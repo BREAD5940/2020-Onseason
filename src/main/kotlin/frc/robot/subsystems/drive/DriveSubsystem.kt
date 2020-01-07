@@ -4,6 +4,7 @@ import com.kauailabs.navx.frc.AHRS
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel
 import edu.wpi.first.wpilibj.SPI
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
@@ -30,7 +31,6 @@ import org.ghrobotics.lib.mathematics.units.inches
 import org.ghrobotics.lib.mathematics.units.nativeunit.SlopeNativeUnitModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.rev.FalconMAX
-import org.ghrobotics.lib.physics.MotorCharacterization
 import org.ghrobotics.lib.utils.BooleanSource
 import org.ghrobotics.lib.utils.asSource
 import org.ghrobotics.lib.utils.launchFrequency
@@ -63,10 +63,10 @@ object DriveSubsystem : FalconSubsystem() {
 
     val modules = listOf(flModule, frModule, blModule, brModule)
 
-    val feedForward = MotorCharacterization<Meter>(
-            SIUnit(2.6),
-            SIUnit(0.0),
-            SIUnit(0.0)
+    val feedForward = SimpleMotorFeedforward(
+            (2.6),
+            (0.0),
+            (0.0)
     ).apply {
 //        TODO("idk -- need to tune dis. Should be per module!")
     }

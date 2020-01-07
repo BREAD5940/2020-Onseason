@@ -1,6 +1,7 @@
 package frc.robot.subsystems.drive.swerve
 
 import edu.wpi.first.wpilibj.controller.PIDController
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
@@ -12,11 +13,11 @@ import frc.robot.subsystems.drive.toTranslation2d
 import lib.normalize
 import org.ghrobotics.lib.mathematics.units.Meter
 import org.ghrobotics.lib.mathematics.units.SIUnit
-import org.ghrobotics.lib.physics.MotorCharacterization
+import org.ghrobotics.lib.mathematics.units.derived.volts
 
 class SwerveTrajectoryController(
     private val kinematics: SwerveDriveKinematics,
-    private val feedforward: MotorCharacterization<Meter>
+    private val feedforward: SimpleMotorFeedforward
 ) {
 
     private var lastTime = -1.0
@@ -65,12 +66,12 @@ class SwerveTrajectoryController(
                     (states[index].speedMetersPerSecond - prevState[index].speedMetersPerSecond) / dt
             val moduleVelocity = states[index].speedMetersPerSecond
 
-            val ffVoltage = feedforward.getVoltage(SIUnit(moduleVelocity), SIUnit(acceleration))
+            val ffVoltage = feedforward.calculate(moduleVelocity, acceleration)
 
             outputs.add(index, Mk2SwerveModule.Output.Velocity(
                     SIUnit(moduleVelocity),
                     states[index].angle,
-                    ffVoltage
+                    ffVoltage.volts
             ))
         }
 
