@@ -1,24 +1,24 @@
 package frc.robot.auto.paths
 
 import edu.wpi.first.wpilibj.geometry.Pose2d
+import edu.wpi.first.wpilibj.trajectory.Trajectory
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator
 import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint
 import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint
+import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint
 import frc.robot.Constants
 import frc.robot.autonomous.paths.TrajectoryWaypoints
 import frc.robot.subsystems.drive.DriveSubsystem.kinematics
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
-import org.ghrobotics.lib.mathematics.twodim.geometry.
 import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
-import org.ghrobotics.lib.mathematics.twodim.trajectory.DefaultTrajectoryGenerator
 import org.ghrobotics.lib.mathematics.twodim.trajectory.constraints.* // ktlint-disable no-wildcard-imports
-import org.ghrobotics.lib.mathematics.twodim.trajectory.types.TimedTrajectory
-import org.ghrobotics.lib.mathematics.twodim.trajectory.types.mirror
 import org.ghrobotics.lib.mathematics.units.Meter
 import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.derived.* // ktlint-disable no-wildcard-imports
 import org.ghrobotics.lib.mathematics.units.feet
 import org.ghrobotics.lib.mathematics.units.inch
+import kotlin.math.max
 
 object TrajectoryFactory {
 
@@ -420,8 +420,8 @@ object TrajectoryFactory {
                 ),
                 getConstraints(false, Pose2d(100.feet, 100.feet, 0.degree)), kMaxVelocity, 7.feet.acceleration, kMaxVoltage
         )
-    }
-*/
+    }*/
+
     /** Generation **/
 
     private fun getConstraints(
@@ -431,39 +431,34 @@ object TrajectoryFactory {
                 SwerveDriveKinematicsConstraint(kinematics, maxSpeedMetersPerSecond)
             )
 
-    fun getConstraints(
-            trajectoryEndpoint: TrajectoryWaypoints.Waypoint,
-            velocityRadiusConstraintVelocity: SIUnit<Velocity<Meter>> = kVelocityRadiusConstraintVelocity,
-            velocityRadius: SIUnit<Meter> = kVelocityRadiusConstraintRadius
+   /* fun getConstraints(
+            maxSpeedMetersPerSecond: Double
     ) =
-            getConstraints( trajectoryEndpoint.position, velocityRadiusConstraintVelocity, velocityRadius)
+            getConstraints(maxSpeedMetersPerSecond)*/
 
     fun generateTrajectory(
             reversed: Boolean,
             points: List<TrajectoryWaypoints.Waypoint>,
-            constraints: List<TimingConstraint<Pose2dWithCurvature>>,
+            constraints: List<TrajectoryConstraint>,
             maxVelocity: SIUnit<Velocity<Meter>>,
             maxAcceleration: SIUnit<Acceleration<Meter>>,
             maxVoltage: SIUnit<Volt>,
             optimizeCurvature: Boolean = true,
             endVelocity: SIUnit<Velocity<Meter>> = 0.inch.velocity
-    ): TimedTrajectory<Pose2dWithCurvature> {
+    ): Trajectory? {
 
-        val driveDynamicsConstraint = DifferentialDriveDynamicsConstraint(Constants.DriveConstants.kHighGearDifferentialDrive, maxVoltage)
-        val allConstraints = ArrayList<TimingConstraint<Pose2dWithCurvature>>()
+        //val driveDynamicsConstraint = DifferentialDriveDynamicsConstraint(Constants.DriveConstants.kHighGearDifferentialDrive, maxVoltage)
+        val allConstraints = ArrayList<TrajectoryConstraint>()
 
-        allConstraints.add(driveDynamicsConstraint)
+        //allConstraints.add(driveDynamicsConstraint)
         if (constraints.isNotEmpty()) allConstraints.addAll(constraints)
-
+        var config: TrajectoryConfig =  TrajectoryConfig(maxVelocity.value, maxAcceleration.value)
+        config.setEndVelocity(endVelocity.value)
+        config.setReversed(reversed)
+        config.addConstraints(allConstraints)
         return TrajectoryGenerator.generateTrajectory(
                 points.map { it.position },
-                allConstraints,
-                0.inch.velocity,
-                endVelocity,
-                maxVelocity,
-                maxAcceleration,
-                reversed,
-                optimizeCurvature
+                config
         )
     }
 }
