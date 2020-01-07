@@ -41,7 +41,12 @@ class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
         }
 
         // calculate wheel speeds from field oriented chassis state
-        val speeds = ChassisSpeeds.fromFieldRelativeSpeeds(translation.x, translation.y, rotation, DriveSubsystem.periodicIO.pose.rotation)
+        val speeds: ChassisSpeeds
+        if (!isRobotRelative()) {
+            speeds = ChassisSpeeds.fromFieldRelativeSpeeds(translation.x, translation.y, rotation, DriveSubsystem.periodicIO.pose.rotation)
+        } else {
+            speeds = ChassisSpeeds(translation.x, translation.y, rotation)
+        }
 //        val moduleStates = DriveSubsystem.kinematics.toSwerveModuleStates(speeds, centerOfRotation)
 
         // Normalize wheel speeds
@@ -77,8 +82,7 @@ class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
         val xSource by lazy { Controls.driverFalconXbox.getY(kTranslationHand).withDeadband(0.1) }
         val zSource by lazy { Controls.driverFalconXbox.getX(kTranslationHand).withDeadband(0.1) }
         val rotSource by lazy { Controls.driverFalconXbox.getX(kRotHand).withDeadband(0.06) }
-
-        val evadingButton by lazy { Controls.driverFalconXbox.getRawButton(11) } // TODO check
+        val isRobotRelative by lazy { Controls.driverFalconXbox.getRawButton(11) } // TODO check
 
         var centerOfRotation = Translation2d()
     }
