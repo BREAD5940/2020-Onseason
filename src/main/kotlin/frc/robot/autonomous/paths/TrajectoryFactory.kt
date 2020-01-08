@@ -53,7 +53,7 @@ object TrajectoryFactory {
                     Pose2d(8.334.feet, 2.474.feet, (-145.637).degree).asWaypoint(),
                     Pose2d(7.102.feet, 6.796.feet, 71.162.degree).asWaypoint()
             ),
-            getConstraints(true, Pose2d()), 5.feet.velocity, kMaxAcceleration, kMaxVoltage
+            getConstraints(kMaxVelocity.value), 5.feet.velocity, kMaxAcceleration //, kMaxVoltage
     )
 
 
