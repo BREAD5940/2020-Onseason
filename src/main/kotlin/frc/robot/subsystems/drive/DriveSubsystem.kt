@@ -22,12 +22,10 @@ import org.ghrobotics.lib.debug.FalconDashboard
 import org.ghrobotics.lib.mathematics.twodim.geometry.x_u
 import org.ghrobotics.lib.mathematics.twodim.geometry.y_u
 import org.ghrobotics.lib.mathematics.twodim.trajectory.mirror
-import org.ghrobotics.lib.mathematics.units.Meter
-import org.ghrobotics.lib.mathematics.units.SIUnit
+import org.ghrobotics.lib.mathematics.units.*
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.radians
-import org.ghrobotics.lib.mathematics.units.inFeet
-import org.ghrobotics.lib.mathematics.units.inches
+import org.ghrobotics.lib.mathematics.units.derived.velocity
 import org.ghrobotics.lib.mathematics.units.nativeunit.SlopeNativeUnitModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.rev.FalconMAX
@@ -272,6 +270,18 @@ sealed class SwerveDriveOutput {
                 Mk2SwerveModule.Output.Velocity(),
                 Mk2SwerveModule.Output.Velocity(),
                 Mk2SwerveModule.Output.Velocity()
+        )
+        constructor(states: Array<SwerveModuleState>) : this (
+                Mk2SwerveModule.Output.Velocity(
+                        states[0].speedMetersPerSecond.meters.velocity, states[0].angle),
+                Mk2SwerveModule.Output.Velocity(
+                        states[1].speedMetersPerSecond.meters.velocity, states[1].angle
+                ),
+                Mk2SwerveModule.Output.Velocity(
+                        states[2].speedMetersPerSecond.meters.velocity, states[2].angle
+                ),
+                Mk2SwerveModule.Output.Velocity(
+                        states[3].speedMetersPerSecond.meters.velocity, states[3].angle)
         )
     }
 }

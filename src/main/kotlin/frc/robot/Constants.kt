@@ -18,10 +18,10 @@ object Constants {
 
     /** Module speeds as (fl, fr, br, bl) */
     val kModulePositions = listOf(
-            Translation2d(baseWidth.inMeters() / 2.0, baseLen.inMeters() / 2.0),
-            Translation2d(baseWidth.inMeters() / 2.0, -baseLen.inMeters() / 2.0),
-            Translation2d(-baseWidth.inMeters() / 2.0, -baseLen.inMeters() / 2.0),
-            Translation2d(-baseWidth.inMeters() / 2.0, baseLen.inMeters() / 2.0)
+            Translation2d(baseWidth.inMeters() / 2.0, baseLen.inMeters() / 2.0), // fl
+            Translation2d(baseWidth.inMeters() / 2.0, -baseLen.inMeters() / 2.0), // fr
+            Translation2d(-baseWidth.inMeters() / 2.0, -baseLen.inMeters() / 2.0), // br
+            Translation2d(-baseWidth.inMeters() / 2.0, baseLen.inMeters() / 2.0) // bl
     )
 
     val kinematics = SwerveDriveKinematics(
