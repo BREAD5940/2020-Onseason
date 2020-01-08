@@ -87,7 +87,7 @@ dependencies {
     // We need to add the Kotlin stdlib in order to use most Kotlin language features.
     compile "org.jetbrains.kotlin:kotlin-stdlib"
 
-    compile "com.github.5190GreenHopeRobotics:FalconLibrary:2020.1.2"
+    compile "com.github.5190GreenHopeRobotics:FalconLibrary:ad1a99907d"
 
     compile "com.fazecast:jSerialComm:2.4.1" // jserialcomm for jevois
     compile "com.github.salomonbrys.kotson:kotson:2.5.0" // gson
