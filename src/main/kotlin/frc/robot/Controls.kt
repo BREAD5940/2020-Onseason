@@ -14,10 +14,7 @@ import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
 import org.ghrobotics.lib.mathematics.twodim.trajectory.FalconTrajectoryConfig
 import org.ghrobotics.lib.mathematics.twodim.trajectory.FalconTrajectoryGenerator
-import org.ghrobotics.lib.mathematics.units.derived.acceleration
-import org.ghrobotics.lib.mathematics.units.derived.degrees
-import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
-import org.ghrobotics.lib.mathematics.units.derived.velocity
+import org.ghrobotics.lib.mathematics.units.derived.*
 import org.ghrobotics.lib.mathematics.units.feet
 import org.ghrobotics.lib.wrappers.hid.* // ktlint-disable no-wildcard-imports
 
@@ -39,9 +36,9 @@ object Controls {
         button(kA).changeOn(command)
 //
 //        button(kA).changeOn(SwerveCharacterizationCommand())
-//        button(kB).changeOn(command.beforeStarting(Runnable{
-//            DriveSubsystem.odometry.resetPosition(Pose2d(10.feet, 10.feet, 0.degrees), DriveSubsystem.gyro())
-//        }))
+        button(kB).changeOn(command.beforeStarting(Runnable{
+            DriveSubsystem.odometry.resetPosition(Pose2d(1.5.feet, 23.feet, 0.degree), DriveSubsystem.gyro())
+        }))
 
         button(kA).changeOn { Proximal.master.encoder.resetPosition(0.degrees) }
         pov(0).changeOn(ClosedLoopProximalMove(90.degrees))
