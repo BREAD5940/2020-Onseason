@@ -410,7 +410,7 @@ object TrajectoryFactory {
             ),
             getConstraints(false, Pose2d()), 9.feet.velocity, 7.feet.acceleration * 1.5, 9.volt
     ) }
-
+*/
     val testTrajectory by lazy {
         generateTrajectory(
                 false,
@@ -418,9 +418,9 @@ object TrajectoryFactory {
                         Pose2d(1.5.feet, 23.feet, 0.degree).asWaypoint(),
                         Pose2d(11.5.feet, 23.feet, 0.degree).asWaypoint()
                 ),
-                getConstraints(false, Pose2d(100.feet, 100.feet, 0.degree)), kMaxVelocity, 7.feet.acceleration, kMaxVoltage
+                getConstraints(maxSpeedMetersPerSecond = kMaxVelocity.value), kMaxVelocity, 7.feet.acceleration
         )
-    }*/
+    }
 
     /** Generation **/
 
