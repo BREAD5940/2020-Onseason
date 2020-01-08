@@ -45,7 +45,7 @@ object DriveSubsystem : FalconSubsystem() {
 
     val kAzumithMotorOutputRange = -0.5..0.5
 
-    val flModule = Mk2SwerveModule(2, 2, 142.degrees + 76.degrees, FalconMAX(
+    val flModule = Mk2SwerveModule(2, 2, 142.degrees + (76+38).degrees, FalconMAX(
             CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
             0.5, 0.0, 0.0001, kAzumithMotorOutputRange)
 
@@ -86,6 +86,7 @@ object DriveSubsystem : FalconSubsystem() {
         blModule.driveMotor.canSparkMax.inverted = false
         brModule.driveMotor.canSparkMax.inverted = true
         modules.forEach { it.driveMotor.brakeMode = true }
+        modules.forEach { it.azimuthMotor.brakeMode = false }
 
         // set the default comand
         defaultCommand = HolomonicDriveCommand()

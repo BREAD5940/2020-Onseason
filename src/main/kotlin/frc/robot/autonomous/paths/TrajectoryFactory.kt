@@ -51,9 +51,10 @@ object TrajectoryFactory {
                 false,
                 listOf(
                         Pose2d(1.5.feet, 23.feet, 0.degree).asWaypoint(),
-                        Pose2d(6.5.feet, 23.feet, 0.degree).asWaypoint()
+                        Pose2d(6.5.feet, 21.feet, -90.degree).asWaypoint(),
+                        Pose2d(1.5.feet, 19.feet, 180.degree).asWaypoint()
                 ),
-                getConstraints(kMaxSpeedMetersPerSecond), kMaxVelocity, 7.feet.acceleration
+                listOf(), kMaxVelocity, 7.feet.acceleration
         )
     }
 
@@ -61,10 +62,7 @@ object TrajectoryFactory {
 
     private fun getConstraints(
             maxSpeedMetersPerSecond: Double
-    ) =
-            listOf(
-                SwerveDriveKinematicsConstraint(kinematics, maxSpeedMetersPerSecond)
-            )
+    ) = listOf(SwerveDriveKinematicsConstraint(kinematics, maxSpeedMetersPerSecond))
 
 
     fun generateTrajectory(

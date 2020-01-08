@@ -33,7 +33,7 @@ open class Mk2SwerveModule(
         set(value) { periodicIO.desiredOutput = value }
 
 //    private val azimuthMotor = Spark(azimuthPWMPort)
-    private val azimuthMotor = FalconMAX(azimuthPWMPort, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel)
+    val azimuthMotor = FalconMAX(azimuthPWMPort, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel)
     private val azimuthController =
             PIDController(angleKp, angleKi, angleKd).apply {
                 //                setInputRange(0.0, 2.0 * PI)
@@ -53,9 +53,9 @@ open class Mk2SwerveModule(
 
         driveMotor.canSparkMax.apply {
             setSmartCurrentLimit(60)
-            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 500)
-            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 3)
-            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20)
+//            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 500)
+//            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 3)
+//            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20)
         }
 
         azimuthMotor.canSparkMax.restoreFactoryDefaults()
@@ -64,8 +64,8 @@ open class Mk2SwerveModule(
 
         azimuthMotor.canSparkMax.apply {
             setSmartCurrentLimit(60)
-            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 500)
-            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 3)
+//            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 500)
+//            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 3)
         }
     }
 

@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory
 import frc.robot.subsystems.drive.SwerveDriveOutput
 import frc.robot.subsystems.drive.toTranslation2d
 import lib.normalize
-import org.ghrobotics.lib.mathematics.units.Meter
 import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.derived.volts
 
@@ -24,9 +23,9 @@ class SwerveTrajectoryController(
     private var prevState = listOf(
             SwerveModuleState(), SwerveModuleState(), SwerveModuleState(), SwerveModuleState())
 
-    private val forwardController = PIDController(1.0, 0.0, 0.0) // x meters per second per meter of error
-    private val strafeController = PIDController(1.0, 0.0, 0.0)
-    private val rotationController = PIDController(0.8, 0.0, 0.0) // rad per sec per radian of error
+    private val forwardController = PIDController(10.0, 0.0, 0.0) // x meters per second per meter of error
+    private val strafeController = PIDController(10.0, 0.0, 0.0)
+    private val rotationController = PIDController(2.0, 0.0, 0.0) // rad per sec per radian of error
 
     fun calculate(
         time: Double,
@@ -49,15 +48,17 @@ class SwerveTrajectoryController(
 
         // place the output in the robot frame of reference
         // and add the trajectory velocity to it as a feedforward
-        val feedbackOutput = ChassisSpeeds.fromFieldRelativeSpeeds(
+        val nextOutput = ChassisSpeeds.fromFieldRelativeSpeeds(
                 forwardController.calculate(currentPose.translation.x, state.poseMeters.translation.x) + velocity.x,
                 strafeController.calculate(currentPose.translation.y, state.poseMeters.translation.y) + velocity.y,
                 rotationController.calculate(currentPose.rotation.radians, targetHeading.radians),
                 currentPose.rotation
         )
 
+        println("output\n$nextOutput")
+
         // convert from chassis speeds (PID plus trajectory speeds) to states
-        val states = kinematics.toSwerveModuleStates(feedbackOutput).toList()
+        val states = kinematics.toSwerveModuleStates(nextOutput).toList()
 
         // Calculate feedforwards for each module based on it's acceleration
         val outputs = arrayListOf<Mk2SwerveModule.Output.Velocity>() // Temp array
