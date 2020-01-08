@@ -4,21 +4,17 @@ import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.trajectory.Trajectory
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator
-import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint
 import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint
-import frc.robot.Constants
 import frc.robot.autonomous.paths.TrajectoryWaypoints
 import frc.robot.subsystems.drive.DriveSubsystem.kinematics
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
-import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
-import org.ghrobotics.lib.mathematics.twodim.trajectory.constraints.* // ktlint-disable no-wildcard-imports
 import org.ghrobotics.lib.mathematics.units.Meter
 import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.derived.* // ktlint-disable no-wildcard-imports
 import org.ghrobotics.lib.mathematics.units.feet
 import org.ghrobotics.lib.mathematics.units.inch
-import kotlin.math.max
+import kotlin.math.absoluteValue
 
 object TrajectoryFactory {
 
@@ -26,25 +22,15 @@ object TrajectoryFactory {
 
     val kMaxVelocity = 7.5.feet.velocity
     val kMaxAcceleration = 6.feet.acceleration
-
-    private val kMaxHabitatVelocity = 3.5.feet.velocity
-
-    private val kFirstPathMaxAcceleration = 6.feet.acceleration
-
-    private val kVelocityRadiusConstraintRadius = 4.5.feet
-    private val kVelocityRadiusConstraintVelocity = 3.75.feet.velocity
-
-    private val kMaxCentripetalAccelerationElevatorUp = 6.feet.acceleration
-    private val kMaxCentripetalAccelerationElevatorDown = 7.5.feet.acceleration
-
-    val kMaxVoltage = 10.volt
+    val kMaxSpeedMetersPerSecond = kMaxVelocity.value.absoluteValue // idk if this is how I should do it but it seems to work
 
     /** Adjusted Poses **/
 
+    // put Infinite Recharge poses here
 
     /** Trajectories **/
 
-
+// big fancy trajectory
     val testTrajectory2 = generateTrajectory(
             false,
             listOf(
@@ -53,7 +39,7 @@ object TrajectoryFactory {
                     Pose2d(8.334.feet, 2.474.feet, (-145.637).degree).asWaypoint(),
                     Pose2d(7.102.feet, 6.796.feet, 71.162.degree).asWaypoint()
             ),
-            getConstraints(kMaxVelocity.value), 5.feet.velocity, kMaxAcceleration //, kMaxVoltage
+            getConstraints(kMaxSpeedMetersPerSecond), 5.feet.velocity, kMaxAcceleration
     )
 
 
@@ -65,9 +51,9 @@ object TrajectoryFactory {
                 false,
                 listOf(
                         Pose2d(1.5.feet, 23.feet, 0.degree).asWaypoint(),
-                        Pose2d(11.5.feet, 23.feet, 0.degree).asWaypoint()
+                        Pose2d(6.5.feet, 23.feet, 0.degree).asWaypoint()
                 ),
-                getConstraints(maxSpeedMetersPerSecond = kMaxVelocity.value), kMaxVelocity, 7.feet.acceleration
+                getConstraints(kMaxSpeedMetersPerSecond), kMaxVelocity, 7.feet.acceleration
         )
     }
 
@@ -80,10 +66,6 @@ object TrajectoryFactory {
                 SwerveDriveKinematicsConstraint(kinematics, maxSpeedMetersPerSecond)
             )
 
-   /* fun getConstraints(
-            maxSpeedMetersPerSecond: Double
-    ) =
-            getConstraints(maxSpeedMetersPerSecond)*/
 
     fun generateTrajectory(
             reversed: Boolean,
@@ -91,15 +73,11 @@ object TrajectoryFactory {
             constraints: List<TrajectoryConstraint>,
             maxVelocity: SIUnit<Velocity<Meter>>,
             maxAcceleration: SIUnit<Acceleration<Meter>>,
-            //maxVoltage: SIUnit<Volt>,
-            //optimizeCurvature: Boolean = true,
             endVelocity: SIUnit<Velocity<Meter>> = 0.inch.velocity
     ): Trajectory? {
 
-        //val driveDynamicsConstraint = SwerveDriveKinematicsConstraint(Constants.DriveConstants.kHighGearDifferentialDrive, maxVoltage)
         val allConstraints = ArrayList<TrajectoryConstraint>()
 
-        //allConstraints.add(driveDynamicsConstraint)
         if (constraints.isNotEmpty()) allConstraints.addAll(constraints)
         var config: TrajectoryConfig =  TrajectoryConfig(maxVelocity.value, maxAcceleration.value)
         config.setEndVelocity(endVelocity.value)
