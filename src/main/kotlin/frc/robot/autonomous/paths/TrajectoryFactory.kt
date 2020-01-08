@@ -442,12 +442,12 @@ object TrajectoryFactory {
             constraints: List<TrajectoryConstraint>,
             maxVelocity: SIUnit<Velocity<Meter>>,
             maxAcceleration: SIUnit<Acceleration<Meter>>,
-            maxVoltage: SIUnit<Volt>,
-            optimizeCurvature: Boolean = true,
+            //maxVoltage: SIUnit<Volt>,
+            //optimizeCurvature: Boolean = true,
             endVelocity: SIUnit<Velocity<Meter>> = 0.inch.velocity
     ): Trajectory? {
 
-        //val driveDynamicsConstraint = DifferentialDriveDynamicsConstraint(Constants.DriveConstants.kHighGearDifferentialDrive, maxVoltage)
+        //val driveDynamicsConstraint = SwerveDriveKinematicsConstraint(Constants.DriveConstants.kHighGearDifferentialDrive, maxVoltage)
         val allConstraints = ArrayList<TrajectoryConstraint>()
 
         //allConstraints.add(driveDynamicsConstraint)
