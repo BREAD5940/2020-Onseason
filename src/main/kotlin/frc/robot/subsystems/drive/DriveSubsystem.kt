@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState
 import edu.wpi.first.wpilibj.trajectory.Trajectory
 import frc.robot.Constants
+import frc.robot.subsystems.drive.DriveSubsystem.feedForward
 import frc.robot.subsystems.drive.swerve.Mk2SwerveModule
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -26,6 +27,7 @@ import org.ghrobotics.lib.mathematics.units.*
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.radians
 import org.ghrobotics.lib.mathematics.units.derived.velocity
+import org.ghrobotics.lib.mathematics.units.derived.volts
 import org.ghrobotics.lib.mathematics.units.nativeunit.SlopeNativeUnitModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.rev.FalconMAX
@@ -273,15 +275,17 @@ sealed class SwerveDriveOutput {
         )
         constructor(states: Array<SwerveModuleState>) : this (
                 Mk2SwerveModule.Output.Velocity(
-                        states[0].speedMetersPerSecond.meters.velocity, states[0].angle),
+                        states[0].speedMetersPerSecond.meters.velocity, states[0].angle,
+                        feedForward.calculate(states[0].speedMetersPerSecond).volts),
                 Mk2SwerveModule.Output.Velocity(
-                        states[1].speedMetersPerSecond.meters.velocity, states[1].angle
-                ),
+                        states[1].speedMetersPerSecond.meters.velocity, states[1].angle,
+                        feedForward.calculate(states[1].speedMetersPerSecond).volts),
                 Mk2SwerveModule.Output.Velocity(
-                        states[2].speedMetersPerSecond.meters.velocity, states[2].angle
-                ),
+                        states[2].speedMetersPerSecond.meters.velocity, states[2].angle,
+                        feedForward.calculate(states[2].speedMetersPerSecond).volts),
                 Mk2SwerveModule.Output.Velocity(
-                        states[3].speedMetersPerSecond.meters.velocity, states[3].angle)
+                        states[3].speedMetersPerSecond.meters.velocity, states[3].angle,
+                        feedForward.calculate(states[3].speedMetersPerSecond).volts)
         )
     }
 }
