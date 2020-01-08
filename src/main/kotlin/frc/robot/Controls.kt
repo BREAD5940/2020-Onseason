@@ -36,6 +36,7 @@ object Controls {
 //                FalconTrajectoryConfig(4.feet.velocity, 5.feet.acceleration)
 //        )
         val command = SwerveTrajectoryFollowerCommand(testTrajectory, 90.degrees.toRotation2d())
+        button(kA).changeOn(command)
 //
 //        button(kA).changeOn(SwerveCharacterizationCommand())
 //        button(kB).changeOn(command.beforeStarting(Runnable{
