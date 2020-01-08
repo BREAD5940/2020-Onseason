@@ -35,7 +35,7 @@ object ClimbSubsystem {
         }
 
         override fun isFinished(): Boolean {
-            return (climbMaster.encoder.rawPosition -climbHeight).absoluteValue < 0.05.meters
+            return (climbMaster.encoder.position -climbHeight).absoluteValue < 0.05.meters
 
         }
 
