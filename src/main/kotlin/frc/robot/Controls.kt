@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.InstantCommand
+import frc.robot.auto.paths.TrajectoryFactory.testTrajectory
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.SwerveCharacterizationCommand
 import frc.robot.subsystems.drive.SwerveTrajectoryFollowerCommand
@@ -34,7 +35,7 @@ object Controls {
 //                listOf(Pose2d(10.feet, 10.feet, 0.degrees), Pose2d( 20.feet, 5.feet, 0.degrees)),
 //                FalconTrajectoryConfig(4.feet.velocity, 5.feet.acceleration)
 //        )
-//        val command = SwerveTrajectoryFollowerCommand(trajectory, 90.degrees.toRotation2d())
+        val command = SwerveTrajectoryFollowerCommand(testTrajectory, 90.degrees.toRotation2d())
 //
 //        button(kA).changeOn(SwerveCharacterizationCommand())
 //        button(kB).changeOn(command.beforeStarting(Runnable{

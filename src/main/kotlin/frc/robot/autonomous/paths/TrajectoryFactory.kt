@@ -74,7 +74,7 @@ object TrajectoryFactory {
             maxVelocity: SIUnit<Velocity<Meter>>,
             maxAcceleration: SIUnit<Acceleration<Meter>>,
             endVelocity: SIUnit<Velocity<Meter>> = 0.inch.velocity
-    ): Trajectory? {
+    ): Trajectory {
 
         val allConstraints = ArrayList<TrajectoryConstraint>()
 
