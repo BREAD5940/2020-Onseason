@@ -1,11 +1,7 @@
 package frc.robot.subsystems.superstructure.intake
-
 import com.revrobotics.CANSparkMaxLowLevel
 import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnitRotationModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
-import org.ghrobotics.lib.motors.ctre.FalconSRX
-import org.ghrobotics.lib.motors.ctre.falconSPX
-import org.ghrobotics.lib.motors.ctre.falconSRX
 import org.ghrobotics.lib.motors.rev.FalconMAX
 
 object Intake{

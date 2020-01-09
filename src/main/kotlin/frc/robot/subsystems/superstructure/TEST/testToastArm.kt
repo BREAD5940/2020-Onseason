@@ -15,9 +15,7 @@ import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.ctre.FalconSRX
 import org.ghrobotics.lib.motors.ctre.falconSRX
 //import com.revrobotics.CANSensor
-
 object Arm{
-
     val armMaster = FalconSRX(30, NativeUnitRotationModel(4096.nativeUnits * 9.333))
     val armSlave = FalconSRX(31, DefaultNativeUnitModel)
 
