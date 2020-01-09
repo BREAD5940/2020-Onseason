@@ -22,7 +22,7 @@ object TrajectoryFactory {
 
     val kMaxVelocity = 7.5.feet.velocity
     val kMaxAcceleration = 6.feet.acceleration
-    val kMaxSpeedMetersPerSecond = kMaxVelocity.value.absoluteValue // idk if this is how I should do it but it seems to work
+    val kMaxSpeedMetersPerSecond = kMaxVelocity // idk if this is how I should do it but it seems to work
 
     /** Adjusted Poses **/
 
@@ -54,15 +54,15 @@ object TrajectoryFactory {
                         Pose2d(6.5.feet, 21.feet, -90.degree).asWaypoint(),
                         Pose2d(1.5.feet, 19.feet, 180.degree).asWaypoint()
                 ),
-                listOf(), kMaxVelocity, 7.feet.acceleration
+                getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
         )
     }
 
     /** Generation **/
 
     private fun getConstraints(
-            maxSpeedMetersPerSecond: Double
-    ) = listOf(SwerveDriveKinematicsConstraint(kinematics, maxSpeedMetersPerSecond))
+            maxSpeedMetersPerSecond: SIUnit<Velocity<Meter>>
+    ) = listOf(SwerveDriveKinematicsConstraint(kinematics, maxSpeedMetersPerSecond.value))
 
 
     fun generateTrajectory(

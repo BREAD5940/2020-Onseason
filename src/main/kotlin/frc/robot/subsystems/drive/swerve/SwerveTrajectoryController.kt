@@ -20,9 +20,11 @@ class SwerveTrajectoryController(
 //    private var prevState = listOf(
 //            SwerveModuleState(), SwerveModuleState(), SwerveModuleState(), SwerveModuleState())
 
-    private val forwardController = PIDController(10.0, 0.0, 0.0) // x meters per second per meter of error
-    private val strafeController = PIDController(10.0, 0.0, 0.0)
+    private val forwardController = PIDController(0.5, 0.0, 0.0) // x meters per second per meter of error
+    private val strafeController = PIDController(0.5, 0.0, 0.0)
     private val rotationController = PIDController(2.0, 0.0, 0.0) // rad per sec per radian of error
+
+    private val maxRotRange = (-45.degrees..45.degrees)
 
     fun calculate(
             time: Double,
@@ -52,7 +54,7 @@ class SwerveTrajectoryController(
         // not following the poses at individual states.
         val targetAngularVel: Double = rotationController.calculate(
                 currentPose.rotation.radians,
-                targetHeading.radians)
+                targetHeading.radians).safeRangeTo(maxRotRange)
 
         val vRef: Double = desiredState.velocityMetersPerSecond
 
