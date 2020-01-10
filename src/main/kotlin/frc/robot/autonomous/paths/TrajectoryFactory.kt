@@ -134,7 +134,7 @@ object TrajectoryFactory {
                         Pose2d(20.8.feet, 12.214.feet, 180.degrees).asWaypoint(),
                         Pose2d(20.448.feet, 13.408.feet, 0.degrees).asWaypoint(),
                         Pose2d(19.656.feet, 14.694.feet, 0.degrees).asWaypoint(),
-                        Pose2d(12.16.feet, 21.393.feet, 180.degrees).asWaypoint(),
+                        Pose2d(12.16.feet, 21.393.feet, 180.degrees).asWaypoint()
                 ),
                 getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
         )
