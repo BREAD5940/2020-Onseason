@@ -68,6 +68,39 @@ object TrajectoryFactory {
                         Pose2d(27.11.feet, 24.704.feet, 0.degree).asWaypoint(),
                         Pose2d(12.16.feet, 21.393.feet, 0.degree).asWaypoint(),
                         Pose2d(11.983.feet, 18.781.feet, 180.degree).asWaypoint()
+                ),
+                getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
+        )
+    }
+
+    val sixPCTrenchShoot by lazy {
+        generateTrajectory(
+                false,
+                listOf(
+                        Pose2d(9.371.feet, 25.709.feet, 0.degree).asWaypoint(),
+                        Pose2d(12.16.feet, 21.393.feet, 180.degree).asWaypoint(),
+                        Pose2d(20.69.feet, 24.612.feet, 0.degree).asWaypoint(),
+                        Pose2d(23.812.feet, 24.658.feet, 0.degree).asWaypoint(),
+                        Pose2d(27.11.feet, 24.704.feet, 0.degree).asWaypoint(),
+                        Pose2d(12.16.feet, 21.393.feet, 0.degree).asWaypoint(),
+                        Pose2d(19.217.feet, 23.556.feet, 210.degree).asWaypoint()
+                ),
+                getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
+        )
+    }
+
+    val eightPCTrenchShoot by lazy {
+        generateTrajectory(
+                false,
+                listOf(
+                        Pose2d(9.371.feet, 25.709.feet, 0.degree).asWaypoint(),
+                        Pose2d(12.16.feet, 21.393.feet, 180.degree).asWaypoint(),
+                        Pose2d(20.69.feet, 24.612.feet, 0.degree).asWaypoint(),
+                        Pose2d(23.812.feet, 24.658.feet, 0.degree).asWaypoint(),
+                        Pose2d(27.11.feet, 24.704.feet, 0.degree).asWaypoint(),
+                        Pose2d(32.343.feet, 25.439.feet, 0.degree).asWaypoint(),
+                        Pose2d(32.409.feet, 23.878.feet, 90.degree).asWaypoint(),
+                        Pose2d(19.217.feet, 23.556.feet, 210.degree).asWaypoint()
                         ),
                 getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
         )
