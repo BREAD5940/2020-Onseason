@@ -9,12 +9,8 @@ import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint
 import frc.robot.autonomous.paths.TrajectoryWaypoints
 import frc.robot.subsystems.drive.DriveSubsystem.kinematics
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
-import org.ghrobotics.lib.mathematics.units.Meter
-import org.ghrobotics.lib.mathematics.units.SIUnit
+import org.ghrobotics.lib.mathematics.units.*
 import org.ghrobotics.lib.mathematics.units.derived.* // ktlint-disable no-wildcard-imports
-import org.ghrobotics.lib.mathematics.units.feet
-import org.ghrobotics.lib.mathematics.units.inch
-import kotlin.math.absoluteValue
 
 object TrajectoryFactory {
 
@@ -34,10 +30,10 @@ object TrajectoryFactory {
     val testTrajectory2 = generateTrajectory(
             false,
             listOf(
-                    Pose2d(5.396.feet, 5.551.feet, 0.degree).asWaypoint(),
-                    Pose2d(10.004.feet, 5.648.feet, 0.degree).asWaypoint(),
-                    Pose2d(8.334.feet, 2.474.feet, (-145.637).degree).asWaypoint(),
-                    Pose2d(7.102.feet, 6.796.feet, 71.162.degree).asWaypoint()
+                    Pose2d(5.396.feet, 5.551.feet, 0.degrees).asWaypoint(),
+                    Pose2d(10.004.feet, 5.648.feet, 0.degrees).asWaypoint(),
+                    Pose2d(8.334.feet, 2.474.feet, (-145.637).degrees).asWaypoint(),
+                    Pose2d(7.102.feet, 6.796.feet, 71.162.degrees).asWaypoint()
             ),
             getConstraints(kMaxSpeedMetersPerSecond), 5.feet.velocity, kMaxAcceleration
     )
@@ -50,9 +46,9 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(1.5.feet, 23.feet, 0.degree).asWaypoint(),
-                        Pose2d(6.5.feet, 21.feet, -90.degree).asWaypoint(),
-                        Pose2d(1.5.feet, 19.feet, 180.degree).asWaypoint()
+                        Pose2d(1.5.feet, 23.feet, 0.degrees).asWaypoint(),
+                        Pose2d(6.5.feet, 21.feet, -90.degrees).asWaypoint(),
+                        Pose2d(1.5.feet, 19.feet, 180.degrees).asWaypoint()
                 ),
                 getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
         )
@@ -61,8 +57,8 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(9.371.feet, 25.709.feet, 0.degree).asWaypoint(),
-                        Pose2d(12.16.feet, 21.393.feet, 180.degree).asWaypoint()
+                        Pose2d(9.371.feet, 25.709.feet, 0.degrees).asWaypoint(),
+                        Pose2d(12.16.feet, 21.393.feet, 180.degrees).asWaypoint()
                 ),
                 getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
         )
@@ -71,12 +67,12 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(12.16.feet, 21.393.feet, 180.degree).asWaypoint(),
-                        Pose2d(20.69.feet, 24.612.feet, 0.degree).asWaypoint(),
-                        Pose2d(23.812.feet, 24.658.feet, 0.degree).asWaypoint(),
-                        Pose2d(27.11.feet, 24.704.feet, 0.degree).asWaypoint(),
-                        Pose2d(12.16.feet, 21.393.feet, 0.degree).asWaypoint(),
-                        Pose2d(11.983.feet, 18.781.feet, 180.degree).asWaypoint()
+                        Pose2d(12.16.feet, 21.393.feet, 180.degrees).asWaypoint(),
+                        Pose2d(20.69.feet, 24.612.feet, 0.degrees).asWaypoint(),
+                        Pose2d(23.812.feet, 24.658.feet, 0.degrees).asWaypoint(),
+                        Pose2d(27.11.feet, 24.704.feet, 0.degrees).asWaypoint(),
+                        Pose2d(12.16.feet, 21.393.feet, 0.degrees).asWaypoint(),
+                        Pose2d(11.983.feet, 18.781.feet, 180.degrees).asWaypoint()
                 ),
                 getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
         )
@@ -87,12 +83,12 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(12.16.feet, 21.393.feet, 180.degree).asWaypoint(),
-                        Pose2d(20.69.feet, 24.612.feet, 0.degree).asWaypoint(),
-                        Pose2d(23.812.feet, 24.658.feet, 0.degree).asWaypoint(),
-                        Pose2d(27.11.feet, 24.704.feet, 0.degree).asWaypoint(),
-                        Pose2d(12.16.feet, 21.393.feet, 0.degree).asWaypoint(),
-                        Pose2d(19.217.feet, 23.556.feet, 210.degree).asWaypoint()
+                        Pose2d(12.16.feet, 21.393.feet, 180.degrees).asWaypoint(),
+                        Pose2d(20.69.feet, 24.612.feet, 0.degrees).asWaypoint(),
+                        Pose2d(23.812.feet, 24.658.feet, 0.degrees).asWaypoint(),
+                        Pose2d(27.11.feet, 24.704.feet, 0.degrees).asWaypoint(),
+                        Pose2d(12.16.feet, 21.393.feet, 0.degrees).asWaypoint(),
+                        Pose2d(19.217.feet, 23.556.feet, 210.degrees).asWaypoint()
                 ),
                 getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
         )
@@ -102,13 +98,13 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(12.16.feet, 21.393.feet, 180.degree).asWaypoint(),
-                        Pose2d(20.69.feet, 24.612.feet, 0.degree).asWaypoint(),
-                        Pose2d(23.812.feet, 24.658.feet, 0.degree).asWaypoint(),
-                        Pose2d(27.11.feet, 24.704.feet, 0.degree).asWaypoint(),
-                        Pose2d(32.343.feet, 25.439.feet, 0.degree).asWaypoint(),
-                        Pose2d(32.409.feet, 23.878.feet, 90.degree).asWaypoint(),
-                        Pose2d(19.217.feet, 23.556.feet, 210.degree).asWaypoint()
+                        Pose2d(12.16.feet, 21.393.feet, 180.degrees).asWaypoint(),
+                        Pose2d(20.69.feet, 24.612.feet, 0.degrees).asWaypoint(),
+                        Pose2d(23.812.feet, 24.658.feet, 0.degrees).asWaypoint(),
+                        Pose2d(27.11.feet, 24.704.feet, 0.degrees).asWaypoint(),
+                        Pose2d(32.343.feet, 25.439.feet, 0.degrees).asWaypoint(),
+                        Pose2d(32.409.feet, 23.878.feet, 90.degrees).asWaypoint(),
+                        Pose2d(19.217.feet, 23.556.feet, 210.degrees).asWaypoint()
                         ),
                 getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
         )
@@ -117,20 +113,18 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(12.16.feet, 21.393.feet, 180.degree).asWaypoint(),
-                        Pose2d(20.69.feet, 24.612.feet, 0.degree).asWaypoint(),
-                        Pose2d(23.812.feet, 24.658.feet, 0.degree).asWaypoint(),
-                        Pose2d(27.11.feet, 24.704.feet, 0.degree).asWaypoint(),
-                        Pose2d(32.343.feet, 25.439.feet, 0.degree).asWaypoint(),
-                        Pose2d(32.409.feet, 23.878.feet, 90.degree).asWaypoint(),
-                        Pose2d(11.983.feet, 18.781.feet, 180.degree).asWaypoint()
+                        Pose2d(12.16.feet, 21.393.feet, 180.degrees).asWaypoint(),
+                        Pose2d(20.69.feet, 24.612.feet, 0.degrees).asWaypoint(),
+                        Pose2d(23.812.feet, 24.658.feet, 0.degrees).asWaypoint(),
+                        Pose2d(27.11.feet, 24.704.feet, 0.degrees).asWaypoint(),
+                        Pose2d(32.343.feet, 25.439.feet, 0.degrees).asWaypoint(),
+                        Pose2d(32.409.feet, 23.878.feet, 90.degrees).asWaypoint(),
+                        Pose2d(11.983.feet, 18.781.feet, 180.degrees).asWaypoint()
                 ),
                 getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
         )
     }
-
-
-
+    
     /** Generation **/
 
     private fun getConstraints(
@@ -144,7 +138,7 @@ object TrajectoryFactory {
             constraints: List<TrajectoryConstraint>,
             maxVelocity: SIUnit<Velocity<Meter>>,
             maxAcceleration: SIUnit<Acceleration<Meter>>,
-            endVelocity: SIUnit<Velocity<Meter>> = 0.inch.velocity
+            endVelocity: SIUnit<Velocity<Meter>> = 0.inches.velocity
     ): Trajectory {
 
         val allConstraints = ArrayList<TrajectoryConstraint>()
