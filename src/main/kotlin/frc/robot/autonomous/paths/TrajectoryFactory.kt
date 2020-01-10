@@ -94,7 +94,7 @@ object TrajectoryFactory {
         )
     }
 
-    val grabEightAndShootTrench by lazy {
+    val grabFiveAndShootTrench by lazy {
         generateTrajectory(
                 false,
                 listOf(
@@ -109,7 +109,7 @@ object TrajectoryFactory {
                 getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
         )
     }
-    val grabEightAndShoot by lazy {
+    val grabFiveAndShoot by lazy {
         generateTrajectory(
                 false,
                 listOf(
@@ -120,6 +120,21 @@ object TrajectoryFactory {
                         Pose2d(32.343.feet, 25.439.feet, 0.degrees).asWaypoint(),
                         Pose2d(32.409.feet, 23.878.feet, 90.degrees).asWaypoint(),
                         Pose2d(11.983.feet, 18.781.feet, 180.degrees).asWaypoint()
+                ),
+                getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
+        )
+    }
+    val grabFiveAndShootShieldGenerator by lazy {
+        generateTrajectory(
+                false,
+                listOf(
+                        Pose2d(12.16.feet, 21.393.feet, 180.degrees).asWaypoint(),
+                        Pose2d(20.25.feet, 16.76.feet, 2.degrees).asWaypoint(),
+                        Pose2d(21.613.feet, 17.311.feet, 180.degrees).asWaypoint(),
+                        Pose2d(20.8.feet, 12.214.feet, 180.degrees).asWaypoint(),
+                        Pose2d(20.448.feet, 13.408.feet, 0.degrees).asWaypoint(),
+                        Pose2d(19.656.feet, 14.694.feet, 0.degrees).asWaypoint(),
+                        Pose2d(12.16.feet, 21.393.feet, 180.degrees).asWaypoint(),
                 ),
                 getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
         )
