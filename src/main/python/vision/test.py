@@ -3,8 +3,8 @@ import numpy
 import math
 from enum import Enum
 
-img = cv2.imread('photos/BlueGoal-060in-Center.jpg',cv2.IMREAD_COLOR)
-# img = cv2.imread('photos/BlueGoal-330in-ProtectedZone.jpg',cv2.IMREAD_COLOR)
+# img = cv2.imread('photos/BlueGoal-060in-Center.jpg',cv2.IMREAD_COLOR)
+img = cv2.imread('photos/BlueGoal-330in-ProtectedZone.jpg',cv2.IMREAD_COLOR)
 
 
 
