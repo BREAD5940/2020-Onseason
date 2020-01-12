@@ -8,6 +8,7 @@ import frc.robot.auto.paths.TrajectoryFactory.testTrajectory
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.SwerveCharacterizationCommand
 import frc.robot.subsystems.drive.SwerveTrajectoryFollowerCommand
+import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.superstructure.ClosedLoopProximalMove
 import frc.robot.subsystems.superstructure.Proximal
 import org.ghrobotics.lib.commands.sequential
@@ -34,6 +35,7 @@ object Controls {
 //        )
         val command = SwerveTrajectoryFollowerCommand(testTrajectory, 180.degrees.toRotation2d())
         button(kA).changeOn(command)
+        button(kX).changeOn(VisionDriveCommand())
 //
 //        button(kA).changeOn(SwerveCharacterizationCommand())
         button(kB).changeOn {

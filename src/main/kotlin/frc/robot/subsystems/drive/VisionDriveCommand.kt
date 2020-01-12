@@ -38,9 +38,7 @@ class VisionDriveCommand : FalconCommand(DriveSubsystem) {
     }
 
     override fun execute() {
-        val turn = rotationController.calculate(DriveSubsystem.robotPosition.rotation.radians)
-                .coerceIn(rotationRange)
-
+        val turn = rotationController.calculate(DriveSubsystem.robotPosition.rotation.radians).coerceIn(rotationRange)
         val currentPose = DriveSubsystem.robotPosition
         // no clue if this works but here goes
         var error: Translation2d
