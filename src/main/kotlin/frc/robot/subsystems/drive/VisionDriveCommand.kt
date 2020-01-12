@@ -2,10 +2,12 @@ package frc.robot.subsystems.drive
 
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.geometry.Rotation2d
+import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import frc.robot.Constants
 import frc.robot.autonomous.paths.TrajectoryWaypoints
 import frc.robot.autonomous.paths.transformBy
+import frc.robot.subsystems.vision.VisionSubsystem
 import kotlin.math.PI
 import kotlin.math.absoluteValue
 import lib.normalize
@@ -39,13 +41,15 @@ class VisionDriveCommand : FalconCommand(DriveSubsystem) {
         val turn = rotationController.calculate(DriveSubsystem.robotPosition.rotation.radians)
                 .coerceIn(rotationRange)
 
-        val targetPose = TrajectoryWaypoints.kSideStart.transformBy(Constants.kIntakeToCenter) // TODO get from limelight
-        // TODO: actually have waypoints from the field -- THIS WON'T WORK
+//        val targetPose = TrajectoryWaypoints.kSideStart.transformBy(Constants.kIntakeToCenter) // TODO get from limelight
+//        // TODO: actually have waypoints from the field -- THIS WON'T WORK
         val currentPose = DriveSubsystem.robotPosition
-        // we only care about the translational error, so
-        var error = (targetPose.translation - currentPose.translation)
+//        // we only care about the translational error, so
+//        var error = (targetPose.translation - currentPose.translation)
 
-        println("target $targetPose current $currentPose error $error")
+        // no clue if this works but here goes
+        var error = Translation2d(VisionSubsystem.getXOffset(), VisionSubsystem.getYOffset())
+        println("current $currentPose error $error")
 
         val targetVelocity = translationController.calculate(error.norm, 0.020).coerceIn(translationOutputRange)
         error = error.normalize()
@@ -55,7 +59,7 @@ class VisionDriveCommand : FalconCommand(DriveSubsystem) {
         DriveSubsystem.periodicIO.output = SwerveDriveOutput.Velocity(
                 ChassisSpeeds.fromFieldRelativeSpeeds(vX, vY, turn, DriveSubsystem.robotPosition.rotation)
         )
-//        println("Target Heading ${targetHeading.degrees} turn $turn")
+        println("Target Heading ${targetHeading.degrees} turn $turn")
     }
 
     companion object {

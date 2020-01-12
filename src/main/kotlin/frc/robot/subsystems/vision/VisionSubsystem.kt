@@ -14,11 +14,11 @@ object VisionSubsystem : FalconSubsystem() {
         return table.getEntry("tv").getNumber(0)
     }
 
-    fun getXOffset(): Double? {
+    fun getXOffset(): Double {
         return table.getEntry("tx").getDouble(0.0)
     }  // horizontal offset from -27 to +27 degrees
 
-    fun getYOffset(): Double? {
+    fun getYOffset(): Double {
         return table.getEntry("ty").getDouble(0.0)
     } // vertical offset from -20.5 to +20.5 degrees
 
