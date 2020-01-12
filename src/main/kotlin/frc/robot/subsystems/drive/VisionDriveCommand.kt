@@ -41,16 +41,17 @@ class VisionDriveCommand : FalconCommand(DriveSubsystem) {
         val turn = rotationController.calculate(DriveSubsystem.robotPosition.rotation.radians)
                 .coerceIn(rotationRange)
 
-//        val targetPose = TrajectoryWaypoints.kSideStart.transformBy(Constants.kIntakeToCenter) // TODO get from limelight
-//        // TODO: actually have waypoints from the field -- THIS WON'T WORK
         val currentPose = DriveSubsystem.robotPosition
 //        // we only care about the translational error, so
-//        var error = (targetPose.translation - currentPose.translation)
-
+//
         // no clue if this works but here goes
-        var error = Translation2d(VisionSubsystem.getXOffset(), VisionSubsystem.getYOffset())
+        var error: Translation2d
+        if (VisionSubsystem.getHasTargets()) {
+            error = Translation2d(VisionSubsystem.getXOffset(), VisionSubsystem.getYOffset())
+        } else {
+            error = Translation2d(0.0, 0.0) // TODO: do something here
+        }
         println("current $currentPose error $error")
-
         val targetVelocity = translationController.calculate(error.norm, 0.020).coerceIn(translationOutputRange)
         error = error.normalize()
         val vX = -error.x * targetVelocity

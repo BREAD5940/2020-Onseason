@@ -10,8 +10,8 @@ object VisionSubsystem : FalconSubsystem() {
     ///////////////////////
     // Reading Functions //
     ///////////////////////
-    fun getHasTargets(): Number? {
-        return table.getEntry("tv").getNumber(0)
+    fun getHasTargets(): Boolean {
+        return (table.getEntry("tv").getNumber(0)) == 1
     }
 
     fun getXOffset(): Double {
