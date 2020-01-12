@@ -76,8 +76,6 @@ object Autonomous {
         LEFT(TrajectoryWaypoints.kSideStart.mirror()),
         CENTER(TrajectoryWaypoints.kCenterStart),
         RIGHT(TrajectoryWaypoints.kSideStart),
-        LEFT_REVERSED(TrajectoryWaypoints.kSideStartReversed.mirror()),
-        RIGHT_REVERSED(TrajectoryWaypoints.kSideStartReversed)
     }
 
     enum class Mode { BOTTOM_ROCKET_2, FORWARD_CARGO_SHIP, SIDE_CARGO_SHIP, HYBRID, DO_NOTHING }

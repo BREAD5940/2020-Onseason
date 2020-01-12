@@ -17,30 +17,6 @@ object TrajectoryWaypoints {
     /** Measured Field Coordinates **/
 
     // Habitat Zone
-    val kHabitatL2RX = 48.00.inches
-    val kHabitatL2BY = 97.00.inches
-    val kHabitatL1RX = 95.28.feet
-    val kHabitatL1Platform = Rectangle2d(Translation2d(4.feet, 7.feet), Translation2d(8.feet, 20.feet))
-    val kRampHypotenuse = .4.inches
-
-    // Cargo Ship
-    val kCargoShipFL = Pose2d(220.25.inches, 172.88.inches, 0.degrees)
-    val kCargoShipFR = Pose2d(220.25.inches, 151.12.inches, 0.degrees)
-    val kCargoShipS1 = Pose2d(260.75.inches, 133.13.inches, 90.degrees)
-    val kCargoShipS2 = Pose2d(282.55.inches, 133.13.inches, 90.degrees)
-    val kCargoShipS3 = Pose2d(304.30.inches, 133.13.inches, 90.degrees)
-
-    // Rocket
-    val kRocketN = Pose2d(214.57.inches, 19.57.inches, (-28.75).degrees)
-    val kRocketF = Pose2d(244.00.inches, 19.57.inches, (-151.25).degrees)
-    val kRocketBay = Pose2d(229.28.inches, 27.50.inches, (-90).degrees)
-
-    // Loading Station
-    val kLoadingStation = Pose2d(0.inches, 25.72.inches, 0.degrees)
-    val kLoadingStationReversed = Pose2d(0.inches, 25.72.inches, 180.degrees)
-
-    // Depot
-    val kDepotBRCorner = Pose2d(47.inches, 78.396.inches, (-25).degrees)
 
     /** Robot Starting Locations **/
 
