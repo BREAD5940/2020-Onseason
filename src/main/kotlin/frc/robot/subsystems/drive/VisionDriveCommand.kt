@@ -42,14 +42,12 @@ class VisionDriveCommand : FalconCommand(DriveSubsystem) {
                 .coerceIn(rotationRange)
 
         val currentPose = DriveSubsystem.robotPosition
-//        // we only care about the translational error, so
-//
         // no clue if this works but here goes
         var error: Translation2d
         if (VisionSubsystem.getHasTargets()) {
             error = Translation2d(VisionSubsystem.getXOffset(), VisionSubsystem.getYOffset())
         } else {
-            error = Translation2d(0.0, 0.0) // TODO: do something here
+            error = Translation2d(0.0, 0.0) // TODO: do something here for when the limelight can't see
         }
         println("current $currentPose error $error")
         val targetVelocity = translationController.calculate(error.norm, 0.020).coerceIn(translationOutputRange)
@@ -68,16 +66,6 @@ class VisionDriveCommand : FalconCommand(DriveSubsystem) {
         val importantAngles = listOf(
                 // rocket n, bay and f (mirrored and not)
                 TrajectoryWaypoints.kSideStart.rotation /// TODO: have actual waypoints
-               // TrajectoryWaypoints.kRocketN.rotation // ,
-//                -TrajectoryWaypoints.kRocketN.rotation,
-//                TrajectoryWaypoints.kRocketF.rotation,
-//                -TrajectoryWaypoints.kRocketF.rotation,
-//                TrajectoryWaypoints.kRocketBay.rotation,
-//                -TrajectoryWaypoints.kRocketBay.rotation,
-//                TrajectoryWaypoints.kCargoShipFL.rotation,
-//                -TrajectoryWaypoints.kCargoShipFL.rotation,
-//                TrajectoryWaypoints.kCargoShipS1.rotation,
-//                -TrajectoryWaypoints.kCargoShipS1.rotation
         ).map { it.radians }
     }
 }
