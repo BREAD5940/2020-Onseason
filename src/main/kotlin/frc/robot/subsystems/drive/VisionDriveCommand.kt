@@ -39,7 +39,8 @@ class VisionDriveCommand : FalconCommand(DriveSubsystem) {
         val turn = rotationController.calculate(DriveSubsystem.robotPosition.rotation.radians)
                 .coerceIn(rotationRange)
 
-        val targetPose = TrajectoryWaypoints.kRocketN.transformBy(Constants.kIntakeToCenter) // TODO get from limelight
+        val targetPose = TrajectoryWaypoints.kSideStart.transformBy(Constants.kIntakeToCenter) // TODO get from limelight
+        // TODO: actually have waypoints from the field -- THIS WON'T WORK
         val currentPose = DriveSubsystem.robotPosition
         // we only care about the translational error, so
         var error = (targetPose.translation - currentPose.translation)
@@ -61,7 +62,8 @@ class VisionDriveCommand : FalconCommand(DriveSubsystem) {
 
         val importantAngles = listOf(
                 // rocket n, bay and f (mirrored and not)
-                TrajectoryWaypoints.kRocketN.rotation // ,
+                TrajectoryWaypoints.kSideStart.rotation /// TODO: have actual waypoints
+               // TrajectoryWaypoints.kRocketN.rotation // ,
 //                -TrajectoryWaypoints.kRocketN.rotation,
 //                TrajectoryWaypoints.kRocketF.rotation,
 //                -TrajectoryWaypoints.kRocketF.rotation,

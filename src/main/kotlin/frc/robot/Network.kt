@@ -49,7 +49,7 @@ object Network {
 
     init {
 
-        startingPositionChooser.setDefaultOption(Autonomous.StartingPositions.CENTER.name, Autonomous.StartingPositions.CENTER)
+        startingPositionChooser.setDefaultOption(Autonomous.StartingPositions.LEFT.name, Autonomous.StartingPositions.LEFT)
         autoModeChooser.setDefaultOption(Autonomous.Mode.DO_NOTHING.name, Autonomous.Mode.DO_NOTHING)
 
         // Put choosers on dashboard

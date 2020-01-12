@@ -29,8 +29,7 @@ object Autonomous {
     private var configValid = Source(true)
 
     val isStartingOnLeft = { val position = startingPosition()
-        position == StartingPositions.LEFT ||
-                position == StartingPositions.LEFT_REVERSED
+        position == StartingPositions.LEFT
     }
 
     // Stores if we are ready to send it.
@@ -73,9 +72,8 @@ object Autonomous {
     private val robotModeMonitor = { Robot.currentMode }.monitor
 
     enum class StartingPositions(val pose: Pose2d) {
-        LEFT(TrajectoryWaypoints.kSideStart.mirror()),
-        CENTER(TrajectoryWaypoints.kCenterStart),
-        RIGHT(TrajectoryWaypoints.kSideStart),
+        LEFT(TrajectoryWaypoints.kSideStart),
+        RIGHT(TrajectoryWaypoints.kSideStart.mirror()),
     }
 
     enum class Mode { BOTTOM_ROCKET_2, FORWARD_CARGO_SHIP, SIDE_CARGO_SHIP, HYBRID, DO_NOTHING }

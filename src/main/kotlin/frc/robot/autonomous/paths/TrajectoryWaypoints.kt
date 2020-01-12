@@ -19,21 +19,21 @@ object TrajectoryWaypoints {
     // Habitat Zone
 
     /** Robot Starting Locations **/
-
+// START LOCATION: 9.371.feet, 25.709.feet, 0.degrees
     // Determine the starting X value for the robot.
-    private val kStartX = kHabitatL2RX + Constants.kBumperThickness + Constants.baseLen / 2.0 - kRampHypotenuse
-
+    private val kStartX = 9.371.feet // TODO: make this not bad/hardcoded.
+    private val kStartY = 25.709.feet
     // Starting on Level 1 HAB on the right side.
     val kSideStart = Pose2d(
-            kHabitatL2RX + Constants.kBumperThickness + Constants.baseLen / 2.0 - kRampHypotenuse,
-            kHabitatL2BY + Constants.kBumperThickness + Constants.baseWidth / 2.0,
-            0.degrees
+            kStartX.inMeters(),
+            kStartY.inMeters(),
+            0.degrees.toRotation2d()
     )
 
-    val kSideStartReversed = Pose2d(kSideStart.translation, 180.degrees)
+//    val kSideStartReversed = Pose2d(kSideStart.translation, 180.degrees)
 
     // Starting on Level 1 HAB in the center.
-    val kCenterStart = Pose2d(kStartX, 13.5.feet)
+//    val kCenterStart = Pose2d(kStartX, 13.5.feet)
 
     data class Waypoint(
         val trueLocation: Pose2d,
