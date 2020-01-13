@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand
 import frc.robot.Network
 import frc.robot.Robot
 import frc.robot.autonomous.paths.TrajectoryWaypoints
+import frc.robot.autonomous.routines.SixPCFromTrenchRoutine
 import frc.robot.subsystems.drive.DriveSubsystem
 import org.ghrobotics.lib.mathematics.twodim.geometry.mirror
 import org.ghrobotics.lib.utils.Source
@@ -55,7 +56,9 @@ object Autonomous {
     }
 
     private val possibleAutos = hashMapOf(
+            Mode.SIX_PC_TRENCH to SixPCFromTrenchRoutine()(),
             Mode.DO_NOTHING to InstantCommand()
+
     )
     private var selectedAutonomous: CommandBase = InstantCommand()
     private val doNothing = selectedAutonomous
@@ -76,5 +79,5 @@ object Autonomous {
         RIGHT(TrajectoryWaypoints.kSideStart.mirror()),
     }
 
-    enum class Mode { BOTTOM_ROCKET_2, FORWARD_CARGO_SHIP, SIDE_CARGO_SHIP, HYBRID, DO_NOTHING }
+    enum class Mode { SIX_PC_TRENCH, DO_NOTHING }
 }
