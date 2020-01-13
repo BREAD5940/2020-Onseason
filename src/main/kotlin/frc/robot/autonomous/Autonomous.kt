@@ -7,6 +7,7 @@ import frc.robot.Network
 import frc.robot.Robot
 import frc.robot.autonomous.paths.TrajectoryWaypoints
 import frc.robot.autonomous.routines.EightPCFromShieldGeneratorRoutine
+import frc.robot.autonomous.routines.EightPCFromTrenchRoutine
 import frc.robot.autonomous.routines.SixPCFromTrenchRoutine
 import frc.robot.autonomous.routines.ThreePCRoutine
 import frc.robot.subsystems.drive.DriveSubsystem
@@ -58,6 +59,7 @@ object Autonomous {
     }
 
     private val possibleAutos = hashMapOf(
+            Mode.EIGHT_PC_TRENCH to EightPCFromTrenchRoutine()(),
             Mode.THREE_PC to ThreePCRoutine()(),
             Mode.EIGHT_PC_SHIELD_GENERATOR to EightPCFromShieldGeneratorRoutine()(),
             Mode.SIX_PC_TRENCH to SixPCFromTrenchRoutine()(),
@@ -83,5 +85,5 @@ object Autonomous {
         RIGHT(TrajectoryWaypoints.kSideStart.mirror()),
     }
 
-    enum class Mode { THREE_PC, SIX_PC_TRENCH, EIGHT_PC_SHIELD_GENERATOR, DO_NOTHING }
+    enum class Mode { THREE_PC, SIX_PC_TRENCH, EIGHT_PC_TRENCH, EIGHT_PC_SHIELD_GENERATOR, DO_NOTHING }
 }

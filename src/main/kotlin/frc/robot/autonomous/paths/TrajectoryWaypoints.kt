@@ -30,10 +30,6 @@ object TrajectoryWaypoints {
             0.degrees.toRotation2d()
     )
 
-//    val kSideStartReversed = Pose2d(kSideStart.translation, 180.degrees)
-
-    // Starting on Level 1 HAB in the center.
-//    val kCenterStart = Pose2d(kStartX, 13.5.feet)
 
     data class Waypoint(
         val trueLocation: Pose2d,
@@ -43,8 +39,6 @@ object TrajectoryWaypoints {
     ) {
 
         val trueAndTransform = trueLocation + transform
-
-        fun transformBy(other: Pose2d) = Waypoint(trueLocation, transform.transformBy(other), translationalOffset, rotationalOffset)
 
         val position = Pose2d(
                 trueAndTransform.translation + translationalOffset,
