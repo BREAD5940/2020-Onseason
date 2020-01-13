@@ -50,8 +50,8 @@ class VisionDriveCommand : FalconCommand(DriveSubsystem) {
         println("current $currentPose error $error")
         val targetVelocity = translationController.calculate(error.norm, 0.020).coerceIn(translationOutputRange)
         error = error.normalize()
-        val vX = -error.x * targetVelocity
-        val vY = -error.y * targetVelocity
+        val vX = -error.x * turn
+        val vY = 0.0 // Don't go forward
 
         DriveSubsystem.periodicIO.output = SwerveDriveOutput.Velocity(
                 ChassisSpeeds.fromFieldRelativeSpeeds(vX, vY, turn, DriveSubsystem.robotPosition.rotation)
