@@ -25,7 +25,6 @@ import org.ghrobotics.lib.mathematics.twodim.geometry.y_u
 import org.ghrobotics.lib.mathematics.twodim.trajectory.mirror
 import org.ghrobotics.lib.mathematics.units.*
 import org.ghrobotics.lib.mathematics.units.derived.degrees
-import org.ghrobotics.lib.mathematics.units.derived.radians
 import org.ghrobotics.lib.mathematics.units.derived.velocity
 import org.ghrobotics.lib.mathematics.units.derived.volts
 import org.ghrobotics.lib.mathematics.units.nativeunit.SlopeNativeUnitModel
@@ -43,23 +42,23 @@ object DriveSubsystem : FalconSubsystem() {
             1.inches,
             (1.0 / (4.0 * Math.PI / 60.0 * 15.0 / 20.0 * 24.0 / 38.0 * 18.0)).nativeUnits)
 
-    val kAzumithMotorOutputRange = -0.5..0.5
+    private val kAzimuthMotorOutputRange = -0.5..0.5
 
-    val flModule = Mk2SwerveModule(2, 2, 142.degrees + (76+38).degrees, FalconMAX(
+    val flModule = Mk2SwerveModule(2, 1, 254.degrees, FalconMAX(
             CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzumithMotorOutputRange)
+            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
 
-    val frModule = Mk2SwerveModule(4, 1, (87+4).degrees, FalconMAX(
-            CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzumithMotorOutputRange)
+    val frModule = Mk2SwerveModule(5, 2, 273.degrees - 140.degrees, FalconMAX(
+            CANSparkMax(6, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
+            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
 
-    val blModule = Mk2SwerveModule(8, 0, 92.degrees - 25.degrees + 0.degrees, FalconMAX(
+    val blModule = Mk2SwerveModule(3, 3, 90.degrees, FalconMAX(
+            CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
+            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
+
+    val brModule = Mk2SwerveModule(8, 0, -21.degrees, FalconMAX(
             CANSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzumithMotorOutputRange)
-
-    val brModule = Mk2SwerveModule(6, 3, 42.degrees, FalconMAX(
-            CANSparkMax(5, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzumithMotorOutputRange)
+            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
 
     val modules = listOf(flModule, frModule, blModule, brModule)
 

@@ -23,7 +23,7 @@ class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
     override fun execute() {
         var forward = -xSource() / 1.0
         var strafe = -zSource() / 1.0
-        var rotation = -rotSource() * 2.0 / 1.0
+        var rotation = -rotSource() * 1.0 / 1.0
 
         forward *= forward.absoluteValue
         strafe *= strafe.absoluteValue
