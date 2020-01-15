@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator
 import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint
 import frc.robot.autonomous.paths.TrajectoryWaypoints
-import frc.robot.subsystems.drive.DriveSubsystem.kinematics
+import frc.robot.Constants.kinematics
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
 import org.ghrobotics.lib.mathematics.units.*
 import org.ghrobotics.lib.mathematics.units.derived.* // ktlint-disable no-wildcard-imports
