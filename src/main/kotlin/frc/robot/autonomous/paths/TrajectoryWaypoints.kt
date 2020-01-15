@@ -23,7 +23,7 @@ object TrajectoryWaypoints {
     // Determine the starting X value for the robot.
     private val kStartX = 9.371.feet // TODO: make this not bad/hardcoded.
     private val kStartY = 25.709.feet
-    // Starting on Level 1 HAB on the right side.
+    // Starting at a place
     val kSideStart = Pose2d(
             kStartX.inMeters(),
             kStartY.inMeters(),

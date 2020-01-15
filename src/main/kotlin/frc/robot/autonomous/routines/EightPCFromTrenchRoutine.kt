@@ -28,6 +28,7 @@ class EightPCFromTrenchRoutine : AutoRoutine() {
                     path2,
                     path2.states.last().poseMeters.rotation
             )
+
             // shoot five balls here
         }
     // probably more stuff here but idk
