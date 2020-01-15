@@ -33,7 +33,8 @@ class TrajectoryDisplayTest {
                 "Robot Chart.", "X", "Y", collection, PlotOrientation.HORIZONTAL, false, false, false
         )
         chart.plot.backgroundImage = ImageIO.read(File("src/test/resources/chart-background.png"))
-        chart.xyPlot.domainAxis.upperBound =
+        chart.xyPlot.domainAxis.upperBound = 5.0 // TODO: make this work
+        chart.xyPlot.rangeAxis.upperBound = 11.0
         var panel = ChartPanel(chart)
         val frame = JFrame()
         frame.add(panel)
