@@ -10,21 +10,17 @@ object VisionSubsystem : FalconSubsystem() {
     ///////////////////////
     // Reading Functions //
     ///////////////////////
-    fun getHasTargets(): Boolean {
-        return (table.getEntry("tv").getNumber(0)) == 1
-    }
+    val hasTargets
+        get() = table.getEntry("tv").getNumber(0)
 
-    fun getXOffset(): Double {
-        return table.getEntry("tx").getDouble(0.0)
-    }  // horizontal offset from -27 to +27 degrees
+    val xOffset
+        get() = table.getEntry("tx").getDouble(0.0)
 
-    fun getYOffset(): Double {
-        return table.getEntry("ty").getDouble(0.0)
-    } // vertical offset from -20.5 to +20.5 degrees
+    val yOffset
+        get() = table.getEntry("ty").getDouble(0.0)
 
-    fun getTargetArea(): Double? {
-        return table.getEntry("ta").getDouble(0.0)
-    } // 0% to 100% of image
+    val targetArea
+        get() =  table.getEntry("ta").getDouble(0.0)
 
 
     ///////////////////////
