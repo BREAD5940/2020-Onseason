@@ -1,6 +1,7 @@
 package frc.robot.subsystems
 
 import frc.robot.auto.paths.TrajectoryFactory
+import org.ghrobotics.lib.mathematics.units.kFeetToMeter
 import org.jfree.chart.ChartFactory
 import org.jfree.chart.ChartPanel
 import org.jfree.chart.JFreeChart
@@ -24,17 +25,19 @@ class TrajectoryDisplayTest {
         var seriesX = XYSeries("x")
 
         TrajectoryFactory.grabThreeAndShoot.states.forEach {
-            seriesX.add(XYDataItem(  it.poseMeters.translation.x, it.poseMeters.translation.y))
+            seriesX.add(XYDataItem(  it.poseMeters.translation.x / kFeetToMeter, it.poseMeters.translation.y / kFeetToMeter))
         }
         // Now X and Y arrays are built! Yay!
         val collection = XYSeriesCollection()
         collection.addSeries(seriesX)
-        val chart  = ChartFactory.createXYLineChart(
-                "Robot Chart.", "X", "Y", collection, PlotOrientation.HORIZONTAL, false, false, false
+        val chart  = ChartFactory.createScatterPlot(
+                "Robot Chart.", "X", "Y", collection, PlotOrientation.VERTICAL, false, false, false
         )
+        chart.xyPlot.domainAxis.isAutoRange = false
+        chart.xyPlot.rangeAxis.isAutoRange = false
+        chart.xyPlot.rangeAxis.setRange(0.0,27.0)
+        chart.xyPlot.domainAxis.setRange(0.0,54.0)
         chart.plot.backgroundImage = ImageIO.read(File("src/test/resources/chart-background.png"))
-        chart.xyPlot.domainAxis.upperBound = 5.0 // TODO: make this work
-        chart.xyPlot.rangeAxis.upperBound = 11.0
         var panel = ChartPanel(chart)
         val frame = JFrame()
         frame.add(panel)
