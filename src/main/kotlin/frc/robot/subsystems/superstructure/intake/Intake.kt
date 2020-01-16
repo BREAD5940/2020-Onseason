@@ -6,12 +6,15 @@ import org.ghrobotics.lib.motors.rev.FalconMAX
 
 object Intake{
                         //TODO Gib real ports and stuff
-    val intakeMotor = FalconMAX(4, CANSparkMaxLowLevel.MotorType.kBrushless, NativeUnitRotationModel(4096.nativeUnits * 9.333))
+    val intakeMotor = FalconMAX(30, CANSparkMaxLowLevel.MotorType.kBrushless, NativeUnitRotationModel(4096.nativeUnits * 9.333))
     //only yeets intake
-     fun intakeYeet(){
-         intakeMotor.setDutyCycle(1.0)
+     fun intakeYeet(intakeSpeed: Double){
+         intakeMotor.setDutyCycle(intakeSpeed)
      }
+
+
     fun intakeOutput(){
-        intakeMotor.setDutyCycle(-1.0)
+        intakeMotor.setDutyCycle(-0.8)
     }
+
 }

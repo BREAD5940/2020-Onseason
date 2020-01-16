@@ -32,7 +32,7 @@ object Robot : FalconTimedRobot() {
     }
 
     override fun teleopPeriodic() {
-        intake.setDutyCycle(.30)
+        //intake.setDutyCycle(.30)
     }
 
     override fun robotPeriodic() {
