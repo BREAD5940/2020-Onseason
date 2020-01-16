@@ -14,6 +14,7 @@ import org.jfree.data.xy.XYDataItem
 import org.jfree.data.xy.XYSeries
 import org.jfree.data.xy.XYSeriesCollection
 import org.junit.Test
+import java.awt.Stroke
 import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.JFrame
@@ -35,6 +36,8 @@ class TrajectoryDisplayTest {
         )
         chart.xyPlot.domainAxis.isAutoRange = false
         chart.xyPlot.rangeAxis.isAutoRange = false
+        chart.xyPlot.isDomainGridlinesVisible = false
+        chart.xyPlot.isRangeGridlinesVisible = false
         chart.xyPlot.rangeAxis.setRange(0.0,27.0)
         chart.xyPlot.domainAxis.setRange(0.0,54.0)
         chart.plot.backgroundImage = ImageIO.read(File("src/test/resources/chart-background.png"))
