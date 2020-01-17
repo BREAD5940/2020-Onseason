@@ -29,8 +29,9 @@ object Controls {
 //        button(kX).changeOn(InstantCommand(Runnable { println("Hullo!") }))
 
         val rezeroCommand = { DriveSubsystem.setGyroAngle(180.degrees.toRotation2d()) }
-        button(kBack).changeOn(rezeroCommand)
+        button(kBumperLeft).changeOn(rezeroCommand)
         button(kStart).changeOn(rezeroCommand)
+        button(kBumperRight).changeOn {SlurpBoi.slurp(0.5)}.changeOff {SlurpBoi.slurpMotor.setNeutral()}
 
 //        val trajectory = FalconTrajectoryGenerator.generateTrajectory(
 //                listOf(Pose2d(10.feet, 10.feet, 0.degrees), Pose2d( 20.feet, 5.feet, 0.degrees)),
