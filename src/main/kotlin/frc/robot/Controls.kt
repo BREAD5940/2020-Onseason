@@ -12,6 +12,7 @@ import frc.robot.subsystems.drive.SwerveCharacterizationCommand
 import frc.robot.subsystems.drive.SwerveTrajectoryFollowerCommand
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.superstructure.intake.Intake
+import frc.robot.subsystems.superstructure.shooter.Shooter
 import kotlinx.coroutines.Runnable
 import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
@@ -40,6 +41,8 @@ object Controls {
         //button(kX).whileOn {Intake.intakeMotor.setNeutral()}
         button(kBumperRight).changeOn {Intake.intakeOutput()}.changeOff {Intake.intakeMotor.setNeutral()}
         triggerAxisButton(GenericHID.Hand.kRight, threshold = 0.01).changeOn { Intake.intakeYeet(genericHID.getTriggerAxis(GenericHID.Hand.kRight)) }
+
+        button(kB).changeOn { Shooter.shoot() }.changeOff { Shooter.setNeutral() }
 
 //
 //        button(kA).changeOn(SwerveCharacterizationCommand())

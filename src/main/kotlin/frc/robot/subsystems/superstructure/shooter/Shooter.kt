@@ -2,37 +2,42 @@ package frc.robot.subsystems.superstructure.shooter
 
 import com.revrobotics.CANSparkMaxLowLevel
 import org.ghrobotics.lib.commands.FalconSubsystem
-import org.ghrobotics.lib.mathematics.units.SIUnit
-import org.ghrobotics.lib.mathematics.units.derived.Radian
-import org.ghrobotics.lib.mathematics.units.derived.Velocity
 import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnitRotationModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.rev.FalconMAX
 
 object Shooter : FalconSubsystem() {
-                            //TODO Put in the right values
-    val shooterMaster = FalconMAX(1, CANSparkMaxLowLevel.MotorType.kBrushless, NativeUnitRotationModel(4096.nativeUnits * 9.33))
-    val shooterSlave = FalconMAX(2, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel)
-init{
-    shooterMaster.canSparkMax.restoreFactoryDefaults()
-    shooterSlave.canSparkMax.restoreFactoryDefaults()
-    //PID gains, adjust them
-        shooterMaster.canSparkMax.pidController.setP(1.0, 1)
-        shooterMaster.canSparkMax.pidController.setD(1.0, 1)
-        shooterSlave.canSparkMax.pidController.setP(1.0, 1)
-        shooterSlave.canSparkMax.pidController.setD(1.0, 1)
-    shooterSlave.follow(shooterMaster)
-        //TODO Check if inverted
-    shooterSlave.outputInverted = false
-    shooterMaster.outputInverted = false
-}
+    //TODO Put in the right values
+    private val topShooterMotor = FalconMAX(20, CANSparkMaxLowLevel.MotorType.kBrushless, NativeUnitRotationModel(4096.nativeUnits * 9.33))
+    private val lowerShooterMotor = FalconMAX(21, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel)
 
-    fun shootShooter(setSpeed : SIUnit<Velocity<Radian>>) {
-        shooterMaster.setVelocity(setSpeed)
+    init{
+        topShooterMotor.canSparkMax.restoreFactoryDefaults()
+        lowerShooterMotor.canSparkMax.restoreFactoryDefaults()
+        //PID gains, adjust them
+        topShooterMotor.canSparkMax.pidController.setP(0.0, 0)
+        topShooterMotor.canSparkMax.pidController.setD(0.0, 0)
+        lowerShooterMotor.canSparkMax.pidController.setP(0.0, 0)
+        lowerShooterMotor.canSparkMax.pidController.setD(0.0, 0)
+//    shooterSlave.follow(shooterMaster)
+        //TODO Check if inverted
+        lowerShooterMotor.outputInverted = false
+        topShooterMotor.outputInverted = false
+
+        topShooterMotor.canSparkMax.setOpenLoopRampRate(2.0)
+        lowerShooterMotor.canSparkMax.setOpenLoopRampRate(2.0)
     }
 
+    fun shoot() {
+        topShooterMotor.setDutyCycle(0.7)
+        lowerShooterMotor.setDutyCycle(-1.0)
+    }
 
+    override fun setNeutral() {
+        topShooterMotor.setNeutral()
+        lowerShooterMotor.setNeutral()
+    }
 
 
 
