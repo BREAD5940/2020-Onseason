@@ -6,7 +6,6 @@ import frc.robot.subsystems.vision.VisionSubsystem
 import org.ghrobotics.lib.commands.FalconCommand
 
 val trajectory = TrajectoryFactory.grabThreeAndShoot
-val newPos = DriveSubsystem.robotPosition
 fun getEndHeading(): Rotation2d {
     if(DriveSubsystem.robotPosition.minus(trajectory.states.last().poseMeters).translation.x < 1.0 && DriveSubsystem.robotPosition.minus(trajectory.states.last().poseMeters).translation.y < 1.0) {
         return DriveSubsystem.robotPosition.rotation.plus( Rotation2d.fromDegrees(VisionSubsystem.xOffset))
