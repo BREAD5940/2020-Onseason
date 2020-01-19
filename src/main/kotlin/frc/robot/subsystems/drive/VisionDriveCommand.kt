@@ -42,8 +42,8 @@ class VisionDriveCommand : FalconCommand(DriveSubsystem) {
         val currentPose = DriveSubsystem.robotPosition
         // no clue if this works but here goes
         var error: Translation2d
-        if (VisionSubsystem.getHasTargets()) {
-            error = Translation2d(VisionSubsystem.getXOffset(), VisionSubsystem.getYOffset())
+        if (VisionSubsystem.hasTargets) {
+            error = Translation2d(VisionSubsystem.xOffset, VisionSubsystem.yOffset)
         } else {
             error = Translation2d(0.0, 0.0) // TODO: do something here for when the limelight can't see
         }
