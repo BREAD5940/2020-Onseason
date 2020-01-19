@@ -13,6 +13,7 @@ import frc.robot.subsystems.drive.SwerveTrajectoryFollowerCommand
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.superstructure.intake.Intake
 import frc.robot.subsystems.superstructure.shooter.Shooter
+import frc.robot.subsystems.superstructure.slurp.SlurpBoi
 import kotlinx.coroutines.Runnable
 import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
@@ -28,10 +29,10 @@ object Controls {
     val driverFalconXbox = driverControllerLowLevel.mapControls {
 //        button(kX).changeOn(InstantCommand(Runnable { println("Hullo!") }))
 
-        val rezeroCommand = { DriveSubsystem.setGyroAngle(180.degrees.toRotation2d()) }
+        val rezeroCommand = { DriveSubsystem.setGyroAngle(0.degrees.toRotation2d()) }
         button(kBumperLeft).changeOn(rezeroCommand)
         button(kStart).changeOn(rezeroCommand)
-        button(kBumperRight).changeOn {SlurpBoi.slurp(0.5)}.changeOff {SlurpBoi.slurpMotor.setNeutral()}
+        button(kBumperRight).changeOn { SlurpBoi.slurp(0.5)}.changeOff {SlurpBoi.slurpMotor.setNeutral()}
 
 //        val trajectory = FalconTrajectoryGenerator.generateTrajectory(
 //                listOf(Pose2d(10.feet, 10.feet, 0.degrees), Pose2d( 20.feet, 5.feet, 0.degrees)),
@@ -43,13 +44,14 @@ object Controls {
         button(kBumperRight).changeOn {Intake.intakeOutput()}.changeOff {Intake.intakeMotor.setNeutral()}
         triggerAxisButton(GenericHID.Hand.kRight, threshold = 0.01).changeOn { Intake.intakeYeet(genericHID.getTriggerAxis(GenericHID.Hand.kRight)) }
 
-        button(kB).changeOn { Shooter.shoot() }.changeOff { Shooter.setNeutral() }
+        //button(kB).changeOn { Shooter.shoot() }.changeOff { Shooter.setNeutral() }
 
 //
 //        button(kA).changeOn(SwerveCharacterizationCommand())
         button(kB).changeOn {
             DriveSubsystem.odometry.resetPosition(Pose2d(1.5.feet, 23.feet, 0.degree), DriveSubsystem.gyro())
         }
+        button(kA).whileOn { Shooter.shoot(1.0)}.whileOff { Shooter.setNeutral()}
     }
 
 //    val operatorWPIJoystick = XboxController(1)
@@ -63,4 +65,4 @@ object Controls {
     }
 }
 
-private fun Command.andThen(block: () -> Unit) = sequential { +this@andThen ; +InstantCommand(Runnable(block)) }
+//private fun Command.andThen(block: () -> Unit) = sequential { +this@andThen ; +InstantCommand(Runnable(block)) }

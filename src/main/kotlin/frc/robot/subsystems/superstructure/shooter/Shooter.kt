@@ -29,9 +29,9 @@ object Shooter : FalconSubsystem() {
         lowerShooterMotor.canSparkMax.setOpenLoopRampRate(2.0)
     }
 
-    fun shoot() {
-        topShooterMotor.setDutyCycle(0.7)
-        lowerShooterMotor.setDutyCycle(-1.0)
+    fun shoot(speed: Double) {
+        topShooterMotor.setDutyCycle(speed)
+        lowerShooterMotor.setDutyCycle(speed)
     }
 
     override fun setNeutral() {
