@@ -1,7 +1,9 @@
 package frc.robot.subsystems.drive
 
 import edu.wpi.first.wpilibj.controller.PIDController
+import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
+import edu.wpi.first.wpilibj.geometry.Transform2d
 import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import frc.robot.Constants
@@ -40,22 +42,24 @@ class VisionDriveCommand : FalconCommand(DriveSubsystem) {
     override fun execute() {
         val turn = rotationController.calculate(DriveSubsystem.robotPosition.rotation.radians).coerceIn(rotationRange)
         val currentPose = DriveSubsystem.robotPosition
-        // no clue if this works but here goes
-        var error: Translation2d
+        val targetPose: Pose2d
         if (VisionSubsystem.hasTargets) {
-            error = Translation2d(VisionSubsystem.xOffset, VisionSubsystem.yOffset)
+            targetPose = currentPose.transformBy(Transform2d(Translation2d(0.0, VisionSubsystem.yOffset), Rotation2d(VisionSubsystem.xOffset)))
         } else {
-            error = Translation2d(0.0, 0.0) // TODO: do something here for when the limelight can't see
+            targetPose = currentPose
         }
-        println("current $currentPose error $error")
+        // no clue if this works but here goes
+
+        var error = (targetPose.translation - currentPose.translation)
         val targetVelocity = translationController.calculate(error.norm, 0.020).coerceIn(translationOutputRange)
         error = error.normalize()
-        val vX = -error.x * turn
-        val vY = 0.0 // Don't go forward
+        val vX = -error.x * targetVelocity
+        val vY = -error.y * targetVelocity
 
         DriveSubsystem.periodicIO.output = SwerveDriveOutput.Velocity(
                 ChassisSpeeds.fromFieldRelativeSpeeds(vX, vY, turn, DriveSubsystem.robotPosition.rotation)
         )
+
         println("Target Heading ${targetHeading.degrees} turn $turn")
     }
 
