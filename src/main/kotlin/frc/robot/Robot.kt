@@ -35,7 +35,7 @@ object Robot : FalconTimedRobot() {
 
     override fun teleopPeriodic() {
         //intake.setDutyCycle(.30)
-        Shooter.shoot()
+//        Shooter.shoot()
     }
 
     override fun robotPeriodic() {
