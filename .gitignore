@@ -29,3 +29,4 @@ bin/*
 .idea/*
 *.DS_Store
 .gradle/*
+imgui.ini

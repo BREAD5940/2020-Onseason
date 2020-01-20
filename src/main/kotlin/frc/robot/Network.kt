@@ -23,11 +23,6 @@ object Network {
     private val autoLayout = mainShuffleboardDisplay.getLayout("Autonomous", BuiltInLayouts.kList)
             .withPosition(0, 0)
             .withSize(2, 2)
-
-//    private val visionLayout = mainShuffleboardDisplay.getLayout("Vision", BuiltInLayouts.kGrid)
-//            .withSize(3, 3)
-//            .withPosition(0, 2)
-
     private val driveSubsystemLayout = mainShuffleboardDisplay.getLayout("Drive", BuiltInLayouts.kGrid)
             .withPosition(4, 0)
             .withSize(4, 3)
@@ -49,7 +44,7 @@ object Network {
 
     init {
 
-        startingPositionChooser.setDefaultOption(Autonomous.StartingPositions.CENTER.name, Autonomous.StartingPositions.CENTER)
+        startingPositionChooser.setDefaultOption(Autonomous.StartingPositions.LEFT.name, Autonomous.StartingPositions.LEFT)
         autoModeChooser.setDefaultOption(Autonomous.Mode.DO_NOTHING.name, Autonomous.Mode.DO_NOTHING)
 
         // Put choosers on dashboard
