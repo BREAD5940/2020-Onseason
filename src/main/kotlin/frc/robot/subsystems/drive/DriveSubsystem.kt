@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.SPI
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
+import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry
@@ -161,7 +162,7 @@ object DriveSubsystem : FalconSubsystem() {
             }
             is SwerveDriveOutput.Percent -> {
                 // normalize wheel speeds
-                val states = kinematics.toSwerveModuleStates(output.chassisSpeed)
+                val states = kinematics.toSwerveModuleStates(output.chassisSpeed, output.centerOfRotation)
                 SwerveDriveKinematics.normalizeWheelSpeeds(states, 1.0)
 
                 flModule.output = Mk2SwerveModule.Output.Percent(
@@ -245,7 +246,8 @@ sealed class SwerveDriveOutput {
     object Nothing : SwerveDriveOutput()
 
     class Percent(
-        val chassisSpeed: ChassisSpeeds
+        val chassisSpeed: ChassisSpeeds,
+        val centerOfRotation: Translation2d = Translation2d()
     ) : SwerveDriveOutput()
 
     class Velocity(

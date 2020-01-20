@@ -35,22 +35,13 @@ class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
 
         if (forward.absoluteValue < 0.01 && strafe.absoluteValue < 0.01 && rotation.absoluteValue < 0.01) {
             DriveSubsystem.periodicIO.output = SwerveDriveOutput.Nothing
-//            val states = DriveSubsystem.currentSwerveModuleStates
-//            DriveSubsystem.periodicIO.output = SwerveDriveOutput.KinematicsVelocity()
             return
         }
 
         // calculate wheel speeds from field oriented chassis state
         val speeds = ChassisSpeeds.fromFieldRelativeSpeeds(translation.x, translation.y, rotation, DriveSubsystem.periodicIO.pose.rotation)
-//        val moduleStates = DriveSubsystem.kinematics.toSwerveModuleStates(speeds, centerOfRotation)
 
-        // Normalize wheel speeds
-        // Max duty cycle is 1.0
-//        SwerveDriveKinematics.normalizeWheelSpeeds(speeds,1.0)
-
-//        println("speeds ${speeds.toString2()}")
-
-        DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds)
+        DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds, Translation2d(5.0, -5.0))
 
         this.lastSpeed = speeds
     }
