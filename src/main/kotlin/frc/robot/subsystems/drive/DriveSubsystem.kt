@@ -103,10 +103,10 @@ object DriveSubsystem : FalconSubsystem() {
         }
 
         // write CSV header
-        logger.log("flAngle, flAzimuthVolt, flDriveAngle, flDriveVolt, " +
-                "frAngle, frAzimuthVolt, frDriveAngle, frDriveVolt, " +
-                "blAngle, blAzimuthVolt, blDriveAngle, blDriveVolt, " +
-                "brAngle, brAzimuthVolt, brDriveAngle, brDriveVolt,")
+        logger.log("flAngle, flAzimuthVolt, flDriveVelocity, flDriveVolt, " +
+                "frAngle, frAzimuthVolt, frDriveVelocity, frDriveVolt, " +
+                "blAngle, blAzimuthVolt, blDriveVelocity, blDriveVolt, " +
+                "brAngle, brAzimuthVolt, brDriveVelocity, brDriveVolt,")
 
     }
 
@@ -159,8 +159,8 @@ object DriveSubsystem : FalconSubsystem() {
         periodicIO.pose = odometry.update(gyro(), states[0], states[1], states[2], states[3])
         periodicIO.speed = kinematics.toChassisSpeeds(states[0], states[1], states[2], states[3])
 
-        val output = modules.map { "${it.azimuthAngle}, ${it.azimuthMotor.voltageOutput}, ${it.driveMotor.voltageOutput}" }
-        logger.log(output)
+        val output = modules.map { "${it.azimuthAngle().degrees}, ${it.azimuthMotor.voltageOutput.value}, ${it.driveMotor.encoder.velocity.value}, ${it.driveMotor.voltageOutput.value}" }
+        logger.log("${output[0]}, ${output[1]}, ${output[2]}, ${output[3]}")
 
     }
 

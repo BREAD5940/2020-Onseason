@@ -30,8 +30,6 @@ class Logger(name: String) {
                 throw RuntimeException("oof")
             }
 
-            println(file)
-
             writer = PrintWriter(FileWriter(file, true))
         } catch (e: Exception) {
             e.printStackTrace()
@@ -41,14 +39,9 @@ class Logger(name: String) {
 
     fun log(vararg args: Any) {
         val string = args.joinToString()
-        val writer_ = writer
 
-        // I know don't refactor it or it breaks
-        @Suppress("IfThenToSafeAccess")
-        if(writer_ != null) {
-            writer_.write(string + "\n")
-            writer_.flush()
-        }
+        writer?.write(string + "\n")
+        writer?.flush()
     }
 
 }
