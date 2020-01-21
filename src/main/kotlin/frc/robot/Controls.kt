@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.InstantCommand
-import frc.robot.Robot.intake
 import frc.robot.auto.paths.TrajectoryFactory.testTrajectory
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.SwerveCharacterizationCommand
