@@ -46,7 +46,7 @@ class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
             speeds = ChassisSpeeds(translation.x, translation.y, rotation)
         }
 
-        DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds, Translation2d(5.0, -5.0))
+        DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds, Translation2d(.50, 0.0))
 
         this.lastSpeed = speeds
     }
