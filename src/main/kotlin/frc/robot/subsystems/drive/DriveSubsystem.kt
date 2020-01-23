@@ -36,6 +36,7 @@ import org.ghrobotics.lib.utils.launchFrequency
 
 object DriveSubsystem : FalconSubsystem() {
 
+
     val gyro = AHRS(SPI.Port.kMXP).asSource()
 
     private val driveNativeUnitModel = SlopeNativeUnitModel(
@@ -43,6 +44,10 @@ object DriveSubsystem : FalconSubsystem() {
             (1.0 / (4.0 * Math.PI / 60.0 * 15.0 / 20.0 * 24.0 / 38.0 * 18.0)).nativeUnits)
 
     private val kAzimuthMotorOutputRange = -0.5..0.5
+
+   // DriveSubsystem.periodicIO.output = SwerveDriveOutput.KineamaticsVoltage(......blah.....)
+
+
 
     val brModule = Mk2SwerveModule(2, 1, 254.degrees, FalconMAX(
             CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
@@ -61,6 +66,7 @@ object DriveSubsystem : FalconSubsystem() {
             0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
 
     val modules = listOf(flModule, frModule, blModule, brModule)
+
 
     val feedForward = SimpleMotorFeedforward(
             (0.15),
@@ -288,5 +294,7 @@ sealed class SwerveDriveOutput {
                         states[3].speedMetersPerSecond.meters.velocity, states[3].angle,
                         feedForward.calculate(states[3].speedMetersPerSecond).volts)
         )
+      //  DriveSubsystem.periodicIO.output = SwerveDriveOutput.KineamaticsVoltage(......blah.....)
+
     }
 }
