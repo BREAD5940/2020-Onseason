@@ -11,7 +11,7 @@ object VisionSubsystem : FalconSubsystem() {
     // Reading Functions //
     ///////////////////////
     val hasTargets
-        get() = table.getEntry("tv").getNumber(0)
+        get() = (table.getEntry("tv").getNumber(0) == 1)
 
     val xOffset
         get() = table.getEntry("tx").getDouble(0.0)

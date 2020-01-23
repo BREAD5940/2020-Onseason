@@ -34,7 +34,7 @@ open class Mk2SwerveModule(
         set(value) { periodicIO.desiredOutput = value }
 
 //    private val azimuthMotor = Spark(azimuthPWMPort)
-    val azimuthMotor = FalconMAX(azimuthPWMPort, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel)
+    public val azimuthMotor = FalconMAX(azimuthPWMPort, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel)
     private val azimuthController =
             PIDController(angleKp, angleKi, angleKd).apply {
                 //                setInputRange(0.0, 2.0 * PI)

@@ -17,6 +17,7 @@ import frc.robot.subsystems.drive.DriveSubsystem.feedForward
 import frc.robot.subsystems.drive.swerve.Mk2SwerveModule
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import lib.Logger
 import lib.mirror
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.debug.FalconDashboard
@@ -44,8 +45,6 @@ object DriveSubsystem : FalconSubsystem() {
             (1.0 / (4.0 * Math.PI / 60.0 * 15.0 / 20.0 * 24.0 / 38.0 * 18.0)).nativeUnits)
 
     private val kAzimuthMotorOutputRange = -0.5..0.5
-
-   // DriveSubsystem.periodicIO.output = SwerveDriveOutput.KineamaticsVoltage(......blah.....)
 
 
 
@@ -104,6 +103,10 @@ object DriveSubsystem : FalconSubsystem() {
             updateState()
             useState()
         }
+
+        // write CSV header
+
+
     }
 
     fun setGyroAngle(angle: Rotation2d) {
@@ -154,6 +157,10 @@ object DriveSubsystem : FalconSubsystem() {
 
         periodicIO.pose = odometry.update(gyro(), states[0], states[1], states[2], states[3])
         periodicIO.speed = kinematics.toChassisSpeeds(states[0], states[1], states[2], states[3])
+
+        val output = modules.map { "${it.azimuthAngle().degrees}, ${it.azimuthMotor.voltageOutput.value}, ${it.driveMotor.encoder.velocity.value}, ${it.driveMotor.voltageOutput.value}" }
+       // logger.log("${output[0]}, ${output[1]}, ${output[2]}, ${output[3]}")
+
     }
 
     fun useState() {
