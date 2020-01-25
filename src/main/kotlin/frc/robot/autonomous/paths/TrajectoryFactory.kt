@@ -73,20 +73,18 @@ object TrajectoryFactory {
                 getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
     }
-
-
-    val grabThreeAndShootTrench by lazy {
+    val grabThreeFromTrench by lazy {
         generateTrajectory(
                 false,
                 listOf(
                         Pose2d(12.16.feet, 21.393.feet, 180.degrees).asWaypoint(),
-                        Pose2d(20.69.feet, 24.612.feet, 0.degrees).asWaypoint(),
-                        Pose2d(23.812.feet, 24.658.feet, 0.degrees).asWaypoint(),
-                        Pose2d(27.11.feet, 24.704.feet, 0.degrees).asWaypoint(),
+                        Pose2d(20.866.feet, 24.791.feet, 0.degrees).asWaypoint(),
+                        Pose2d(23.958.feet, 24.597.feet, 0.degrees).asWaypoint(),
+                        Pose2d(26.956.feet, 24.658.feet, 0.degrees).asWaypoint(),
                         Pose2d(12.16.feet, 21.393.feet, 0.degrees).asWaypoint(),
-                        Pose2d(19.217.feet, 23.556.feet, -140.degrees).asWaypoint()
+                        Pose2d(19.305.feet, 23.74.feet, 200.degrees).asWaypoint()
                 ),
-                getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
+                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
     }
 
