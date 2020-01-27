@@ -52,19 +52,22 @@ class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
     }
 
     /** Determine which wheels to use to evade. */
-    private fun determineEvasionWheels(driveVector: Translation2d, robotPosition: Pose2d) {
-        val here: Translation2d = driveVector.rotateBy(robotPosition.rotation.inverse())
-        val wheels = Constants.kModulePositions
-        clockwiseCenter = wheels[0]
-        counterClockwiseCenter = wheels[wheels.size - 1]
-        for (i in 0 until wheels.size - 1) {
-            val cw = wheels[i]
-            val ccw = wheels[i + 1]
-            if (here.isWithinAngle(cw, ccw)) {
-                clockwiseCenter = ccw
-                counterClockwiseCenter = cw
-            }
-        }
+    private fun determineEvasionWheels(robotRelativeDriveVectpr: Translation2d) {
+//        val here: Translation2d = driveVector.rotateBy(robotPosition.rotation.inverse())
+//        val wheels = Constants.kModulePositions
+//        clockwiseCenter = wheels[0]
+//        counterClockwiseCenter = wheels[wheels.size - 1]
+//        for (i in 0 until wheels.size - 1) {
+//            val cw = wheels[i]
+//            val ccw = wheels[i + 1]
+//            if (here.isWithinAngle(cw, ccw)) {
+//                clockwiseCenter = ccw
+//                counterClockwiseCenter = cw
+//            }
+//        }
+
+
+
     }
 
     companion object {

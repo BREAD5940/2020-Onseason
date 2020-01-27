@@ -34,6 +34,7 @@ import org.ghrobotics.lib.motors.rev.FalconMAX
 import org.ghrobotics.lib.utils.BooleanSource
 import org.ghrobotics.lib.utils.asSource
 import org.ghrobotics.lib.utils.launchFrequency
+import kotlin.math.absoluteValue
 
 object DriveSubsystem : FalconSubsystem() {
 
@@ -88,7 +89,7 @@ object DriveSubsystem : FalconSubsystem() {
         modules.forEach { it.driveMotor.brakeMode = true }
         modules.forEach { it.azimuthMotor.brakeMode = false }
 
-        // set the default comand
+        // set the default command
         defaultCommand = HolomonicDriveCommand()
 //        defaultCommand = RunCommand(Runnable{
 //            periodicIO.output = SwerveDriveOutput.Nothing //SwerveDriveOutput.Percent(ChassisSpeeds(0.0, 0.0, 0.0))
@@ -148,6 +149,11 @@ object DriveSubsystem : FalconSubsystem() {
                 blModule.state)
 
         periodicIO.pose = odometry.update(gyro(), states[0], states[1], states[2], states[3])
+
+        if(periodicIO.pose.translation.x.absoluteValue > 1000) {
+            println("ohno")
+        }
+
         periodicIO.speed = kinematics.toChassisSpeeds(states[0], states[1], states[2], states[3])
     }
 
