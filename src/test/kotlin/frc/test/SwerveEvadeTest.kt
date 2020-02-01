@@ -3,13 +3,9 @@ package frc.test
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics
-//import frc.test.Constants.baseLen
-//import frc.test.Constants.baseWidth
-//import frc.test.Constants.kModulePositions
 import frc.test.SwerveEvadeTest.Constants.baseLen
 import frc.test.SwerveEvadeTest.Constants.baseWidth
 import frc.test.SwerveEvadeTest.Constants.kModulePositions
-import jdk.nashorn.internal.runtime.JSType.toDouble
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.feet
@@ -49,13 +45,17 @@ class SwerveEvadeTest {
 
     @Test
     fun testForwardEvasion() {
-        println("hi")
 
         val positions = kModulePositions
 
         val driveVector = Translation2d(1.0, 0.0)
 
         val wheels = findEvasionWheels(driveVector, positions)
+
+        // expected, actual
+        val text = "hi! we chose ${positions.map { it.x }}"
+        println(text)
+        assertEquals(positions[0], wheels[0]) // ex. expected front left, we choose $wheels[0]
 
 
     }
@@ -65,7 +65,7 @@ class SwerveEvadeTest {
         var modulesssss = ArrayList<Rotation2d>()
         // find angle of wheels (fl, fr, br, bl)
         for (i in kModulePositions) {
-            var convertTranslationToRotation = Rotation2d(toDouble(baseWidth.value), toDouble(baseLen.value))
+            var convertTranslationToRotation = Rotation2d(baseWidth.value, baseLen.value)
             modulesssss.add(convertTranslationToRotation)
         }
         // find angle of drive vector using Rotation2d(x, y)
@@ -74,23 +74,26 @@ class SwerveEvadeTest {
         //    between fr and br,
         //    between fl and bl
         //    otherwise must be bl and br
-        val cw = Translation2d()
-        val ccw = Translation2d()
-        val driveVectorAngle = Rotation2d(toDouble(driveVector.x), toDouble(driveVector.y))
+        // return the Clockwise rotation center and CCW rotation center as a listOf(cw, ccw)
+        var cw = Translation2d()
+        var ccw = Translation2d()
+        val driveVectorAngle = Rotation2d(driveVector.x, driveVector.y)
         if (driveVectorAngle.degrees <= modulesssss[0].degrees && driveVectorAngle.degrees > modulesssss[1].degrees) { //fl & fr
-            val cw = kModulePositions[0]
-            val ccw = kModulePositions[1]
+            cw = kModulePositions[0]
+            ccw = kModulePositions[1]
+            return listOf<Translation2d>(cw, ccw)
         } else if (driveVectorAngle.degrees <= modulesssss[1].degrees && driveVectorAngle.degrees > modulesssss[2].degrees) { //fr & br
             val cw = kModulePositions[1]
             val ccw = kModulePositions[2]
+            return listOf<Translation2d>(cw, ccw)
         } else if (driveVectorAngle.degrees <= modulesssss[2].degrees && driveVectorAngle.degrees > modulesssss[3].degrees) { //br & bl
             val cw = kModulePositions[2]
             val ccw = kModulePositions[3]
+            return listOf<Translation2d>(cw, ccw)
         } else { //bl & fl
             val cw = kModulePositions[3]
             val ccw = kModulePositions[0]
+            return listOf<Translation2d>(cw, ccw)
         }
-        // return the Clockwise rotation center and CCW rotation center as a listOf(cw, ccw)
-        return listOf<Translation2d>(cw, ccw)
     }
 }
