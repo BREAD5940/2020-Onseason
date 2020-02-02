@@ -3,8 +3,6 @@ package frc.test
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics
-import frc.test.SwerveEvadeTest.Constants.baseLen
-import frc.test.SwerveEvadeTest.Constants.baseWidth
 import frc.test.SwerveEvadeTest.Constants.kModulePositions
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
 import org.ghrobotics.lib.mathematics.units.derived.degrees
@@ -13,9 +11,7 @@ import org.ghrobotics.lib.mathematics.units.inMeters
 import org.ghrobotics.lib.mathematics.units.inches
 import org.junit.Test
 import org.junit.Assert.*
-import java.lang.Math.atan2
 import java.util.ArrayList
-import java.util.Scanner
 
 
 class SwerveEvadeTest {
@@ -50,22 +46,22 @@ class SwerveEvadeTest {
 
         val driveVector = Translation2d(1.0, 0.0)
 
-        val wheels = findEvasionWheels(driveVector, positions)
+        val wheels = findEvasionWheels(driveVector)
 
         // expected, actual
-        val text = "hi! we chose ${positions.map { it.x }}"
-        println(text)
+//        val text = "hi! we chose ${positions.map { it.x }}"
+//        println(text)
         assertEquals(positions[0], wheels[0]) // ex. expected front left, we choose $wheels[0]
-
+        assertEquals(positions[1], wheels[1])
 
     }
 
-    private fun findEvasionWheels(driveVector: Translation2d, positions: List<Translation2d>): List<Translation2d> {
+    private fun findEvasionWheels(driveVector: Translation2d): List<Translation2d> {
         // put code here to...
         var modulesssss = ArrayList<Rotation2d>()
         // find angle of wheels (fl, fr, br, bl)
         for (i in kModulePositions) {
-            var convertTranslationToRotation = Rotation2d(baseWidth.value, baseLen.value)
+            var convertTranslationToRotation = Rotation2d(i.x, i.y)
             modulesssss.add(convertTranslationToRotation)
         }
         // find angle of drive vector using Rotation2d(x, y)
@@ -83,16 +79,16 @@ class SwerveEvadeTest {
             ccw = kModulePositions[1]
             return listOf<Translation2d>(cw, ccw)
         } else if (driveVectorAngle.degrees <= modulesssss[1].degrees && driveVectorAngle.degrees > modulesssss[2].degrees) { //fr & br
-            val cw = kModulePositions[1]
-            val ccw = kModulePositions[2]
+            cw = kModulePositions[1]
+            ccw = kModulePositions[2]
             return listOf<Translation2d>(cw, ccw)
         } else if (driveVectorAngle.degrees <= modulesssss[2].degrees && driveVectorAngle.degrees > modulesssss[3].degrees) { //br & bl
-            val cw = kModulePositions[2]
-            val ccw = kModulePositions[3]
+            cw = kModulePositions[2]
+            ccw = kModulePositions[3]
             return listOf<Translation2d>(cw, ccw)
         } else { //bl & fl
-            val cw = kModulePositions[3]
-            val ccw = kModulePositions[0]
+            cw = kModulePositions[3]
+            ccw = kModulePositions[0]
             return listOf<Translation2d>(cw, ccw)
         }
     }
