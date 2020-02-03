@@ -7,11 +7,13 @@ package frc.robot
 
 import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import frc.robot.autonomous.Autonomous
 import frc.robot.subsystems.drive.DriveSubsystem
 import org.ghrobotics.lib.wrappers.networktables.enumSendableChooser
+import org.ghrobotics.lib.wrappers.networktables.tab
 
 object Network {
 
@@ -43,6 +45,13 @@ object Network {
     private val blAzimuthError = driveSubsystemLayout.add("BL Error (deg)", 0.0).entry
 
     init {
+
+        val table = tab("croissant") {
+            textView("robot X", { DriveSubsystem.robotPosition.translation.x }) {
+                position(0, 0)
+                size(1, 1)
+            }.withWidget(BuiltInWidgets.kGraph)
+        }
 
         startingPositionChooser.setDefaultOption(Autonomous.StartingPositions.LEFT.name, Autonomous.StartingPositions.LEFT)
         autoModeChooser.setDefaultOption(Autonomous.Mode.DO_NOTHING.name, Autonomous.Mode.DO_NOTHING)

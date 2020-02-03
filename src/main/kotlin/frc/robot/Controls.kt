@@ -26,41 +26,15 @@ object Controls {
 
     val driverControllerLowLevel = XboxController(0)
     val driverFalconXbox = driverControllerLowLevel.mapControls {
-//        button(kX).changeOn(InstantCommand(Runnable { println("Hullo!") }))
 
         val rezeroCommand = { DriveSubsystem.setGyroAngle(0.degrees.toRotation2d()) }
         button(kBumperLeft).changeOn(rezeroCommand)
         button(kStart).changeOn(rezeroCommand)
-        button(kBumperRight).changeOn { SlurpBoi.slurp(0.5)}.changeOff {SlurpBoi.slurpMotor.setNeutral()}
 
-//        val trajectory = FalconTrajectoryGenerator.generateTrajectory(
-//                listOf(Pose2d(10.feet, 10.feet, 0.degrees), Pose2d( 20.feet, 5.feet, 0.degrees)),
-//                FalconTrajectoryConfig(4.feet.velocity, 5.feet.acceleration)
-//        )
-        val command = SwerveTrajectoryFollowerCommand(testTrajectory, 180.degrees.toRotation2d())
-        //button(kB).whileOn {Intake.intakeOutput()}
-        //button(kX).whileOn {Intake.intakeMotor.setNeutral()}
-        button(kBumperRight).changeOn {Intake.intakeOutput()}.changeOff {Intake.intakeMotor.setNeutral()}
-        triggerAxisButton(GenericHID.Hand.kRight, threshold = 0.01).changeOn { Intake.intakeYeet(genericHID.getTriggerAxis(GenericHID.Hand.kRight)) }
-
-        //button(kB).changeOn { Shooter.shoot() }.changeOff { Shooter.setNeutral() }
-
-//
-//        button(kA).changeOn(SwerveCharacterizationCommand())
-        button(kB).changeOn {
-            DriveSubsystem.odometry.resetPosition(Pose2d(1.5.feet, 23.feet, 0.degree), DriveSubsystem.gyro())
-        }
-        button(kA).whileOn { Shooter.shoot(1.0)}.whileOff { Shooter.setNeutral()}
     }
-
-//    val operatorWPIJoystick = XboxController(1)
-//    val operatorFalconXbox = operatorWPIJoystick.mapControls {
-//    }
 
     fun update() {
         driverFalconXbox.update()
-//        operatorFalconHID.update()
-//        operatorFalconXbox.update()
     }
 }
 

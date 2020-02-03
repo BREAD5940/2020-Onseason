@@ -17,7 +17,7 @@ import frc.robot.subsystems.drive.DriveSubsystem.feedForward
 import frc.robot.subsystems.drive.swerve.Mk2SwerveModule
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
-import lib.Logger
+import lib.asSparkMax
 import lib.mirror
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.debug.FalconDashboard
@@ -85,7 +85,7 @@ object DriveSubsystem : FalconSubsystem() {
 
     override fun lateInit() {
 
-        flModule.driveMotor.canSparkMax.inverted = false
+        flModule.driveMotor.asSparkMax()?.canSparkMax?.inverted = false
         frModule.driveMotor.canSparkMax.inverted = true
         blModule.driveMotor.canSparkMax.inverted = false
         brModule.driveMotor.canSparkMax.inverted = true
