@@ -1,6 +1,6 @@
 package frc.robot.subsystems.intake
 import com.revrobotics.CANSparkMaxLowLevel
-import edu.wpi.first.wpilibj.XboxController
+import edu.wpi.first.wpilibj.GenericHID
 import frc.robot.Controls
 import frc.robot.Ports.intakeMotorId
 import frc.robot.Ports.intakeSolenoid
@@ -37,5 +37,8 @@ object IntakeSubsystem : FalconSubsystem() {
     }
 
     // Operator joystick memes
-    val speedSource by lazy { Controls.operatorFalconXbox.getRawAxis(XboxController.Axis.kRightTrigger.value) }
+    val speedSource by lazy {
+        { Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kRight) -
+                Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft) }
+    }
 }

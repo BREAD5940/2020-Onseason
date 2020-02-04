@@ -25,7 +25,7 @@ object Controls {
         }
     }
 
-    private val operatorXbox = XboxController(0)
+    val operatorXbox = XboxController(1)
     val operatorFalconXbox = driverWpiXbox.mapControls {
         state({ !isClimbing }) {
             button(kBumperLeft).changeOn { IntakeSubsystem.wantsExtended = false }
