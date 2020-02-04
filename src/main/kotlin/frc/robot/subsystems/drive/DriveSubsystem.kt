@@ -131,7 +131,7 @@ object DriveSubsystem : FalconSubsystem() {
                     if (mirrored) endHeading.mirror() else endHeading)
 
     fun followTrajectory(trajectory: Trajectory, endHeading: Source<Rotation2d>) =
-            SwerveTrajectoryFollowerCommand({trajectory}, endHeading)
+            SwerveTrajectoryFollowerCommand({ trajectory }, endHeading)
 
     fun followTrajectory(trajectory: Trajectory, endHeading: Rotation2d, mirrored: BooleanSource) =
             SwerveTrajectoryFollowerCommand(trajectory, endHeading, mirrored)

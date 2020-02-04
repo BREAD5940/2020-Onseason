@@ -1,9 +1,12 @@
 package frc.robot.subsystems.intake
 import com.revrobotics.CANSparkMaxLowLevel
+import edu.wpi.first.wpilibj.XboxController
+import frc.robot.Controls
 import frc.robot.Ports.intakeMotorId
 import frc.robot.Ports.intakeSolenoid
 import frc.robot.Ports.kPcmId
 import kotlin.properties.Delegates
+import lib.runCommand
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.mathematics.units.amps
 import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
@@ -28,4 +31,11 @@ object IntakeSubsystem : FalconSubsystem() {
 
     var wantsExtended by Delegates.observable(true, { _, _, nowWantsExtended ->
         solenoid.state = if (nowWantsExtended) FalconSolenoid.State.Forward else FalconSolenoid.State.Reverse })
+
+    override fun lateInit() {
+        defaultCommand = runCommand { setSpeed(speedSource()) }
+    }
+
+    // Operator joystick memes
+    val speedSource by lazy { Controls.operatorFalconXbox.getRawAxis(XboxController.Axis.kRightTrigger.value) }
 }
