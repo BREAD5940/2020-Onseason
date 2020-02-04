@@ -89,7 +89,6 @@ open class Mk2SwerveModule(
         azimuthMotor.setDutyCycle(nextAzimuthOutput)
 //        driveMotor.setDutyCycle(0.2)
 
-
         periodicIO.lastError = azimuthController.positionError.radians.toRotation2d()
         periodicIO.lastAzimuthOutput = nextAzimuthOutput
 

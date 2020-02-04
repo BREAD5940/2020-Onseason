@@ -1,15 +1,15 @@
 package frc.robot.subsystems.vision
 
-import edu.wpi.first.networktables.NetworkTableEntry
+import edu.wpi.first.networktables.NetworkTable
 import edu.wpi.first.networktables.NetworkTableInstance
 import org.ghrobotics.lib.commands.FalconSubsystem
 
 object VisionSubsystem : FalconSubsystem() {
-    val table = NetworkTableInstance.getDefault().getTable("limelight")
+    private val table: NetworkTable = NetworkTableInstance.getDefault().getTable("limelight")
 
-    ///////////////////////
+    // /////////////////////
     // Reading Functions //
-    ///////////////////////
+    // /////////////////////
     val hasTargets
         get() = (table.getEntry("tv").getNumber(0) == 1)
 
@@ -20,12 +20,11 @@ object VisionSubsystem : FalconSubsystem() {
         get() = table.getEntry("ty").getDouble(0.0)
 
     val targetArea
-        get() =  table.getEntry("ta").getDouble(0.0)
+        get() = table.getEntry("ta").getDouble(0.0)
 
-
-    ///////////////////////
+    // /////////////////////
     // Writing Functions //
-    ///////////////////////
+    // /////////////////////
 
     // LED functions
     fun setLEDOff() {
@@ -50,12 +49,10 @@ object VisionSubsystem : FalconSubsystem() {
     }
 
     fun setPipeline(pipeline: Int) {
-        if (pipeline >= 0 && pipeline <= 9) { // in range
+        if (pipeline in 0..9) { // in range
             table.getEntry("pipeline").setValue(pipeline)
         } else {
             return
         }
     }
-
-
 }

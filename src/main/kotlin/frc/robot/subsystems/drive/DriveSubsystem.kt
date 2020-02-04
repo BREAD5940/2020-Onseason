@@ -37,7 +37,6 @@ import org.ghrobotics.lib.utils.launchFrequency
 
 object DriveSubsystem : FalconSubsystem() {
 
-
     val gyro = AHRS(SPI.Port.kMXP).asSource()
 
     private val driveNativeUnitModel = SlopeNativeUnitModel(
@@ -45,8 +44,6 @@ object DriveSubsystem : FalconSubsystem() {
             (1.0 / (4.0 * Math.PI / 60.0 * 15.0 / 20.0 * 24.0 / 38.0 * 18.0)).nativeUnits)
 
     private val kAzimuthMotorOutputRange = -0.5..0.5
-
-
 
     val brModule = Mk2SwerveModule(2, 1, 254.degrees, FalconMAX(
             CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
@@ -65,7 +62,6 @@ object DriveSubsystem : FalconSubsystem() {
             0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
 
     val modules = listOf(flModule, frModule, blModule, brModule)
-
 
     val feedForward = SimpleMotorFeedforward(
             (0.15),
@@ -105,8 +101,6 @@ object DriveSubsystem : FalconSubsystem() {
         }
 
         // write CSV header
-
-
     }
 
     fun setGyroAngle(angle: Rotation2d) {
@@ -159,8 +153,7 @@ object DriveSubsystem : FalconSubsystem() {
         periodicIO.speed = kinematics.toChassisSpeeds(states[0], states[1], states[2], states[3])
 
         val output = modules.map { "${it.azimuthAngle().degrees}, ${it.azimuthMotor.voltageOutput.value}, ${it.driveMotor.encoder.velocity.value}, ${it.driveMotor.voltageOutput.value}" }
-       // logger.log("${output[0]}, ${output[1]}, ${output[2]}, ${output[3]}")
-
+        // logger.log("${output[0]}, ${output[1]}, ${output[2]}, ${output[3]}")
     }
 
     fun useState() {
@@ -301,7 +294,6 @@ sealed class SwerveDriveOutput {
                         states[3].speedMetersPerSecond.meters.velocity, states[3].angle,
                         feedForward.calculate(states[3].speedMetersPerSecond).volts)
         )
-      //  DriveSubsystem.periodicIO.output = SwerveDriveOutput.KineamaticsVoltage(......blah.....)
-
+        //  DriveSubsystem.periodicIO.output = SwerveDriveOutput.KineamaticsVoltage(......blah.....)
     }
 }

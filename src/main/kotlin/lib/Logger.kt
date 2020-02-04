@@ -18,14 +18,14 @@ class Logger(name: String) {
             val logFileName = "log-$name-" +
                     "${DateTimeFormatter.ofPattern("yyyy-MM-dd_HH;mm;ss").format(LocalDateTime.now())}.txt"
 
-            val logRoot = if(RobotBase.isReal()) "/home/lvuser/"
+            val logRoot = if (RobotBase.isReal()) "/home/lvuser/"
             else File(System.getProperty("user.dir"), "log").absolutePath
 
             val file = File(Paths.get(logRoot, logFileName).toUri())
             file.parentFile.mkdirs()
             file.createNewFile()
 
-            if(!file.exists()) {
+            if (!file.exists()) {
                 println("file still doesn't exist!")
                 throw RuntimeException("oof")
             }
@@ -43,5 +43,4 @@ class Logger(name: String) {
         writer?.write(string + "\n")
         writer?.flush()
     }
-
 }

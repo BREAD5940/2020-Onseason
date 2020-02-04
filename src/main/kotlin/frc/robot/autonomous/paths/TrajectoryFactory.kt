@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator
 import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint
-import frc.robot.autonomous.paths.TrajectoryWaypoints
 import frc.robot.Constants.kinematics
+import frc.robot.autonomous.paths.TrajectoryWaypoints
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
 import org.ghrobotics.lib.mathematics.units.*
 import org.ghrobotics.lib.mathematics.units.derived.* // ktlint-disable no-wildcard-imports
@@ -36,7 +36,6 @@ object TrajectoryFactory {
             ),
             getConstraints(kMaxVelocity), 5.feet.velocity, kMaxAcceleration
     )
-
 
     fun Pose2d.withRotation(rotation: SIUnit<Radian>) = Pose2d(this.translation, rotation.toRotation2d())
     fun TrajectoryWaypoints.Waypoint.withRotation(rotation: SIUnit<Radian>) = Pose2d(this.position.translation, rotation.toRotation2d()).asWaypoint()
@@ -75,7 +74,6 @@ object TrajectoryFactory {
                 getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
         )
     }
-
 
     val grabThreeAndShootTrench by lazy {
         generateTrajectory(
@@ -137,27 +135,26 @@ object TrajectoryFactory {
                 getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
         )
     }
-    
+
     /** Generation **/
 
     private fun getConstraints(
-            maxSpeedMetersPerSecond: SIUnit<Velocity<Meter>>
+        maxSpeedMetersPerSecond: SIUnit<Velocity<Meter>>
     ) = listOf(SwerveDriveKinematicsConstraint(kinematics, maxSpeedMetersPerSecond.value))
 
-
     fun generateTrajectory(
-            reversed: Boolean,
-            points: List<TrajectoryWaypoints.Waypoint>,
-            constraints: List<TrajectoryConstraint>,
-            maxVelocity: SIUnit<Velocity<Meter>>,
-            maxAcceleration: SIUnit<Acceleration<Meter>>,
-            endVelocity: SIUnit<Velocity<Meter>> = 0.inches.velocity
+        reversed: Boolean,
+        points: List<TrajectoryWaypoints.Waypoint>,
+        constraints: List<TrajectoryConstraint>,
+        maxVelocity: SIUnit<Velocity<Meter>>,
+        maxAcceleration: SIUnit<Acceleration<Meter>>,
+        endVelocity: SIUnit<Velocity<Meter>> = 0.inches.velocity
     ): Trajectory {
 
         val allConstraints = ArrayList<TrajectoryConstraint>()
 
         if (constraints.isNotEmpty()) allConstraints.addAll(constraints)
-        var config: TrajectoryConfig =  TrajectoryConfig(maxVelocity.value, maxAcceleration.value)
+        var config: TrajectoryConfig = TrajectoryConfig(maxVelocity.value, maxAcceleration.value)
         config.setEndVelocity(endVelocity.value)
         config.setReversed(reversed)
         config.addConstraints(allConstraints)

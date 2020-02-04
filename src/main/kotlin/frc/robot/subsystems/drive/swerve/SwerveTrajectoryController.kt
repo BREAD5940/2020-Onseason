@@ -1,6 +1,6 @@
 package frc.robot.subsystems.drive.swerve
 
-import  edu.wpi.first.wpilibj.controller.PIDController
+import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
@@ -12,7 +12,6 @@ import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.SwerveDriveOutput
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.inRadians
-import org.ghrobotics.lib.utils.safeRangeTo
 
 class SwerveTrajectoryController(
     private val kinematics: SwerveDriveKinematics,
@@ -30,10 +29,10 @@ class SwerveTrajectoryController(
     private val maxRotRange = (-45.degrees.inRadians()..45.degrees.inRadians())
 
     fun calculate(
-            time: Double,
-            desiredState: Trajectory.State,
-            targetHeading: Rotation2d,
-            currentPose: Pose2d
+        time: Double,
+        desiredState: Trajectory.State,
+        targetHeading: Rotation2d,
+        currentPose: Pose2d
     ): SwerveDriveOutput.TrajectoryTrackerOutput {
 
         // dt

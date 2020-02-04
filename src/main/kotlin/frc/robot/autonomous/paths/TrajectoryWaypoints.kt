@@ -3,9 +3,7 @@ package frc.robot.autonomous.paths
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Translation2d
-import frc.robot.Constants
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
-import org.ghrobotics.lib.mathematics.twodim.geometry.Rectangle2d
 import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
 import org.ghrobotics.lib.mathematics.units.* // ktlint-disable no-wildcard-imports
 import org.ghrobotics.lib.mathematics.units.derived.Radian
@@ -29,7 +27,6 @@ object TrajectoryWaypoints {
             kStartY.inMeters(),
             0.degrees.toRotation2d()
     )
-
 
     data class Waypoint(
         val trueLocation: Pose2d,

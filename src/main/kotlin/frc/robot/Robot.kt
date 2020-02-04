@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import frc.robot.autonomous.Autonomous
 import frc.robot.subsystems.drive.DriveSubsystem
-import frc.robot.subsystems.superstructure.shooter.Shooter
+import frc.robot.subsystems.shooter.FlywheelSubsystem
 import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
 import org.ghrobotics.lib.motors.rev.FalconMAX
 import org.ghrobotics.lib.wrappers.FalconTimedRobot
@@ -23,7 +23,7 @@ object Robot : FalconTimedRobot() {
 
         // + for subsystems
         +DriveSubsystem
-        +Shooter
+        +FlywheelSubsystem
 
         SmartDashboard.putData(CommandScheduler.getInstance())
 
@@ -34,7 +34,7 @@ object Robot : FalconTimedRobot() {
     }
 
     override fun teleopPeriodic() {
-        //intake.setDutyCycle(.30)
+        // intake.setDutyCycle(.30)
 //        Shooter.shoot()
     }
 
