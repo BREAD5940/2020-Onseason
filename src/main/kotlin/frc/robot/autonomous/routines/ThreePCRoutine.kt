@@ -8,7 +8,7 @@ import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.Second
 
 class ThreePCRoutine : AutoRoutine() {
-    private val path1 = TrajectoryFactory.shootThreePC // three we have
+    private val path1 = TrajectoryFactory.grabThreeFromTrench // three we have
 
     override val duration: SIUnit<Second>
         get() = SIUnit<Second>(path1.totalTimeSeconds)

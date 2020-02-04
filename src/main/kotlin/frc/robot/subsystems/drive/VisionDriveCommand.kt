@@ -7,7 +7,7 @@ import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.mathematics.twodim.geometry.Rectangle2d
 import kotlin.math.absoluteValue
 
-val trajectory = TrajectoryFactory.testTrajectory
+val trajectory = TrajectoryFactory.testTrajectory2
 fun getEndHeading(): Rotation2d {
     if(DriveSubsystem.robotPosition.translation.getDistance(trajectory.states.last().poseMeters.translation) < 1.0) {
         return DriveSubsystem.robotPosition.rotation.plus( Rotation2d.fromDegrees(VisionSubsystem.xOffset))

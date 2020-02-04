@@ -8,8 +8,8 @@ import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.Second
 
 class SixPCFromTrenchRoutine : AutoRoutine() {
-    private val path1 = TrajectoryFactory.shootThreePC // three we have
-    private val path2 = TrajectoryFactory.grabThreeAndShoot // grab 3 from trench and drive to shooting position
+    private val path1 = TrajectoryFactory.shootThree // three we have
+    private val path2 = TrajectoryFactory.grabThreeFromTrench // grab 3 from trench and drive to shooting position
 
     override val duration: SIUnit<Second>
         get() = SIUnit<Second>(path1.totalTimeSeconds + path2.totalTimeSeconds)

@@ -18,7 +18,7 @@ class TrajectoryDisplayTest {
     fun main() {
         var seriesX = XYSeries("x")
 
-        TrajectoryFactory.grabThreeAndShootTrench.states.forEach {
+        TrajectoryFactory.grabThreeFromTrench.states.forEach {
             seriesX.add(XYDataItem(it.poseMeters.translation.x / kFeetToMeter, it.poseMeters.translation.y / kFeetToMeter))
         }
         // Now X and Y arrays are built! Yay!

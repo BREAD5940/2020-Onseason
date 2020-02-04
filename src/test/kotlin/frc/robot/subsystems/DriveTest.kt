@@ -15,7 +15,7 @@ class DriveTest {
         val out = kinematics.toSwerveModuleStates(ChassisSpeeds(0.0, 0.0, 3.14))
         println(out.map { "${it.angle.degrees}" })
 
-        val controller = LinearSystem.createElevatorSystem(DCMotor.getNEO(2), 3,
-                .1, 12.0)
+        val controller = LinearSystem.createElevatorSystem(DCMotor.getNEO(2), 3.0,
+                .1, 0.81, 12.0)
     }
 }
