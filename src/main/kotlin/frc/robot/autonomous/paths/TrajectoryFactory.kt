@@ -40,53 +40,50 @@ object TrajectoryFactory {
     fun Pose2d.withRotation(rotation: SIUnit<Radian>) = Pose2d(this.translation, rotation.toRotation2d())
     fun TrajectoryWaypoints.Waypoint.withRotation(rotation: SIUnit<Radian>) = Pose2d(this.position.translation, rotation.toRotation2d()).asWaypoint()
 
-    val testTrajectory by lazy {
+    val moveForward5Feet by lazy {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(1.5.feet, 23.feet, 0.degrees).asWaypoint(),
-                        Pose2d(6.5.feet, 21.feet, -90.degrees).asWaypoint(),
-                        Pose2d(1.5.feet, 19.feet, 180.degrees).asWaypoint()
+                        Pose2d(9.371.feet, 25.709.feet, 0.degrees).asWaypoint(),
+                        Pose2d(14.371.feet, 25.709.feet, 0.degrees).asWaypoint()
                 ),
-                getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
+                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
     }
-    val shootThreePC by lazy {
+    val shootThree by lazy {
         generateTrajectory(
                 false,
                 listOf(
                         Pose2d(9.371.feet, 25.709.feet, 0.degrees).asWaypoint(),
                         Pose2d(12.16.feet, 21.393.feet, 180.degrees).asWaypoint()
                 ),
-                getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
+                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
     }
-    val grabThreeAndShoot by lazy {
+    val grabTwoFromTrench by lazy {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(12.16.feet, 21.393.feet, 180.degrees).asWaypoint(),
-                        Pose2d(20.69.feet, 24.612.feet, 0.degrees).asWaypoint(),
-                        Pose2d(23.812.feet, 24.658.feet, 0.degrees).asWaypoint(),
-                        Pose2d(27.11.feet, 24.704.feet, 0.degrees).asWaypoint(),
+                        Pose2d(9.371.feet, 25.709.feet, 0.degrees).asWaypoint(),
+                        Pose2d(20.779.feet, 24.699.feet, 0.degrees).asWaypoint(),
+                        Pose2d(24.002.feet, 24.551.feet, 0.degrees).asWaypoint(),
                         Pose2d(12.16.feet, 21.393.feet, 180.degrees).asWaypoint()
                 ),
-                getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
+                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
     }
-
-    val grabThreeAndShootTrench by lazy {
+    val grabThreeFromTrench by lazy {
         generateTrajectory(
                 false,
                 listOf(
                         Pose2d(12.16.feet, 21.393.feet, 180.degrees).asWaypoint(),
-                        Pose2d(20.69.feet, 24.612.feet, 0.degrees).asWaypoint(),
-                        Pose2d(23.812.feet, 24.658.feet, 0.degrees).asWaypoint(),
-                        Pose2d(27.11.feet, 24.704.feet, 0.degrees).asWaypoint(),
+                        Pose2d(20.866.feet, 24.791.feet, 0.degrees).asWaypoint(),
+                        Pose2d(23.958.feet, 24.597.feet, 0.degrees).asWaypoint(),
+                        Pose2d(26.956.feet, 24.658.feet, 0.degrees).asWaypoint(),
                         Pose2d(12.16.feet, 21.393.feet, 0.degrees).asWaypoint(),
-                        Pose2d(19.217.feet, 23.556.feet, -140.degrees).asWaypoint()
+                        Pose2d(19.305.feet, 23.74.feet, 200.degrees).asWaypoint()
                 ),
-                getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
+                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
     }
 

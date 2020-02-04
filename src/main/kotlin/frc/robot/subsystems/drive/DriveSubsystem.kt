@@ -32,6 +32,7 @@ import org.ghrobotics.lib.mathematics.units.nativeunit.SlopeNativeUnitModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.rev.FalconMAX
 import org.ghrobotics.lib.utils.BooleanSource
+import org.ghrobotics.lib.utils.Source
 import org.ghrobotics.lib.utils.asSource
 import org.ghrobotics.lib.utils.launchFrequency
 
@@ -128,6 +129,9 @@ object DriveSubsystem : FalconSubsystem() {
     fun followTrajectory(trajectory: Trajectory, endHeading: Rotation2d, mirrored: Boolean = false) =
             SwerveTrajectoryFollowerCommand(if (mirrored) trajectory.mirror() else trajectory,
                     if (mirrored) endHeading.mirror() else endHeading)
+
+    fun followTrajectory(trajectory: Trajectory, endHeading: Source<Rotation2d>) =
+            SwerveTrajectoryFollowerCommand({trajectory}, endHeading)
 
     fun followTrajectory(trajectory: Trajectory, endHeading: Rotation2d, mirrored: BooleanSource) =
             SwerveTrajectoryFollowerCommand(trajectory, endHeading, mirrored)
