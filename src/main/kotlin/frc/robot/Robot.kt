@@ -26,10 +26,10 @@ object Robot : FalconTimedRobot() {
 
         // + for subsystems
         +DriveSubsystem
-        +FlywheelSubsystem
-        +BumperGrabberSubsystem
-        +IntakeSubsystem
-        +VisionSubsystem
+//        +FlywheelSubsystem
+//        +BumperGrabberSubsystem
+//        +IntakeSubsystem
+//        +VisionSubsystem
 
         SmartDashboard.putData(CommandScheduler.getInstance())
 

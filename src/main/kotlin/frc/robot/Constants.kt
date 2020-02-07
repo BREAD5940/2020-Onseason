@@ -11,8 +11,8 @@ import org.ghrobotics.lib.mathematics.units.inches
 object Constants {
 
     val kBumperThickness = 3.25.inches
-    val baseWidth = 29.inches // TODO check
-    val baseLen = 17.5.inches // TODO check
+    val baseWidth = 27.inches // TODO check
+    val baseLen = 32.5.inches // TODO check
 
     val kIntakeToCenter = Pose2d(baseLen / 2, 0.feet, 0.degrees)
 

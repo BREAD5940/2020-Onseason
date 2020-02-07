@@ -6,15 +6,15 @@ object Ports {
 
     // MOTORS
 
-    val driveAngleIds = listOf(1, 3, 5, 7)
-    val driveDriveIds = listOf(2, 4, 6, 8)
+    val driveAngleIds = listOf(2, 4, 6, 8)
+    val driveDriveIds = listOf(1,3, 5, 7)
 
-    const val intakeMotorId = 13
+    const val intakeMotorId = 12
     const val collectorAgitatorId = 12
 
-    val shooterGearboxIds = listOf(15, 14)
-    const val shooterHoodId = 16
-    const val bumperGrabberId = 11
+    val shooterGearboxIds = listOf(12, 12)
+    const val shooterHoodId = 12
+    const val bumperGrabberId = 12
 
     // SOLENOIDS
 
