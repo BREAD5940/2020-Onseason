@@ -2,12 +2,9 @@ package frc.robot
 
 object Ports {
 
-    const val kPcmId = 8
+    const val kPcmId = 9
 
     // MOTORS
-
-    val driveAngleIds = listOf(2, 4, 6, 8)
-    val driveDriveIds = listOf(1,3, 5, 7)
 
     const val intakeMotorId = 12
     const val collectorAgitatorId = 12
@@ -18,7 +15,7 @@ object Ports {
 
     // SOLENOIDS
 
-    val intakeSolenoid = listOf(0, 1)
+    val intakeSolenoid = listOf(2, 7, 7, 6) // outer and inner
 
     val shooterShifterSolenoid = listOf(4, 5)
     val armSolenoid = listOf(6, 7)

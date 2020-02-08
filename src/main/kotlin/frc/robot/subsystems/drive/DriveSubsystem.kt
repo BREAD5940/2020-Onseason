@@ -3,6 +3,7 @@ package frc.robot.subsystems.drive
 import com.kauailabs.navx.frc.AHRS
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel
+import edu.wpi.first.wpilibj.Compressor
 import edu.wpi.first.wpilibj.SPI
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.geometry.Pose2d
@@ -41,6 +42,8 @@ object DriveSubsystem : FalconSubsystem() {
 
     val navX = AHRS(SPI.Port.kMXP)
     val gyro = { Rotation2d.fromDegrees(navX.fusedHeading.toDouble()) }
+
+    val compressor = Compressor(8).apply { clearAllPCMStickyFaults() }
 
     private val driveNativeUnitModel = SlopeNativeUnitModel(
             1.inches,
@@ -111,6 +114,7 @@ object DriveSubsystem : FalconSubsystem() {
         //        "blAngle, blAzimuthVolt, blDriveAngle, blDriveVolt, " +
         //        "brAngle, brAzimuthVolt, brDriveAngle, brDriveVolt,")
 
+        compressor.start()
 
     }
 
