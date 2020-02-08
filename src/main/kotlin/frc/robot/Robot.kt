@@ -20,9 +20,9 @@ object Robot : FalconTimedRobot() {
 
         // + for subsystems
         +DriveSubsystem
-        //+FlywheelSubsystem
+            //+FlywheelSubsystem
         //+BumperGrabberSubsystem
-        //+IntakeSubsystem
+        +IntakeSubsystem
         //+VisionSubsystem
 
         SmartDashboard.putData(CommandScheduler.getInstance())
@@ -45,13 +45,10 @@ object Robot : FalconTimedRobot() {
     }
 
     override fun teleopInit() {
-        IntakeSubsystem.extendIntakeCommand().schedule()
-
     }
 
 
     override fun autonomousInit() {
-        IntakeSubsystem.retractIntakeCommand().schedule()
     }
 
 }

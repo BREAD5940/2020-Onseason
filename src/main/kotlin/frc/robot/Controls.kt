@@ -14,7 +14,7 @@ object Controls {
 
     var isClimbing = false
 
-    private val driverWpiXbox = XboxController(0)
+    val driverWpiXbox = XboxController(0)
     val driverFalconXbox = driverWpiXbox.mapControls {
         val reZeroCommand = { DriveSubsystem.setGyroAngle(0.degrees.toRotation2d()) }
         button(kBumperLeft).changeOn(reZeroCommand)

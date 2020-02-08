@@ -1,6 +1,7 @@
 package frc.robot.subsystems.intake
 import com.revrobotics.CANSparkMaxLowLevel
 import edu.wpi.first.wpilibj.GenericHID
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.WaitCommand
 import frc.robot.Controls
 import frc.robot.Ports.intakeMotorId
@@ -60,11 +61,14 @@ object IntakeSubsystem : FalconSubsystem() {
 
     override fun lateInit() {
         defaultCommand = runCommand({ setSpeed(speedSource()) }, this)
+
+        SmartDashboard.putData("retract intake", retractIntakeCommand())
+        SmartDashboard.putData("extend intake", extendIntakeCommand())
     }
 
     // Operator joystick memes
     val speedSource by lazy {
-        { Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kRight) -
-                Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft) }
+        { Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kRight) -
+                Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kLeft) }
     }
 }
