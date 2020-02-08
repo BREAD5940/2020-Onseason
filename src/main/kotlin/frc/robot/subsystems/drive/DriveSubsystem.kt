@@ -38,7 +38,8 @@ import org.ghrobotics.lib.utils.launchFrequency
 
 object DriveSubsystem : FalconSubsystem() {
 
-    val gyro = AHRS(SPI.Port.kMXP).asSource()
+    val navX = AHRS(SPI.Port.kMXP)
+    val gyro = { Rotation2d.fromDegrees(navX.fusedHeading.toDouble()) }
 
     private val driveNativeUnitModel = SlopeNativeUnitModel(
             1.inches,
@@ -46,16 +47,16 @@ object DriveSubsystem : FalconSubsystem() {
 
     private val kAzimuthMotorOutputRange = -0.5..0.5
 
-    val brModule = Mk2SwerveModule(2, 3, 254.degrees - 270.degrees, FalconMAX(
+    val brModule = Mk2SwerveModule(4, 3, 254.degrees - 254.degrees, FalconMAX(
+            CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
+            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
+
+    val blModule = Mk2SwerveModule(6, 2, 273.degrees - 164.degrees, FalconMAX(
+            CANSparkMax(5, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
+            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
+
+    val frModule = Mk2SwerveModule(2, 1, -18.degrees , FalconMAX(
             CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
-
-    val blModule = Mk2SwerveModule(5, 2, 273.degrees - 164.degrees, FalconMAX(
-            CANSparkMax(6, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
-
-    val frModule = Mk2SwerveModule(3, 1, 2.degrees , FalconMAX(
-            CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
             0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
 
     val flModule = Mk2SwerveModule(8, 0, -24.degrees, FalconMAX(
