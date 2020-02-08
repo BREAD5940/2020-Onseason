@@ -1,24 +1,17 @@
 
 package frc.robot
 
-import com.revrobotics.CANSparkMaxLowLevel
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import frc.robot.autonomous.Autonomous
-import frc.robot.subsystems.buddyClimb.BumperGrabberSubsystem
 import frc.robot.subsystems.drive.DriveSubsystem
-import frc.robot.subsystems.intake.IntakeSubsystem
-import frc.robot.subsystems.shooter.FlywheelSubsystem
-import frc.robot.subsystems.vision.VisionSubsystem
-import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
-import org.ghrobotics.lib.motors.rev.FalconMAX
 import org.ghrobotics.lib.wrappers.FalconTimedRobot
 
 object Robot : FalconTimedRobot() {
 
     val isEnabled get() = wrappedValue.isEnabled
 
-    val intake = FalconMAX(30, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel)
+    //val intake = FalconMAX(11, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel)
 
     override fun robotInit() {
         Network // at the top because s3ndable choosers need to be instantiated
@@ -26,10 +19,10 @@ object Robot : FalconTimedRobot() {
 
         // + for subsystems
         +DriveSubsystem
-//        +FlywheelSubsystem
-//        +BumperGrabberSubsystem
-//        +IntakeSubsystem
-//        +VisionSubsystem
+        //+FlywheelSubsystem
+        //+BumperGrabberSubsystem
+        //+IntakeSubsystem
+        //+VisionSubsystem
 
         SmartDashboard.putData(CommandScheduler.getInstance())
 

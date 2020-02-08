@@ -2,6 +2,7 @@ package lib
 
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.RunCommand
+import edu.wpi.first.wpilibj2.command.Subsystem
 import kotlin.math.PI
 import org.ghrobotics.lib.mathematics.units.SIKey
 import org.ghrobotics.lib.mathematics.units.SIUnit
@@ -15,7 +16,7 @@ fun <K : SIKey> FalconMotor<K>.asTalonSRX() = if (this is FalconSRX) this else n
 
 fun <K : SIKey> FalconMotor<K>.asSparkMax() = if (this is FalconMAX) this else null
 
-fun runCommand(block: () -> Unit) = RunCommand(Runnable(block))
+fun runCommand(block: () -> Unit, vararg reqs: Subsystem) = RunCommand(Runnable(block), *reqs)
 
 fun instantCommand(block: () -> Unit) = InstantCommand(Runnable(block))
 

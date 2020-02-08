@@ -1,14 +1,14 @@
 package frc.robot
 
-import edu.wpi.first.wpilibj.XboxController
-import frc.robot.subsystems.buddyClimb.GrabBumperCommand
-import frc.robot.subsystems.drive.DriveSubsystem
-import frc.robot.subsystems.intake.IntakeSubsystem
-import frc.robot.subsystems.shooter.FlywheelSubsystem
-import lib.revolutionsPerMinute
 // import frc.robot.subsystems.drive.VisionDriveCommand
-import org.ghrobotics.lib.mathematics.units.derived.*
-import org.ghrobotics.lib.wrappers.hid.* // ktlint-disable no-wildcard-imports
+import edu.wpi.first.wpilibj.XboxController
+import frc.robot.subsystems.drive.DriveSubsystem
+import org.ghrobotics.lib.mathematics.units.derived.degrees
+import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
+import org.ghrobotics.lib.wrappers.hid.button
+import org.ghrobotics.lib.wrappers.hid.kBumperLeft
+import org.ghrobotics.lib.wrappers.hid.kStart
+import org.ghrobotics.lib.wrappers.hid.mapControls
 
 object Controls {
 
@@ -28,15 +28,15 @@ object Controls {
     val operatorXbox = XboxController(1)
     val operatorFalconXbox = driverWpiXbox.mapControls {
         state({ !isClimbing }) {
-            button(kBumperLeft).changeOn { IntakeSubsystem.wantsExtended = false }
-            button(kBumperRight).changeOn { IntakeSubsystem.wantsExtended = true }
+            //button(kBumperLeft).changeOn { IntakeSubsystem.wantsExtended = false }
+            //button(kBumperRight).changeOn { IntakeSubsystem.wantsExtended = true }
 
-            button(kA).changeOn(FlywheelSubsystem.agitateAndShoot(3000.revolutionsPerMinute))
+            //button(kA).changeOn(FlywheelSubsystem.agitateAndShoot(3000.revolutionsPerMinute))
 
             state({ operatorXbox.getRawButton(11) }) {
                 button(12).changeOn {
                     isClimbing = true
-                    GrabBumperCommand().schedule()
+                    //GrabBumperCommand().schedule()
                 }
             }
             pov(180).changeOn { isClimbing = false }

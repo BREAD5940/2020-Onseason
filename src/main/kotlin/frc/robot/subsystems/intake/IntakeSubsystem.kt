@@ -16,7 +16,7 @@ import org.ghrobotics.lib.wrappers.FalconSolenoid
 
 object IntakeSubsystem : FalconSubsystem() {
 
-    private val solenoid = FalconDoubleSolenoid(intakeSolenoid[0], intakeSolenoid[1], kPcmId)
+    private val solenoid = FalconDoubleSolenoid(intakeSolenoid[0], intakeSolenoid[1], 9)
     private val intakeMotor = falconMAX(intakeMotorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         canSparkMax.apply {
             restoreFactoryDefaults()
@@ -33,7 +33,7 @@ object IntakeSubsystem : FalconSubsystem() {
         solenoid.state = if (nowWantsExtended) FalconSolenoid.State.Forward else FalconSolenoid.State.Reverse })
 
     override fun lateInit() {
-        defaultCommand = runCommand { setSpeed(speedSource()) }
+        defaultCommand = runCommand({ setSpeed(speedSource()) }, this)
     }
 
     // Operator joystick memes
