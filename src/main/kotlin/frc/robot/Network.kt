@@ -7,11 +7,13 @@ package frc.robot
 
 import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import frc.robot.autonomous.Autonomous
 import frc.robot.subsystems.drive.DriveSubsystem
 import org.ghrobotics.lib.wrappers.networktables.enumSendableChooser
+import org.ghrobotics.lib.wrappers.networktables.tab
 
 object Network {
 
@@ -23,11 +25,6 @@ object Network {
     private val autoLayout = mainShuffleboardDisplay.getLayout("Autonomous", BuiltInLayouts.kList)
             .withPosition(0, 0)
             .withSize(2, 2)
-
-//    private val visionLayout = mainShuffleboardDisplay.getLayout("Vision", BuiltInLayouts.kGrid)
-//            .withSize(3, 3)
-//            .withPosition(0, 2)
-
     private val driveSubsystemLayout = mainShuffleboardDisplay.getLayout("Drive", BuiltInLayouts.kGrid)
             .withPosition(4, 0)
             .withSize(4, 3)
@@ -49,7 +46,14 @@ object Network {
 
     init {
 
-        startingPositionChooser.setDefaultOption(Autonomous.StartingPositions.CENTER.name, Autonomous.StartingPositions.CENTER)
+        val table = tab("croissant") {
+            textView("robot X", { DriveSubsystem.robotPosition.translation.x }) {
+                position(0, 0)
+                size(1, 1)
+            }.withWidget(BuiltInWidgets.kGraph)
+        }
+
+        startingPositionChooser.setDefaultOption(Autonomous.StartingPositions.LEFT.name, Autonomous.StartingPositions.LEFT)
         autoModeChooser.setDefaultOption(Autonomous.Mode.DO_NOTHING.name, Autonomous.Mode.DO_NOTHING)
 
         // Put choosers on dashboard

@@ -13,9 +13,11 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState
 import edu.wpi.first.wpilibj.trajectory.Trajectory
 import frc.robot.Constants
+import frc.robot.subsystems.drive.DriveSubsystem.feedForward
 import frc.robot.subsystems.drive.swerve.Mk2SwerveModule
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import lib.asSparkMax
 import lib.Logger
 import lib.mirror
 import org.ghrobotics.lib.commands.FalconSubsystem
@@ -23,52 +25,52 @@ import org.ghrobotics.lib.debug.FalconDashboard
 import org.ghrobotics.lib.mathematics.twodim.geometry.x_u
 import org.ghrobotics.lib.mathematics.twodim.geometry.y_u
 import org.ghrobotics.lib.mathematics.twodim.trajectory.mirror
-import org.ghrobotics.lib.mathematics.units.Meter
-import org.ghrobotics.lib.mathematics.units.SIUnit
+import org.ghrobotics.lib.mathematics.units.*
 import org.ghrobotics.lib.mathematics.units.derived.degrees
-import org.ghrobotics.lib.mathematics.units.derived.radians
-import org.ghrobotics.lib.mathematics.units.inFeet
-import org.ghrobotics.lib.mathematics.units.inches
+import org.ghrobotics.lib.mathematics.units.derived.velocity
+import org.ghrobotics.lib.mathematics.units.derived.volts
 import org.ghrobotics.lib.mathematics.units.nativeunit.SlopeNativeUnitModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.rev.FalconMAX
 import org.ghrobotics.lib.utils.BooleanSource
+import org.ghrobotics.lib.utils.Source
 import org.ghrobotics.lib.utils.asSource
 import org.ghrobotics.lib.utils.launchFrequency
 
 object DriveSubsystem : FalconSubsystem() {
 
-    val gyro = AHRS(SPI.Port.kMXP).asSource()
+    val navX = AHRS(SPI.Port.kMXP)
+    val gyro = { Rotation2d.fromDegrees(navX.fusedHeading.toDouble()) }
 
     private val driveNativeUnitModel = SlopeNativeUnitModel(
             1.inches,
             (1.0 / (4.0 * Math.PI / 60.0 * 15.0 / 20.0 * 24.0 / 38.0 * 18.0)).nativeUnits)
 
-    val kAzumithMotorOutputRange = -0.5..0.5
+    private val kAzimuthMotorOutputRange = -0.5..0.5
 
     private val logger = Logger("DriveSubsystem")
-
-    val flModule = Mk2SwerveModule(2, 2, 142.degrees + 76.degrees, FalconMAX(
-            CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzumithMotorOutputRange)
-
-    val frModule = Mk2SwerveModule(4, 1, (87+4).degrees, FalconMAX(
+  
+    val brModule = Mk2SwerveModule(4, 3, 254.degrees - 254.degrees, FalconMAX(
             CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzumithMotorOutputRange)
+            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
 
-    val blModule = Mk2SwerveModule(8, 0, 92.degrees - 25.degrees + 0.degrees, FalconMAX(
-            CANSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzumithMotorOutputRange)
-
-    val brModule = Mk2SwerveModule(6, 3, 42.degrees, FalconMAX(
+    val blModule = Mk2SwerveModule(6, 2, 273.degrees - 164.degrees, FalconMAX(
             CANSparkMax(5, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzumithMotorOutputRange)
+            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
+
+    val frModule = Mk2SwerveModule(2, 1, -18.degrees , FalconMAX(
+            CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
+            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
+
+    val flModule = Mk2SwerveModule(8, 0, -24.degrees, FalconMAX(
+            CANSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
+            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
 
     val modules = listOf(flModule, frModule, blModule, brModule)
 
     val feedForward = SimpleMotorFeedforward(
-            (2.6),
-            (0.0),
+            (0.15),
+            (2.5),
             (0.0)
     ).apply {
 //        TODO("idk -- need to tune dis. Should be per module!")
@@ -84,11 +86,12 @@ object DriveSubsystem : FalconSubsystem() {
 
     override fun lateInit() {
 
-        flModule.driveMotor.canSparkMax.inverted = false
+        flModule.driveMotor.asSparkMax()?.canSparkMax?.inverted = false
         frModule.driveMotor.canSparkMax.inverted = true
         blModule.driveMotor.canSparkMax.inverted = false
         brModule.driveMotor.canSparkMax.inverted = true
         modules.forEach { it.driveMotor.brakeMode = true }
+        modules.forEach { it.azimuthMotor.brakeMode = false }
 
         // set the default comand
         defaultCommand = HolomonicDriveCommand()
@@ -103,10 +106,11 @@ object DriveSubsystem : FalconSubsystem() {
         }
 
         // write CSV header
-        logger.log("flAngle, flAzimuthVolt, flDriveAngle, flDriveVolt, " +
-                "frAngle, frAzimuthVolt, frDriveAngle, frDriveVolt, " +
-                "blAngle, blAzimuthVolt, blDriveAngle, blDriveVolt, " +
-                "brAngle, brAzimuthVolt, brDriveAngle, brDriveVolt,")
+        //logger.log("flAngle, flAzimuthVolt, flDriveAngle, flDriveVolt, " +
+        //        "frAngle, frAzimuthVolt, frDriveAngle, frDriveVolt, " +
+        //        "blAngle, blAzimuthVolt, blDriveAngle, blDriveVolt, " +
+        //        "brAngle, brAzimuthVolt, brDriveAngle, brDriveVolt,")
+
 
     }
 
@@ -136,6 +140,9 @@ object DriveSubsystem : FalconSubsystem() {
             SwerveTrajectoryFollowerCommand(if (mirrored) trajectory.mirror() else trajectory,
                     if (mirrored) endHeading.mirror() else endHeading)
 
+    fun followTrajectory(trajectory: Trajectory, endHeading: Source<Rotation2d>) =
+            SwerveTrajectoryFollowerCommand({ trajectory }, endHeading)
+
     fun followTrajectory(trajectory: Trajectory, endHeading: Rotation2d, mirrored: BooleanSource) =
             SwerveTrajectoryFollowerCommand(trajectory, endHeading, mirrored)
 
@@ -159,9 +166,8 @@ object DriveSubsystem : FalconSubsystem() {
         periodicIO.pose = odometry.update(gyro(), states[0], states[1], states[2], states[3])
         periodicIO.speed = kinematics.toChassisSpeeds(states[0], states[1], states[2], states[3])
 
-        val output = modules.map { "${it.azimuthAngle}, ${it.azimuthMotor.voltageOutput}, ${it.driveMotor.voltageOutput}" }
-        logger.log(output)
-
+        val output = modules.map { "${it.azimuthAngle().degrees}, ${it.azimuthMotor.voltageOutput.value}, ${it.driveMotor.encoder.velocity.value}, ${it.driveMotor.voltageOutput.value}" }
+        // logger.log("${output[0]}, ${output[1]}, ${output[2]}, ${output[3]}")
     }
 
     fun useState() {
@@ -177,6 +183,8 @@ object DriveSubsystem : FalconSubsystem() {
                 // normalize wheel speeds
                 val states = kinematics.toSwerveModuleStates(output.chassisSpeed)
                 SwerveDriveKinematics.normalizeWheelSpeeds(states, 1.0)
+
+                println("chassis speeds: ${output.chassisSpeed.omegaRadiansPerSecond} states:\n" + states.map { it.angle.degrees })
 
                 flModule.output = Mk2SwerveModule.Output.Percent(
                         states[0].speedMetersPerSecond,
@@ -286,5 +294,20 @@ sealed class SwerveDriveOutput {
                 Mk2SwerveModule.Output.Velocity(),
                 Mk2SwerveModule.Output.Velocity()
         )
+        constructor(states: Array<SwerveModuleState>) : this (
+                Mk2SwerveModule.Output.Velocity(
+                        states[0].speedMetersPerSecond.meters.velocity, states[0].angle,
+                        feedForward.calculate(states[0].speedMetersPerSecond).volts),
+                Mk2SwerveModule.Output.Velocity(
+                        states[1].speedMetersPerSecond.meters.velocity, states[1].angle,
+                        feedForward.calculate(states[1].speedMetersPerSecond).volts),
+                Mk2SwerveModule.Output.Velocity(
+                        states[2].speedMetersPerSecond.meters.velocity, states[2].angle,
+                        feedForward.calculate(states[2].speedMetersPerSecond).volts),
+                Mk2SwerveModule.Output.Velocity(
+                        states[3].speedMetersPerSecond.meters.velocity, states[3].angle,
+                        feedForward.calculate(states[3].speedMetersPerSecond).volts)
+        )
+        //  DriveSubsystem.periodicIO.output = SwerveDriveOutput.KineamaticsVoltage(......blah.....)
     }
 }

@@ -11,17 +11,19 @@ import org.ghrobotics.lib.mathematics.units.inches
 object Constants {
 
     val kBumperThickness = 3.25.inches
-    val baseWidth = 24.inches // TODO check
-    val baseLen = 24.inches // TODO check
+
+    // the center to center distance of the robot
+    val baseWidth = 20.75.inches // TODO check
+    val baseLen = 25.75.inches // TODO check
 
     val kIntakeToCenter = Pose2d(baseLen / 2, 0.feet, 0.degrees)
 
     /** Module speeds as (fl, fr, br, bl) */
     val kModulePositions = listOf(
-            Translation2d(baseWidth.inMeters() / 2.0, baseLen.inMeters() / 2.0),
-            Translation2d(baseWidth.inMeters() / 2.0, -baseLen.inMeters() / 2.0),
-            Translation2d(-baseWidth.inMeters() / 2.0, -baseLen.inMeters() / 2.0),
-            Translation2d(-baseWidth.inMeters() / 2.0, baseLen.inMeters() / 2.0)
+            Translation2d(baseLen.inMeters() / 2.0, baseWidth.inMeters() / 2.0), // fl
+            Translation2d(baseLen.inMeters() / 2.0, -baseWidth.inMeters() / 2.0), // fr
+            Translation2d(-baseLen.inMeters() / 2.0, -baseWidth.inMeters() / 2.0), // br
+            Translation2d(-baseLen.inMeters() / 2.0, baseWidth.inMeters() / 2.0) // bl
     )
 
     val kinematics = SwerveDriveKinematics(
