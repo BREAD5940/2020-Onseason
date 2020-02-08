@@ -3,12 +3,10 @@ package frc.robot
 // import frc.robot.subsystems.drive.VisionDriveCommand
 import edu.wpi.first.wpilibj.XboxController
 import frc.robot.subsystems.drive.DriveSubsystem
+import frc.robot.subsystems.intake.IntakeSubsystem
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
-import org.ghrobotics.lib.wrappers.hid.button
-import org.ghrobotics.lib.wrappers.hid.kBumperLeft
-import org.ghrobotics.lib.wrappers.hid.kStart
-import org.ghrobotics.lib.wrappers.hid.mapControls
+import org.ghrobotics.lib.wrappers.hid.*
 
 object Controls {
 
@@ -22,6 +20,9 @@ object Controls {
 
         state({ !isClimbing }) {
             // todo stuff
+
+            button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
+            button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())
         }
     }
 

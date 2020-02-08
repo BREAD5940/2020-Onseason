@@ -188,7 +188,7 @@ object DriveSubsystem : FalconSubsystem() {
                 val states = kinematics.toSwerveModuleStates(output.chassisSpeed)
                 SwerveDriveKinematics.normalizeWheelSpeeds(states, 1.0)
 
-                println("chassis speeds: ${output.chassisSpeed.omegaRadiansPerSecond} states:\n" + states.map { it.angle.degrees })
+//                println("chassis speeds: ${output.chassisSpeed.omegaRadiansPerSecond} states:\n" + states.map { it.angle.degrees })
 
                 flModule.output = Mk2SwerveModule.Output.Percent(
                         states[0].speedMetersPerSecond,

@@ -12,6 +12,7 @@ import lib.runCommand
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.units.amps
+import org.ghrobotics.lib.mathematics.units.inAmps
 import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
 import org.ghrobotics.lib.motors.rev.falconMAX
 import org.ghrobotics.lib.wrappers.FalconDoubleSolenoid
@@ -55,7 +56,7 @@ object IntakeSubsystem : FalconSubsystem() {
 
     fun retractIntakeCommand() = sequential {
             +instantCommand(IntakeSubsystem) { setChungusPistonExtension(false) }
-            +WaitCommand(1.0)
+            +WaitCommand(0.0)
             +instantCommand(IntakeSubsystem) { setSmolPistonExtension(false) }
         }
 
@@ -64,6 +65,10 @@ object IntakeSubsystem : FalconSubsystem() {
 
         SmartDashboard.putData("retract intake", retractIntakeCommand())
         SmartDashboard.putData("extend intake", extendIntakeCommand())
+    }
+
+    override fun periodic() {
+        println(intakeMotor.drawnCurrent.inAmps())
     }
 
     // Operator joystick memes
