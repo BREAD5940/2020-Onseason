@@ -18,8 +18,8 @@ import frc.robot.subsystems.drive.DriveSubsystem.feedForward
 import frc.robot.subsystems.drive.swerve.Mk2SwerveModule
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
-import lib.asSparkMax
 import lib.Logger
+import lib.asSparkMax
 import lib.mirror
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.debug.FalconDashboard
@@ -35,7 +35,6 @@ import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.rev.FalconMAX
 import org.ghrobotics.lib.utils.BooleanSource
 import org.ghrobotics.lib.utils.Source
-import org.ghrobotics.lib.utils.asSource
 import org.ghrobotics.lib.utils.launchFrequency
 
 object DriveSubsystem : FalconSubsystem() {
@@ -52,7 +51,7 @@ object DriveSubsystem : FalconSubsystem() {
     private val kAzimuthMotorOutputRange = -0.5..0.5
 
     private val logger = Logger("DriveSubsystem")
-  
+
     val brModule = Mk2SwerveModule(4, 3, 254.degrees - 254.degrees, FalconMAX(
             CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
             0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
@@ -61,7 +60,7 @@ object DriveSubsystem : FalconSubsystem() {
             CANSparkMax(5, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
             0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
 
-    val frModule = Mk2SwerveModule(2, 1, -18.degrees , FalconMAX(
+    val frModule = Mk2SwerveModule(2, 1, -18.degrees, FalconMAX(
             CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
             0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
 
@@ -109,7 +108,7 @@ object DriveSubsystem : FalconSubsystem() {
         }
 
         // write CSV header
-        //logger.log("flAngle, flAzimuthVolt, flDriveAngle, flDriveVolt, " +
+        // logger.log("flAngle, flAzimuthVolt, flDriveAngle, flDriveVolt, " +
         //        "frAngle, frAzimuthVolt, frDriveAngle, frDriveVolt, " +
         //        "blAngle, blAzimuthVolt, blDriveAngle, blDriveVolt, " +
         //        "brAngle, brAzimuthVolt, brDriveAngle, brDriveVolt,")

@@ -11,10 +11,11 @@ import frc.robot.Ports.shooterGearboxIds
 import frc.robot.Ports.shooterShifterSolenoid
 import kotlin.math.abs
 import kotlin.properties.Delegates
-import lib.inRpm
-import lib.instantCommand
+import lib.*
 import org.ghrobotics.lib.commands.FalconSubsystem
+import org.ghrobotics.lib.commands.parallel
 import org.ghrobotics.lib.commands.sequential
+import org.ghrobotics.lib.mathematics.lerp
 import org.ghrobotics.lib.mathematics.units.Frac
 import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.Second
@@ -24,6 +25,7 @@ import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnitRotationModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.rev.falconMAX
+import org.ghrobotics.lib.types.Interpolatable
 import org.ghrobotics.lib.wrappers.FalconDoubleSolenoid
 import org.ghrobotics.lib.wrappers.FalconSolenoid
 
@@ -87,10 +89,29 @@ object FlywheelSubsystem : FalconSubsystem() {
         kickWheelMotor.setDutyCycle(speed)
     }
 
-    fun agitateAndShoot(speed: () -> SIUnit<Velocity<Radian>>): CommandBase = sequential {
-            +WaitUntilCommand { abs(speed().inRpm() - flywheelSpeed.inRpm()) < 40 }
+    fun agitateAndShoot(): CommandBase = sequential {
+        +ShootCommand(true)
+        +parallel {
             +instantCommand { runAgitator(0.3) }.perpetually().withTimeout(5.0)
-        }.raceWith(VariableSpeedShootCommand(speed))
+            +ShootCommand().withTimeout(5.0)
+        }
+    }
 
-    fun agitateAndShoot(speed: SIUnit<Frac<Radian, Second>>): CommandBase = agitateAndShoot { speed }
+    val defaultShotLookupTable = InterpolatingTable(
+            // maybe we'll do target pitch for now?
+            60.0 to ShotParameter(10.degrees, 4000.revolutionsPerMinute),
+            40.0 to ShotParameter(40.degrees, 5000.revolutionsPerMinute),
+            30.0 to ShotParameter(30.degrees, 6000.revolutionsPerMinute)
+    )
+}
+
+data class ShotParameter(val hoodAngle: SIUnit<Radian>, val speed: SIUnit<Velocity<Radian>>) : Interpolatable<ShotParameter> {
+
+    override fun interpolate(endValue: ShotParameter, t: Double) =
+            ShotParameter(SIUnit(hoodAngle.value.lerp(endValue.hoodAngle.value, t)),
+                    SIUnit(speed.value.lerp(endValue.speed.value, t)))
+
+    companion object {
+        val DefaultParameter = ShotParameter(45.degrees, 5000.revolutionsPerMinute)
+    }
 }

@@ -29,15 +29,15 @@ object Controls {
     val operatorXbox = XboxController(1)
     val operatorFalconXbox = driverWpiXbox.mapControls {
         state({ !isClimbing }) {
-            //button(kBumperLeft).changeOn { IntakeSubsystem.wantsExtended = false }
-            //button(kBumperRight).changeOn { IntakeSubsystem.wantsExtended = true }
+            // button(kBumperLeft).changeOn { IntakeSubsystem.wantsExtended = false }
+            // button(kBumperRight).changeOn { IntakeSubsystem.wantsExtended = true }
 
-            //button(kA).changeOn(FlywheelSubsystem.agitateAndShoot(3000.revolutionsPerMinute))
+            // button(kA).changeOn(FlywheelSubsystem.agitateAndShoot(3000.revolutionsPerMinute))
 
             state({ operatorXbox.getRawButton(11) }) {
                 button(12).changeOn {
                     isClimbing = true
-                    //GrabBumperCommand().schedule()
+                    // GrabBumperCommand().schedule()
                 }
             }
             pov(180).changeOn { isClimbing = false }
