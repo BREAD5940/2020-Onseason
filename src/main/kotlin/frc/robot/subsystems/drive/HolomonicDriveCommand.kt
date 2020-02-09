@@ -4,14 +4,18 @@ import edu.wpi.first.wpilibj.GenericHID
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState
 import frc.robot.Constants
 import frc.robot.Controls
 import kotlin.math.absoluteValue
 import lib.* // ktlint-disable no-wildcard-imports
 import org.ghrobotics.lib.commands.FalconCommand
+import org.ghrobotics.lib.mathematics.units.derived.degrees
+import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.utils.withDeadband
 import org.ghrobotics.lib.wrappers.hid.getX
 import org.ghrobotics.lib.wrappers.hid.getY
+import kotlin.math.abs
 
 class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
 
@@ -28,6 +32,12 @@ class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
         forward *= forward.absoluteValue
         strafe *= strafe.absoluteValue
         rotation *= rotation.absoluteValue
+
+        // if abs of forward, strafe and rotation are all less than 0.01, do this and return
+        if (abs(forward) < 0.01 && abs(strafe) < 0.01 && abs(rotation) < 0.01) { //should be false (I think?)
+            DriveSubsystem.periodicIO.output = SwerveDriveOutput.KinematicsVoltage(pointInwards())
+            return
+        }
 
         // calculate translation vector (with magnitude of the max speed
         // volts divided by volts per meter per second is meters per second
@@ -51,22 +61,13 @@ class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
         this.lastSpeed = speeds
     }
 
-    /** Determine which wheels to use to evade. */
-    private fun determineEvasionWheels(robotRelativeDriveVectpr: Translation2d) {
-//        val here: Translation2d = driveVector.rotateBy(robotPosition.rotation.inverse())
-//        val wheels = Constants.kModulePositions
-//        clockwiseCenter = wheels[0]
-//        counterClockwiseCenter = wheels[wheels.size - 1]
-//        for (i in 0 until wheels.size - 1) {
-//            val cw = wheels[i]
-//            val ccw = wheels[i + 1]
-//            if (here.isWithinAngle(cw, ccw)) {
-//                clockwiseCenter = ccw
-//                counterClockwiseCenter = cw
-//            }
-//        }
+    private fun pointInwards(): List<SwerveModuleState> {
+        // what we'll do it just rotate, then rotate the angles by 90 degrees
+        // and set the speeds to 0
 
-
+        return Constants.kinematics.toSwerveModuleStates(ChassisSpeeds(
+                0.0, 0.0, 1.0))
+                .map { it -> SwerveModuleState(0.0, it.angle + 90.degrees.toRotation2d()) }
 
     }
 
