@@ -31,3 +31,6 @@ bin/*
 .gradle/*
 imgui.ini
 log/*
+.project
+.classpath
+*.prefs
