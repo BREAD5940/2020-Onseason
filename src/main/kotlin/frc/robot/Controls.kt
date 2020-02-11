@@ -25,8 +25,8 @@ object Controls {
             // todo stuff
 
             button(kBumperRight).changeOn(instantCommand{IntakeSubsystem.toggleIntakeExtensionCommand()})
-            button(kB).changeOn(instantCommand{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}).changeOff(instantCommand{FlywheelSubsystem.kickWheelMotor.setNeutral()})
-            button(kA).changeOn(instantCommand{IntakeSubsystem.toggleMiniIntakeExtensionCommand()})
+            button(kBumperLeft).changeOn(instantCommand{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}).changeOff(instantCommand{FlywheelSubsystem.kickWheelMotor.setNeutral()})
+            button(kStickRight).changeOn(instantCommand{IntakeSubsystem.toggleMiniIntakeExtensionCommand()})
        // }
     }
 
