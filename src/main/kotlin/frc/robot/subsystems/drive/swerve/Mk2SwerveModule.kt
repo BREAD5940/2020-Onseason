@@ -1,6 +1,5 @@
 package frc.robot.subsystems.drive.swerve
 
-import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel
 import edu.wpi.first.wpilibj.AnalogInput
 import edu.wpi.first.wpilibj.RobotController
@@ -51,20 +50,22 @@ open class Mk2SwerveModule(
         driveMotor.canSparkMax.restoreFactoryDefaults()
         driveMotor.canSparkMax.setSecondaryCurrentLimit(60.0)
         driveMotor.canSparkMax.setSmartCurrentLimit(40)
-        driveMotor.canSparkMax.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, false)
-        driveMotor.canSparkMax.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, false)
-        driveMotor.canSparkMax.openLoopRampRate = 0.05
+
+        driveMotor.canSparkMax.apply {
+            setSmartCurrentLimit(60)
+            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 500)
+            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 3)
+            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20)
+        }
 
         azimuthMotor.canSparkMax.restoreFactoryDefaults()
-        azimuthMotor.canSparkMax.setSecondaryCurrentLimit(50.0)
-        azimuthMotor.canSparkMax.setSmartCurrentLimit(30)
-        azimuthMotor.canSparkMax.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, false)
-        azimuthMotor.canSparkMax.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, false)
+        azimuthMotor.canSparkMax.setSecondaryCurrentLimit(60.0)
+        azimuthMotor.canSparkMax.setSmartCurrentLimit(40)
 
         azimuthMotor.canSparkMax.apply {
             setSmartCurrentLimit(60)
-//            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 500)
-//            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 3)
+            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 500)
+            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 3)
         }
     }
 
@@ -86,8 +87,9 @@ open class Mk2SwerveModule(
 //        azimuthMotor.set(0.2)
 //        println("swerve next angle out $nextAzimuthOutput")
 
+//        azimuthMotor.set(nextAzimuthOutput)
         azimuthMotor.setDutyCycle(nextAzimuthOutput)
-//        driveMotor.setDutyCycle(0.2)
+//        azimuthMotor.setDutyCycle(0.2)
 
         periodicIO.lastError = azimuthController.positionError.radians.toRotation2d()
         periodicIO.lastAzimuthOutput = nextAzimuthOutput
@@ -95,8 +97,6 @@ open class Mk2SwerveModule(
 //        driveMotor.setDutyCycle(0.0)
 
 //        driveMotor.setNeutral()
-
-//        return
 
         when (customizedOutput) {
             is Output.Nothing -> {

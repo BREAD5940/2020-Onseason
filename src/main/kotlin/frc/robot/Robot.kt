@@ -11,18 +11,12 @@ object Robot : FalconTimedRobot() {
 
     val isEnabled get() = wrappedValue.isEnabled
 
-    //val intake = FalconMAX(11, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel)
-
     override fun robotInit() {
         Network // at the top because s3ndable choosers need to be instantiated
         Autonomous
 
         // + for subsystems
         +DriveSubsystem
-        //+FlywheelSubsystem
-        //+BumperGrabberSubsystem
-        //+IntakeSubsystem
-        //+VisionSubsystem
 
         SmartDashboard.putData(CommandScheduler.getInstance())
 

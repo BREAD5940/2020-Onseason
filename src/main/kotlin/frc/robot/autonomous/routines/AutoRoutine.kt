@@ -26,10 +26,10 @@ abstract class AutoRoutine : SequentialCommandGroup(), Source<Command> {
     }.raceWith(WaitUntilCommand { /*Robot.emergencyActive*/ false }) as CommandBase
 
     fun followVisionAssistedTrajectory(
-        originalTrajectory: Trajectory,
-        pathMirrored: BooleanSource,
-        radiusFromEnd: SIUnit<Meter>,
-        useAbsoluteVision: Boolean = false
+            originalTrajectory: Trajectory,
+            pathMirrored: BooleanSource,
+            radiusFromEnd: SIUnit<Meter>,
+            useAbsoluteVision: Boolean = false
     ): CommandBase = InstantCommand(Runnable { TODO("aha") })
 //            "VisionAssistedTrajectoryTracker(
 //            pathMirrored.map(originalTrajectory.mirror(), originalTrajectory),
