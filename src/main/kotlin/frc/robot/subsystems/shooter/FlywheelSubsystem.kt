@@ -52,7 +52,7 @@ object FlywheelSubsystem : FalconSubsystem() {
             armSolenoid[0], armSolenoid[1], kPcmId
     )
 
-    private val kickWheelMotor = falconMAX(collectorAgitatorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
+     val kickWheelMotor = falconMAX(collectorAgitatorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         with(canSparkMax) {
             restoreFactoryDefaults()
             setSecondaryCurrentLimit(35.0)

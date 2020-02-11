@@ -2,8 +2,10 @@ package frc.robot
 
 // import frc.robot.subsystems.drive.VisionDriveCommand
 import edu.wpi.first.wpilibj.XboxController
+import edu.wpi.first.wpilibj.system.plant.FlywheelSystem
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.intake.IntakeSubsystem
+import frc.robot.subsystems.shooter.FlywheelSubsystem
 import lib.instantCommand
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
@@ -23,7 +25,8 @@ object Controls {
             // todo stuff
 
             button(kBumperRight).changeOn(instantCommand {IntakeSubsystem.toggleIntakeExtensionCommand()})
-            //button(kBumperLeft).changeOn(IntakeSubsystem.retractIntakeCommand())
+            button(kB).changeOn(instantCommand {FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}).changeOff(instantCommand{FlywheelSubsystem.kickWheelMotor.setNeutral()})
+
         }
     }
 
