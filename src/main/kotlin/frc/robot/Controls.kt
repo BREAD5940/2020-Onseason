@@ -15,14 +15,14 @@ object Controls {
     val driverWpiXbox = XboxController(0)
     val driverFalconXbox = driverWpiXbox.mapControls {
         val reZeroCommand = { DriveSubsystem.setGyroAngle(0.degrees.toRotation2d()) }
-        button(kBumperLeft).changeOn(reZeroCommand)
+        //button(kBumperLeft).changeOn(reZeroCommand)
         button(kStart).changeOn(reZeroCommand)
 
         state({ !isClimbing }) {
             // todo stuff
 
-            button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
-            button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())
+            button(kBumperRight).changeOn(IntakeSubsystem.extendIntakeCommand())
+            button(kBumperLeft).changeOn(IntakeSubsystem.retractIntakeCommand())
         }
     }
 

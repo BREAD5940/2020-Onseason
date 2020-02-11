@@ -3,6 +3,7 @@ package frc.robot
 object Ports {
 
     const val kPcmId = 9
+    const val kPcmId2 = 8
 
     // MOTORS
 
