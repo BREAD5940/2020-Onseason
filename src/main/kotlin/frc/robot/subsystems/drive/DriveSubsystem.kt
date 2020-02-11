@@ -16,6 +16,7 @@ import frc.robot.Constants
 import frc.robot.subsystems.drive.swerve.Mk2SwerveModule
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import lib.Logger
 
 import lib.mirror
 import org.ghrobotics.lib.commands.FalconSubsystem
@@ -46,49 +47,30 @@ object DriveSubsystem : FalconSubsystem() {
 
     val kAzumithMotorOutputRange = -0.5..0.5
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> parent of 674d806... Matt fixed it --Matt
+
     val brModule = Mk2SwerveModule(2, 3, 254.degrees - 270.degrees, FalconMAX(
             CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
+            0.5, 0.0, 0.0001, kAzumithMotorOutputRange)
 
     val blModule = Mk2SwerveModule(5, 2, 273.degrees - 164.degrees, FalconMAX(
             CANSparkMax(6, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-<<<<<<< HEAD
-            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)//s
 
-    val frModule = Mk2SwerveModule(3, 1, 2.degrees , FalconMAX(
-            CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-=======
->>>>>>> parent of 674d806... Matt fixed it --Matt
-            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
-=======
+            0.5, 0.0, 0.0001, kAzumithMotorOutputRange)//s
+
+
+
     private val logger = Logger("DriveSubsystem")
 
-<<<<<<< HEAD
+
     val flModule = Mk2SwerveModule(2, 2, 142.degrees + 76.degrees, FalconMAX(
             CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
             0.5, 0.0, 0.0001, kAzumithMotorOutputRange)
->>>>>>> parent of 7470702... Merge pull request #8 from BREAD5940/Max
+
 
     val frModule = Mk2SwerveModule(4, 1, (87+4).degrees, FalconMAX(
             CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
             0.5, 0.0, 0.0001, kAzumithMotorOutputRange)
-=======
-    val frModule = Mk2SwerveModule(3, 1, 2.degrees , FalconMAX(
-            CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
->>>>>>> parent of 674d806... Matt fixed it --Matt
 
-    val blModule = Mk2SwerveModule(8, 0, 92.degrees - 25.degrees + 0.degrees, FalconMAX(
-            CANSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzumithMotorOutputRange)
-
-    val brModule = Mk2SwerveModule(6, 3, 42.degrees, FalconMAX(
-            CANSparkMax(5, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzumithMotorOutputRange)
 
     val modules = listOf(flModule, frModule, blModule, brModule)
 
@@ -129,14 +111,12 @@ object DriveSubsystem : FalconSubsystem() {
         }
 
         // write CSV header
-<<<<<<< HEAD
-=======
+
         logger.log("flAngle, flAzimuthVolt, flDriveAngle, flDriveVolt, " +
                 "frAngle, frAzimuthVolt, frDriveAngle, frDriveVolt, " +
                 "blAngle, blAzimuthVolt, blDriveAngle, blDriveVolt, " +
                 "brAngle, brAzimuthVolt, brDriveAngle, brDriveVolt,")
 
->>>>>>> parent of 7470702... Merge pull request #8 from BREAD5940/Max
     }
 
     fun setGyroAngle(angle: Rotation2d) {
