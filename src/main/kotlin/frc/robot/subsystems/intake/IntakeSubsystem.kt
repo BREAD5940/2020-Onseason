@@ -21,6 +21,7 @@ import org.ghrobotics.lib.wrappers.FalconSolenoid
 
 object IntakeSubsystem : FalconSubsystem() {
     val open = false
+    val miniOpen = false
     val chungusPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[0], intakeSolenoid[1], 9)
     val secondarySmolPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[2], intakeSolenoid[3], 8)
 
@@ -56,14 +57,31 @@ object IntakeSubsystem : FalconSubsystem() {
             extendIntakeCommand()
         }
     }
+    fun toggleMiniIntakeExtensionCommand(){
+        if(miniOpen){
+            miniRetractIntakeCommand()
+        }
+        else {
+            miniExtendIntakeCommand()
+        }
+    }
 
-    fun extendIntakeCommand() = sequential {
+
+    private fun miniRetractIntakeCommand(){
+        setSmolPistonExtension(true); miniOpen
+    }
+    private fun miniExtendIntakeCommand(){
+        setSmolPistonExtension(false); !miniOpen
+    }
+
+
+    private fun extendIntakeCommand() = sequential {
         +instantCommand(IntakeSubsystem) { setSmolPistonExtension(true); open }
         +WaitCommand(0.5)
         +instantCommand(IntakeSubsystem) { setChungusPistonExtension(true) }
     }
 
-    fun retractIntakeCommand() = sequential {
+    private fun retractIntakeCommand() = sequential {
             +instantCommand(IntakeSubsystem) { setChungusPistonExtension(false); !open }
             +WaitCommand(0.0)
             +instantCommand(IntakeSubsystem) { setSmolPistonExtension(false) }

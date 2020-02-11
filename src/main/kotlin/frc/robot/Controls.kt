@@ -21,13 +21,13 @@ object Controls {
         //button(kBumperLeft).changeOn(reZeroCommand)
         button(kStart).changeOn(reZeroCommand)
 
-        state({ !isClimbing }) {
+     //   state({ !isClimbing }) {
             // todo stuff
 
-            button(kBumperRight).changeOn(instantCommand {IntakeSubsystem.toggleIntakeExtensionCommand()})
-            button(kB).changeOn(instantCommand {FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}).changeOff(instantCommand{FlywheelSubsystem.kickWheelMotor.setNeutral()})
-
-        }
+            button(kBumperRight).changeOn(instantCommand{IntakeSubsystem.toggleIntakeExtensionCommand()})
+            button(kB).changeOn(instantCommand{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}).changeOff(instantCommand{FlywheelSubsystem.kickWheelMotor.setNeutral()})
+            button(kA).changeOn(instantCommand{IntakeSubsystem.toggleMiniIntakeExtensionCommand()})
+       // }
     }
 
     val operatorXbox = XboxController(1)
