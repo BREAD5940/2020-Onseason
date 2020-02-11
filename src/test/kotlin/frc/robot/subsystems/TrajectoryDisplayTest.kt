@@ -35,11 +35,11 @@ class TrajectoryDisplayTest {
         chart.xyPlot.domainAxis.setRange(0.0, 54.0)
         chart.plot.backgroundImage = ImageIO.read(File("src/test/resources/chart-background.png"))
         var panel = ChartPanel(chart)
-        val frame = JFrame()
-        frame.add(panel)
-        frame.setSize(2598 / 3, 1299 / 3)
-        frame.setVisible(true)
-        Thread.sleep(100000)
+//        val frame = JFrame()
+//        frame.add(panel)
+//        frame.setSize(2598 / 3, 1299 / 3)
+//        frame.setVisible(true)
+//        Thread.sleep(100000)
         // return
     }
 }
