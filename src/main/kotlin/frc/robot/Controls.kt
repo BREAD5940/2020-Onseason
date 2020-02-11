@@ -4,6 +4,7 @@ package frc.robot
 import edu.wpi.first.wpilibj.XboxController
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.intake.IntakeSubsystem
+import lib.instantCommand
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.wrappers.hid.*
@@ -21,8 +22,8 @@ object Controls {
         state({ !isClimbing }) {
             // todo stuff
 
-            button(kBumperRight).changeOn(IntakeSubsystem.extendIntakeCommand())
-            button(kBumperLeft).changeOn(IntakeSubsystem.retractIntakeCommand())
+            button(kBumperRight).changeOn(instantCommand {IntakeSubsystem.toggleIntakeExtensionCommand()})
+            //button(kBumperLeft).changeOn(IntakeSubsystem.retractIntakeCommand())
         }
     }
 

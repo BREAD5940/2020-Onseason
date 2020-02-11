@@ -9,6 +9,7 @@ import frc.robot.Ports.intakeSolenoid
 import lib.instantCommand
 import kotlin.properties.Delegates
 import lib.runCommand
+import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.units.amps
@@ -19,7 +20,7 @@ import org.ghrobotics.lib.wrappers.FalconDoubleSolenoid
 import org.ghrobotics.lib.wrappers.FalconSolenoid
 
 object IntakeSubsystem : FalconSubsystem() {
-
+    val open = false
     val chungusPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[0], intakeSolenoid[1], 9)
     val secondarySmolPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[2], intakeSolenoid[3], 8)
 
@@ -47,15 +48,23 @@ object IntakeSubsystem : FalconSubsystem() {
     private fun setSmolPistonExtension(nowWantsExtended: Boolean) {
         secondarySmolPistonSolenoid.state = if (nowWantsExtended) FalconSolenoid.State.Forward else FalconSolenoid.State.Reverse
     }
+    fun toggleIntakeExtensionCommand() {
+        if(open){
+            retractIntakeCommand()
+        }
+        else {
+            extendIntakeCommand()
+        }
+    }
 
     fun extendIntakeCommand() = sequential {
-        +instantCommand(IntakeSubsystem) { setSmolPistonExtension(true) }
+        +instantCommand(IntakeSubsystem) { setSmolPistonExtension(true); open }
         +WaitCommand(0.5)
         +instantCommand(IntakeSubsystem) { setChungusPistonExtension(true) }
     }
 
     fun retractIntakeCommand() = sequential {
-            +instantCommand(IntakeSubsystem) { setChungusPistonExtension(false) }
+            +instantCommand(IntakeSubsystem) { setChungusPistonExtension(false); !open }
             +WaitCommand(0.0)
             +instantCommand(IntakeSubsystem) { setSmolPistonExtension(false) }
         }
