@@ -22,7 +22,7 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
 
     override fun execute() {
         val wantedParameter = parameterSupplier()
-        FlywheelSubsystem.setSpeed(wantedParameter.speed)
+        FlywheelSubsystem.shootAtSpeed(wantedParameter.speed)
         HoodSubsystem.wantedAngle = wantedParameter.hoodAngle
     }
 

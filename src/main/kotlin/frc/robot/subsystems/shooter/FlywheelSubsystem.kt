@@ -44,7 +44,7 @@ object FlywheelSubsystem : FalconSubsystem() {
         with(canSparkMax) {
             restoreFactoryDefaults()
         }
-        follow(shooterMaster)
+//        follow(shooterMaster)
     }
     private val shifterSolenoid = FalconDoubleSolenoid(shooterShifterSolenoid[0], shooterShifterSolenoid[1], kPcmId)
 
@@ -80,9 +80,14 @@ object FlywheelSubsystem : FalconSubsystem() {
     // feedforward
     private val feedForward = SimpleMotorFeedforward(0.0, 0.015)
 
-    fun setSpeed(speed: SIUnit<Velocity<Radian>>) {
+    fun shootAtSpeed(speed: SIUnit<Velocity<Radian>>) {
         wantsShootMode = true
         shooterMaster.setVelocity(speed, feedForward.calculate(speed.value).volts)
+    }
+
+    fun shootAtPower(power: Double) {
+        wantsShootMode = true
+        shooterMaster.setDutyCycle(power)
     }
 
     fun runAgitator(speed: Double) {
