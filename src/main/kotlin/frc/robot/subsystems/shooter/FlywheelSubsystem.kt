@@ -31,21 +31,31 @@ import org.ghrobotics.lib.wrappers.FalconSolenoid
 
 object FlywheelSubsystem : FalconSubsystem() {
 
-    private val shooterMaster = falconMAX(shooterGearboxIds[0],
+    val shooterMaster = falconMAX(shooterGearboxIds[0],
             CANSparkMaxLowLevel.MotorType.kBrushless, NativeUnitRotationModel(0.81.nativeUnits)) {
         with(canSparkMax) {
             restoreFactoryDefaults()
         }
-        controller.p = 0.0
+        controller.setOutputRange(-1.0, 1.0)
+        controller.p = 0.00005
         controller.i = 0.0
         controller.d = 0.0
+        controller.ff = 2.0E-5
+
+        outputInverted = true
+        brakeMode = false
     }
+
     private val shooterSlave = falconMAX(shooterGearboxIds[1], CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         with(canSparkMax) {
             restoreFactoryDefaults()
         }
-//        follow(shooterMaster)
+        controller.setOutputRange(-1.0, 1.0)
+        outputInverted = true
+        brakeMode = false
+        follow(shooterMaster)
     }
+
     private val shifterSolenoid = FalconDoubleSolenoid(shooterShifterSolenoid[0], shooterShifterSolenoid[1], kPcmId)
 
     private val armExtensionSolenoid = FalconDoubleSolenoid(

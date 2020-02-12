@@ -3,10 +3,13 @@ package frc.robot.subsystems.drive
 import edu.wpi.first.wpilibj.GenericHID
 import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState
 import frc.robot.Controls
 import kotlin.math.absoluteValue
 import lib.* // ktlint-disable no-wildcard-imports
 import org.ghrobotics.lib.commands.FalconCommand
+import org.ghrobotics.lib.mathematics.units.derived.degrees
+import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.utils.withDeadband
 import org.ghrobotics.lib.wrappers.hid.getX
 import org.ghrobotics.lib.wrappers.hid.getY
@@ -32,8 +35,13 @@ class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
         val translation = Translation2d(forward, strafe) // this will have a norm of 1, or 100% power
 
         if (forward.absoluteValue < 0.01 && strafe.absoluteValue < 0.01 && rotation.absoluteValue < 0.01) {
-            // TODO point wheels inwards
-            DriveSubsystem.periodicIO.output = SwerveDriveOutput.Nothing
+            // Point wheels inwards
+            DriveSubsystem.periodicIO.output = SwerveDriveOutput.KinematicsVoltage(
+                    DriveSubsystem.kinematics.toSwerveModuleStates(
+                            ChassisSpeeds(0.0, 0.0, 1.0)).map {
+                        SwerveModuleState(0.0, it.angle + 90.degrees.toRotation2d())
+                    }
+            )
             return
         }
 
