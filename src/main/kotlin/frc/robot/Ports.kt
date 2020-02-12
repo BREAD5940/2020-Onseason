@@ -20,7 +20,7 @@ object Ports {
     val intakeSolenoid = listOf(2, 7, 7, 6) // outer and inner
 
     val shooterShifterSolenoid = listOf(4, 5)
-    val armSolenoid = listOf(6, 7)
+    val armSolenoid = listOf(3, 1) // TODO make real
 
     val bumperGrabberSolenoid = listOf(0, 1)
 
