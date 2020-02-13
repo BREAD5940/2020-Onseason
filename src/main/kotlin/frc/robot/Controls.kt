@@ -6,8 +6,10 @@ import edu.wpi.first.wpilibj.system.plant.FlywheelSystem
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
+import frc.robot.subsystems.shooter.HoodSubsystem
 import lib.instantCommand
 import org.ghrobotics.lib.mathematics.units.derived.degrees
+import org.ghrobotics.lib.mathematics.units.derived.radians
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.wrappers.hid.*
 
@@ -22,36 +24,39 @@ object Controls {
         button(kStart).changeOn(reZeroCommand)
 
      //   state({ !isClimbing }) {
+
             // todo stuff
 
-            button(kBumperRight).changeOn(instantCommand{IntakeSubsystem.toggleIntakeExtensionCommand()})
-            button(kBumperLeft).changeOn(instantCommand{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}).changeOff(instantCommand{FlywheelSubsystem.kickWheelMotor.setNeutral()})
-            button(kStickRight).changeOn(instantCommand{IntakeSubsystem.toggleMiniIntakeExtensionCommand()})
+            button(kBumperRight).changeOn{IntakeSubsystem.toggleIntakeExtensionCommand()}
+            button(kBumperLeft).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
+            button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
+            button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())
+            button(kX).changeOn{IntakeSubsystem.miniExtendIntakeCommand()}
+            button(kY).changeOn{FlywheelSubsystem.wantsShootMode = true; FlywheelSubsystem.shooterMaster.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.shooterMaster.setNeutral()}
+            //button(kB).changeOn{  }
        // }
     }
 
     val operatorXbox = XboxController(1)
-    val operatorFalconXbox = driverWpiXbox.mapControls {
-        state({ !isClimbing }) {
-            // button(kBumperLeft).changeOn { IntakeSubsystem.wantsExtended = false }
-            // button(kBumperRight).changeOn { IntakeSubsystem.wantsExtended = true }
+    val operatorFalconXbox = operatorXbox.mapControls {
 
-            // button(kA).changeOn(FlywheelSubsystem.agitateAndShoot(3000.revolutionsPerMinute))
-
-            state({ operatorXbox.getRawButton(11) }) {
-                button(12).changeOn {
-                    isClimbing = true
-                    // GrabBumperCommand().schedule()
-                }
-            }
-            pov(180).changeOn { isClimbing = false }
-        }
+        button(kBumperRight).changeOn{IntakeSubsystem.toggleIntakeExtensionCommand()}
+        button(kBumperLeft).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
+        button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
+        button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())
+        button(kX).changeOn{IntakeSubsystem.miniExtendIntakeCommand()}
+        button(kY).changeOn{FlywheelSubsystem.wantsShootMode = true; FlywheelSubsystem.shooterMaster.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.shooterMaster.setNeutral()}
+        //button(kB).changeOn{  }
     }
 
     fun update() {
         driverFalconXbox.update()
         operatorFalconXbox.update()
     }
+}
+
+private operator fun Boolean.invoke(b: Boolean) {
+
 }
 
 // private fun Command.andThen(block: () -> Unit) = sequential { +this@andThen ; +InstantCommand(Runnable(block)) }

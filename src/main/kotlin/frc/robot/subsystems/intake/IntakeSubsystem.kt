@@ -25,7 +25,7 @@ object IntakeSubsystem : FalconSubsystem() {
     val chungusPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[0], intakeSolenoid[1], 9)
     val secondarySmolPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[2], intakeSolenoid[3], 8)
 
-    private val intakeMotor = falconMAX(intakeMotorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
+     val intakeMotor = falconMAX(intakeMotorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         canSparkMax.apply {
             restoreFactoryDefaults()
             setSecondaryCurrentLimit(30.0)
@@ -67,23 +67,25 @@ object IntakeSubsystem : FalconSubsystem() {
     }
 
 
-    private fun miniRetractIntakeCommand(){
-        setSmolPistonExtension(true); miniOpen
-    }
-    private fun miniExtendIntakeCommand(){
-        setSmolPistonExtension(false); !miniOpen
-    }
+     fun miniRetractIntakeCommand() = setSmolPistonExtension(true)
+
+     fun miniExtendIntakeCommand() = setSmolPistonExtension(false);
 
 
-    private fun extendIntakeCommand() = sequential {
-        +instantCommand(IntakeSubsystem) { setSmolPistonExtension(true); open }
-        +WaitCommand(0.5)
+
+     fun extendIntakeCommand() = sequential {
+        +instantCommand(IntakeSubsystem) { setSmolPistonExtension(true); }
+         +instantCommand(IntakeSubsystem) { intakeMotor.setDutyCycle(0.5)}
+        +WaitCommand(0.8)
+         +instantCommand { IntakeSubsystem.intakeMotor.setNeutral() }
         +instantCommand(IntakeSubsystem) { setChungusPistonExtension(true) }
     }
 
-    private fun retractIntakeCommand() = sequential {
-            +instantCommand(IntakeSubsystem) { setChungusPistonExtension(false); !open }
+     fun retractIntakeCommand() = sequential {
+            +instantCommand(IntakeSubsystem) { setChungusPistonExtension(false);  }
+         +instantCommand(IntakeSubsystem) { intakeMotor.setDutyCycle(-0.5)}
             +WaitCommand(0.0)
+         +instantCommand(IntakeSubsystem) { intakeMotor.setNeutral()}
             +instantCommand(IntakeSubsystem) { setSmolPistonExtension(false) }
         }
 
@@ -100,7 +102,7 @@ object IntakeSubsystem : FalconSubsystem() {
 
     // Operator joystick memes
     val speedSource by lazy {
-        { Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kRight) -
-                Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kLeft) }
+        { Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kRight) -
+                Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft) }
     }
 }

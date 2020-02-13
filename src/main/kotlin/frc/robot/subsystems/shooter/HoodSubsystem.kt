@@ -14,7 +14,7 @@ import org.ghrobotics.lib.motors.rev.falconMAX
 
 object HoodSubsystem : FalconSubsystem() {
 
-    private val hoodMotor = falconMAX(Ports.shooterHoodId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
+     val hoodMotor = falconMAX(Ports.shooterHoodId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         with(canSparkMax) {
             restoreFactoryDefaults()
             setSecondaryCurrentLimit(35.0)
