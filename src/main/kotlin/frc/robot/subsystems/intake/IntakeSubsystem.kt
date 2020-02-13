@@ -91,12 +91,12 @@ object IntakeSubsystem : FalconSubsystem() {
         }
 
     override fun lateInit() {
-        defaultCommand = runCommand({ setSpeed(speedSource()) }, this)
-        if(speedSource() > 0.1 && holdIntake == false){
+        defaultCommand = runCommand({ setSpeed(speedSource()); if(speedSource() > 0.1 && holdIntake == false){
             miniExtendIntakeCommand()
         }else if(holdIntake == false){
             miniRetractIntakeCommand()
-        }
+        } }, this)
+
 
         SmartDashboard.putData("retract intake", retractIntakeCommand())
         SmartDashboard.putData("extend intake", extendIntakeCommand())

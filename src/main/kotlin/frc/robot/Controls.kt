@@ -40,13 +40,23 @@ object Controls {
     val operatorXbox = XboxController(1)
     val operatorFalconXbox = operatorXbox.mapControls {
 
-        button(kBumperRight).changeOn{FlywheelSubsystem.wantsShootMode = true; FlywheelSubsystem.shooterMaster.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.shooterMaster.setNeutral(); FlywheelSubsystem.wantsShootMode = false}
-        button(kBumperLeft).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
+        button(kBumperRight).whileOn{
+            FlywheelSubsystem.wantsShootMode = true;
+            FlywheelSubsystem.shooterMaster.setDutyCycle(1.0)}
+                .changeOff{FlywheelSubsystem.shooterMaster.setNeutral(); }
+
+        button(kBumperLeft).changeOn{
+            FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}
+                .changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
+
         button(kB).changeOn{IntakeSubsystem.intakeMotor.setDutyCycle(-0.5); FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5)}.changeOff{IntakeSubsystem.intakeMotor.setNeutral(); FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false}
-        button(kA).whileOn{IntakeSubsystem.holdIntake = true}.changeOff{IntakeSubsystem.holdIntake = false}
+        button(kA).whileOn{IntakeSubsystem.holdIntake = true}.whileOff{IntakeSubsystem.holdIntake = false}
         pov(0).changeOn{IntakeSubsystem.extendIntakeCommand()}
         pov(180).changeOn{IntakeSubsystem.retractIntakeCommand()}
         //todo make climb shit
+
+        button(kStickLeft).changeOn { FlywheelSubsystem.wantsShootMode = false }
+                .changeOff { FlywheelSubsystem.wantsShootMode = true }
     }
 
     fun update() {
