@@ -22,6 +22,7 @@ import org.ghrobotics.lib.wrappers.FalconSolenoid
 object IntakeSubsystem : FalconSubsystem() {
     val open = false
     val miniOpen = false
+    var holdIntake = false
     val chungusPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[0], intakeSolenoid[1], 9)
     val secondarySmolPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[2], intakeSolenoid[3], 8)
 
@@ -76,7 +77,7 @@ object IntakeSubsystem : FalconSubsystem() {
      fun extendIntakeCommand() = sequential {
         +instantCommand(IntakeSubsystem) { setSmolPistonExtension(true); }
          +instantCommand(IntakeSubsystem) { intakeMotor.setDutyCycle(0.5)}
-        +WaitCommand(0.8)
+        +WaitCommand(0.0)
          +instantCommand { IntakeSubsystem.intakeMotor.setNeutral() }
         +instantCommand(IntakeSubsystem) { setChungusPistonExtension(true) }
     }
@@ -91,6 +92,11 @@ object IntakeSubsystem : FalconSubsystem() {
 
     override fun lateInit() {
         defaultCommand = runCommand({ setSpeed(speedSource()) }, this)
+        if(speedSource() > 0.1 && holdIntake == false){
+            miniExtendIntakeCommand()
+        }else if(holdIntake == false){
+            miniRetractIntakeCommand()
+        }
 
         SmartDashboard.putData("retract intake", retractIntakeCommand())
         SmartDashboard.putData("extend intake", extendIntakeCommand())
@@ -106,3 +112,4 @@ object IntakeSubsystem : FalconSubsystem() {
                 Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft) }
     }
 }
+

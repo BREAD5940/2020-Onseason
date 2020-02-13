@@ -40,17 +40,13 @@ object Controls {
     val operatorXbox = XboxController(1)
     val operatorFalconXbox = operatorXbox.mapControls {
 
-        //button(kBumperRight).changeOn{IntakeSubsystem.toggleIntakeExtensionCommand()}
+        button(kBumperRight).changeOn{FlywheelSubsystem.wantsShootMode = true; FlywheelSubsystem.shooterMaster.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.shooterMaster.setNeutral(); FlywheelSubsystem.wantsShootMode = false}
         button(kBumperLeft).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
-        button(kB).changeOn(IntakeSubsystem.extendIntakeCommand())
-        button(kBumperRight).changeOn(IntakeSubsystem.retractIntakeCommand())
-        button(kStickRight).changeOn{IntakeSubsystem.miniRetractIntakeCommand()}
-        button(kStickLeft).changeOn{IntakeSubsystem.miniExtendIntakeCommand()}
-        button(kA).changeOn{FlywheelSubsystem.wantsShootMode = true}.changeOff{FlywheelSubsystem.wantsShootMode = false}
-        button(kX).changeOn{IntakeSubsystem.intakeMotor.setDutyCycle(-0.5); FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5)}.changeOff{IntakeSubsystem.intakeMotor.setNeutral(); FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false}
-        button(kY).changeOn{FlywheelSubsystem.wantsShootMode = true; FlywheelSubsystem.shooterMaster.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.shooterMaster.setNeutral(); FlywheelSubsystem.wantsShootMode = false}
-        //button(kX).changeOn{FlywheelSubsystem.wantsShootMode = false; FlywheelSubsystem.shooterMaster.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.shooterMaster.brakeMode = true}
-        //button(kB).changeOn{  }
+        button(kB).changeOn{IntakeSubsystem.intakeMotor.setDutyCycle(-0.5); FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5)}.changeOff{IntakeSubsystem.intakeMotor.setNeutral(); FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false}
+        button(kA).whileOn{IntakeSubsystem.holdIntake = true}.changeOff{IntakeSubsystem.holdIntake = false}
+        pov(0).changeOn{IntakeSubsystem.extendIntakeCommand()}
+        pov(180).changeOn{IntakeSubsystem.retractIntakeCommand()}
+        //todo make climb shit
     }
 
     fun update() {
