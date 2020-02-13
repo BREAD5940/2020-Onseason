@@ -67,9 +67,9 @@ object IntakeSubsystem : FalconSubsystem() {
     }
 
 
-     fun miniRetractIntakeCommand() = setSmolPistonExtension(true)
+     fun miniRetractIntakeCommand() = setSmolPistonExtension(false)
 
-     fun miniExtendIntakeCommand() = setSmolPistonExtension(false);
+     fun miniExtendIntakeCommand() = setSmolPistonExtension(true);
 
 
 
