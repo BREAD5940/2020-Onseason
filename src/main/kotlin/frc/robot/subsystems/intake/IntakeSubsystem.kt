@@ -91,11 +91,15 @@ object IntakeSubsystem : FalconSubsystem() {
         }
 
     override fun lateInit() {
-        defaultCommand = runCommand({ setSpeed(speedSource()); if(speedSource() > 0.1 && holdIntake == false){
-            miniExtendIntakeCommand()
-        }else if(holdIntake == false){
-            miniRetractIntakeCommand()
-        } }, this)
+
+        defaultCommand = runCommand({
+            setSpeed(speedSource())
+            if(speedSource() > 0.1 && !holdIntake){
+                miniExtendIntakeCommand()
+            }else if(!holdIntake){
+                miniRetractIntakeCommand()
+            }
+        }, this)
 
 
         SmartDashboard.putData("retract intake", retractIntakeCommand())
@@ -109,7 +113,9 @@ object IntakeSubsystem : FalconSubsystem() {
     // Operator joystick memes
     val speedSource by lazy {
         { Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kRight) -
-                Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft) }
+                Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft)
+            + Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kRight) -
+                Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kLeft) }
     }
 }
 

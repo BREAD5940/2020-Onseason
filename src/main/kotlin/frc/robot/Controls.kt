@@ -32,13 +32,14 @@ object Controls {
             button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
             button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())
             button(kX).changeOn{IntakeSubsystem.miniRetractIntakeCommand()}
-            button(kY).changeOn{FlywheelSubsystem.wantsShootMode = true; FlywheelSubsystem.shooterMaster.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.shooterMaster.setNeutral()}
+            button(kY).changeOn{ FlywheelSubsystem.shootAtPower(1.0)}.changeOff{FlywheelSubsystem.setNeutral()}
             //button(kB).changeOn{  }
        // }
     }
 
     val operatorXbox = XboxController(1)
     val operatorFalconXbox = operatorXbox.mapControls {
+
 
         button(kBumperRight).whileOn{
             FlywheelSubsystem.wantsShootMode = true;
@@ -51,6 +52,7 @@ object Controls {
 
         button(kB).changeOn{IntakeSubsystem.intakeMotor.setDutyCycle(-0.5); FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5)}.changeOff{IntakeSubsystem.intakeMotor.setNeutral(); FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false}
         button(kA).whileOn{IntakeSubsystem.holdIntake = true}.whileOff{IntakeSubsystem.holdIntake = false}
+
         pov(0).changeOn{IntakeSubsystem.extendIntakeCommand()}
         pov(180).changeOn{IntakeSubsystem.retractIntakeCommand()}
         //todo make climb shit
