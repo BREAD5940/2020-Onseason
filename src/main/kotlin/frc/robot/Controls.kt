@@ -32,7 +32,7 @@ object Controls {
             button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
             button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())
             button(kX).changeOn{IntakeSubsystem.miniRetractIntakeCommand()}
-            button(kY).changeOn{FlywheelSubsystem.wantsShootMode = true; FlywheelSubsystem.shooterMaster.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.shooterMaster.setNeutral()}
+            button(kY).changeOn{ FlywheelSubsystem.shootAtPower(1.0)}.changeOff{FlywheelSubsystem.setNeutral()}
             //button(kB).changeOn{  }
        // }
     }
@@ -40,9 +40,13 @@ object Controls {
     val operatorXbox = XboxController(1)
     val operatorFalconXbox = operatorXbox.mapControls {
 
-        button(kBumperRight).changeOn{FlywheelSubsystem.wantsShootMode = true; FlywheelSubsystem.shooterMaster.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.shooterMaster.setNeutral(); FlywheelSubsystem.wantsShootMode = false}
-        button(kBumperLeft).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
-        button(kB).changeOn{IntakeSubsystem.intakeMotor.setDutyCycle(-0.5); FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5)}.changeOff{IntakeSubsystem.intakeMotor.setNeutral(); FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false}
+        button(kBumperRight).changeOn{ FlywheelSubsystem.kickWheelMotor.setDutyCycle((1.0))}.changeOff{FlywheelSubsystem.kickWheelMotor.setNeutral()}
+
+                .changeOff{FlywheelSubsystem.shooterMaster.setNeutral(); }
+        button(kBumperLeft).changeOn{FlywheelSubsystem.shootAtPower(1.0)}.changeOff{FlywheelSubsystem.setNeutral()}
+        button(kB).changeOn{
+            IntakeSubsystem.intakeMotor.setDutyCycle(-0.5); FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5)}
+                .changeOff{IntakeSubsystem.intakeMotor.setNeutral(); FlywheelSubsystem.kickWheelMotor.setNeutral(); }
         button(kA).whileOn{IntakeSubsystem.holdIntake = true}.changeOff{IntakeSubsystem.holdIntake = false}
         pov(0).changeOn{IntakeSubsystem.extendIntakeCommand()}
         pov(180).changeOn{IntakeSubsystem.retractIntakeCommand()}
