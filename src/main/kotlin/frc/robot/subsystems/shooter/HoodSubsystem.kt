@@ -1,11 +1,12 @@
 package frc.robot.subsystems.shooter
 
 import com.revrobotics.CANSparkMaxLowLevel
-import edu.wpi.first.wpilibj.AnalogInput
-import edu.wpi.first.wpilibj.RobotController
+import edu.wpi.first.wpilibj.*
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
 import frc.robot.Ports
+import frc.robot.Robot
 import kotlin.math.PI
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.mathematics.units.derived.*
@@ -19,22 +20,35 @@ object HoodSubsystem : FalconSubsystem() {
             restoreFactoryDefaults()
             setSecondaryCurrentLimit(35.0)
         }
-        controller.setOutputRange(-1.0, 1.0)
+        controller.setOutputRange(-0.1, 0.1)
     }
 
     private val hoodAngleEncoder = AnalogInput(Ports.hoodEncoderPort)
-    private val hoodAngle
-        get() = ((1.0 - hoodAngleEncoder.voltage / RobotController.getVoltage5V() * 2.0 * PI).radians + 0.degrees).toRotation2d()
+    val hoodAngle
+        get() = ((hoodAngleEncoder.voltage / RobotController.getVoltage5V() * 2.0 * PI).radians + 3.degrees)
 
-    var wantedAngle = 45.degrees
+    var wantedAngle = 56.degrees
 
-    private val hoodPidController = PIDController(0.1, 0.0, 0.0)
+    val hoodPidController = PIDController(5.0, 0.0, 0.0).apply {
+//        enableContinuousInput(-PI, PI)
+        disableContinuousInput()
+    }
+
+    var lastProfiledReference = TrapezoidProfile.State(hoodAngle.value, 0.0)
+    private val constraints = TrapezoidProfile.Constraints(20.degrees.inRadians(), 40.degrees.inRadians())
+
+    fun enabledReset() {
+        lastProfiledReference = TrapezoidProfile.State(hoodAngle.value, 0.0)
+    }
 
     override fun lateInit() {
         SmartDashboard.putData(hoodPidController)
     }
 
     override fun periodic() {
-        hoodMotor.setDutyCycle(hoodPidController.calculate(hoodAngle.radians, wantedAngle.inRadians()))
+        val setpoint = TrapezoidProfile(constraints, TrapezoidProfile.State(wantedAngle.value, 0.0), lastProfiledReference)
+                .calculate(0.020)
+        lastProfiledReference = setpoint
+        hoodMotor.setDutyCycle(hoodPidController.calculate(hoodAngle.inRadians(), setpoint.position))
     }
 }

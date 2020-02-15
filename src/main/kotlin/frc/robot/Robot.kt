@@ -8,6 +8,9 @@ import frc.robot.autonomous.Autonomous
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
+import frc.robot.subsystems.shooter.HoodSubsystem
+import org.ghrobotics.lib.utils.monitor
+import org.ghrobotics.lib.utils.onChangeToTrue
 import org.ghrobotics.lib.wrappers.FalconTimedRobot
 
 object Robot : FalconTimedRobot() {
@@ -20,11 +23,11 @@ object Robot : FalconTimedRobot() {
         Network // at the top because s3ndable choosers need to be instantiated
         Autonomous
 
-        // + for subsystems
         +DriveSubsystem
-            //+FlywheelSubsystem
-        //+BumperGrabberSubsystem
+        +FlywheelSubsystem
         +IntakeSubsystem
+        +HoodSubsystem
+        //+BumperGrabberSubsystem
         //+VisionSubsystem
 
         SmartDashboard.putData(CommandScheduler.getInstance())
@@ -49,10 +52,12 @@ object Robot : FalconTimedRobot() {
     }
 
     override fun teleopInit() {
+        HoodSubsystem.enabledReset()
     }
 
 
     override fun autonomousInit() {
+        HoodSubsystem.enabledReset()
     }
 
 }

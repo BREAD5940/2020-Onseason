@@ -13,7 +13,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import frc.robot.autonomous.Autonomous
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
+import frc.robot.subsystems.shooter.HoodSubsystem
 import lib.inRpm
+import org.ghrobotics.lib.mathematics.units.derived.inDegrees
+import org.ghrobotics.lib.mathematics.units.derived.radians
 import org.ghrobotics.lib.wrappers.networktables.enumSendableChooser
 import org.ghrobotics.lib.wrappers.networktables.tab
 import kotlin.math.roundToInt
@@ -44,8 +47,12 @@ object Network {
             list("Flywheel") {
                 number("Velocity, RPM") { FlywheelSubsystem.shooterMaster.encoder.velocity.inRpm() }
                 number("Output, V") { FlywheelSubsystem.shooterMaster.voltageOutput.value }
+                number("Hood Angle, Deg") { HoodSubsystem.hoodAngle.inDegrees().roundToInt().toDouble() }
+                number("Hood Error, Deg") { HoodSubsystem.hoodPidController.positionError.radians.inDegrees().roundToInt().toDouble() }
+                number("Hood Output, Volt") { HoodSubsystem.hoodMotor.voltageOutput.value }
+                number("Last ref pos, deg") { HoodSubsystem.lastProfiledReference.position.radians.inDegrees().roundToInt().toDouble() }
                 position(2, 0)
-                size(1, 2)
+                size(1, 4)
             }
         }
 
