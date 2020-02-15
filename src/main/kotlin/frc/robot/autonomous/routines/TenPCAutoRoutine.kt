@@ -5,13 +5,17 @@ import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.intake.IntakeSubsystem
+import frc.robot.subsystems.shooter.FlywheelSubsystem
 import lib.runCommand
 import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.twodim.geometry.Rectangle2d
 import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.Second
 import org.ghrobotics.lib.mathematics.units.derived.degrees
+import org.ghrobotics.lib.mathematics.units.derived.radians
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
+import org.ghrobotics.lib.mathematics.units.derived.velocity
+import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 
 class TenPCAutoRoutine: AutoRoutine() {
     private val path1 = TrajectoryFactory.tenPointAutoToShieldGenerator
@@ -31,9 +35,18 @@ class TenPCAutoRoutine: AutoRoutine() {
                     .alongWith(
                             IntakeSubsystem.extendIntakeCommand()
                                     .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(0.5) }))
-                    .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem),
-            +DriveSubsystem.followTrajectory(path2) { 0.0.degrees }
-                    .andThen()
+                    .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
+            +DriveSubsystem.followTrajectory(path2) { (0.0).degrees.toRotation2d() }
+                    .andThen(runCommand(FlywheelSubsystem)
+                    { FlywheelSubsystem.shootAtSpeed((Math.PI/2).radians.velocity); FlywheelSubsystem.shootAtPower(0.5) })
+            +DriveSubsystem.followTrajectory(path3) { 180.0.degrees.toRotation2d() }
+                    .alongWith(
+                            IntakeSubsystem.extendIntakeCommand()
+                                    .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(0.5) }))
+                    .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
+            +DriveSubsystem.followTrajectory(path4) { 0.0.degrees.toRotation2d() }
+                    .andThen(runCommand(FlywheelSubsystem)
+                    { FlywheelSubsystem.shootAtSpeed((Math.PI/2).radians.velocity); FlywheelSubsystem.shootAtPower(0.5) })
 
 
 
