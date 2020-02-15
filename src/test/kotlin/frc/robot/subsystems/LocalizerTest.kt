@@ -77,8 +77,8 @@ class LocalizerTest {
         }
 
         try {
-            SwingWrapper(chart).displayChart()
-            Thread.sleep(10000000)
+//            SwingWrapper(chart).displayChart()
+//            Thread.sleep(10000000)
         } catch (ign: Exception) {
         }
 

@@ -56,3 +56,5 @@ abstract class AutoRoutine : SequentialCommandGroup(), Source<Command> {
 fun Command.withExit(exit: BooleanSource): Command = this.raceWith(WaitUntilCommand(exit))
 
 fun Command.withTimeout(second: SIUnit<Second>): Command = this.withTimeout(second.second)
+
+val Trajectory.duration get() = totalTimeSeconds.seconds
