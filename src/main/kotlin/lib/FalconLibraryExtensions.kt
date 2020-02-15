@@ -27,5 +27,5 @@ fun instantCommand(vararg reqs: Subsystem, block: () -> Unit) = InstantCommand(R
 
 fun SIUnit<Velocity<Radian>>.inRpm() = this.value / 2.0 / PI * 60.0
 
-val Number.revolutionsPerMinute: SIUnit<Velocity<Radian>>
+val Number. revolutionsPerMinute: SIUnit<Velocity<Radian>>
     get() = SIUnit(this.toDouble() /* so this is currently in rpm so div by 60 to get rps */ / 60.0 * 2 * PI)
