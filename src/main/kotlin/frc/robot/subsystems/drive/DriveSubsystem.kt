@@ -27,15 +27,14 @@ import org.ghrobotics.lib.mathematics.twodim.geometry.x_u
 import org.ghrobotics.lib.mathematics.twodim.geometry.y_u
 import org.ghrobotics.lib.mathematics.twodim.trajectory.mirror
 import org.ghrobotics.lib.mathematics.units.*
-import org.ghrobotics.lib.mathematics.units.derived.degrees
-import org.ghrobotics.lib.mathematics.units.derived.velocity
-import org.ghrobotics.lib.mathematics.units.derived.volts
+import org.ghrobotics.lib.mathematics.units.derived.*
 import org.ghrobotics.lib.mathematics.units.nativeunit.SlopeNativeUnitModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.rev.FalconMAX
 import org.ghrobotics.lib.utils.BooleanSource
 import org.ghrobotics.lib.utils.Source
 import org.ghrobotics.lib.utils.launchFrequency
+import org.ghrobotics.lib.utils.map
 
 object DriveSubsystem : FalconSubsystem() {
 
@@ -145,6 +144,14 @@ object DriveSubsystem : FalconSubsystem() {
 
     fun followTrajectory(trajectory: Trajectory, endHeading: Source<Rotation2d>) =
             SwerveTrajectoryFollowerCommand({ trajectory }, endHeading)
+
+    fun followTrajectory2(trajectory: Trajectory, endHeading: Source<SIUnit<Radian>>) =
+            SwerveTrajectoryFollowerCommand({ trajectory }, endHeading.map { it.toRotation2d() })
+
+
+    fun followTrajectory(trajectory: Trajectory, endHeading: Source<Rotation2d>, mirrored: BooleanSource = { false }) =
+            SwerveTrajectoryFollowerCommand(mirrored.map(trajectory.mirror(), trajectory),
+                    mirrored.map { if(mirrored()) endHeading().mirror() else endHeading() })
 
     fun followTrajectory(trajectory: Trajectory, endHeading: Rotation2d, mirrored: BooleanSource) =
             SwerveTrajectoryFollowerCommand(trajectory, endHeading, mirrored)
