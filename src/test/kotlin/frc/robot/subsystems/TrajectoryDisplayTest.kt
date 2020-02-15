@@ -18,7 +18,7 @@ class TrajectoryDisplayTest {
     fun main() {
         var seriesX = XYSeries("x")
 
-        TrajectoryFactory.grabThreeFromTrench.states.forEach {
+        TrajectoryFactory.tenPointAutoMaybe.states.forEach {
             seriesX.add(XYDataItem(it.poseMeters.translation.x / kFeetToMeter, it.poseMeters.translation.y / kFeetToMeter))
         }
 
