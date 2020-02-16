@@ -117,7 +117,9 @@ object IntakeSubsystem : FalconSubsystem() {
     // Operator joystick memes
     val speedSource by lazy {
         { Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kRight) -
-                Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft)
+                Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft) + Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kRight) -
+                Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kLeft)
+
 //            + Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kRight) -
 //                Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kLeft)
         }

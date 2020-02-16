@@ -65,7 +65,5 @@ class VisionDriveCommand : HolomonicDriveCommand() {
     companion object {
         val centerOfRotation = Translation2d(0.meters, 8.inches)
         val controller = PIDController(2.8, 0.0, 0.3)
-
-        val rightBelowGoalParameter = ShotParameter(44.degrees, 1600.revolutionsPerMinute)
     }
 }
