@@ -37,7 +37,7 @@ class VisionDriveCommand : HolomonicDriveCommand() {
         forward *= forward.absoluteValue
         strafe *= strafe.absoluteValue
 
-        val shotParameter = FlywheelSubsystem.defaultShotLookupTable.get(VisionSubsystem.ps3eye.yaw.degrees) ?: ShotParameter.DefaultParameter
+        val shotParameter = FlywheelSubsystem.defaultShotLookupTable.get(VisionSubsystem.ps3eye.pitch.degrees) ?: ShotParameter.DefaultParameter
 //        val shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
 
         when {
