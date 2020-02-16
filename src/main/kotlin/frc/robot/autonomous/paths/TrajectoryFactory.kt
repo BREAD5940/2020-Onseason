@@ -2,7 +2,6 @@ package frc.robot.auto.paths
 
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Translation2d
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics
 import edu.wpi.first.wpilibj.trajectory.Trajectory
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator
@@ -137,7 +136,6 @@ object TrajectoryFactory {
                 getConstraints(4.feet.velocity), 4.feet.velocity, 7.feet.acceleration
         )
     }
-
 
 //    val tenPointAuto by lazy {
 //        generateTrajectory(

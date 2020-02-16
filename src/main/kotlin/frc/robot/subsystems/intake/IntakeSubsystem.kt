@@ -6,14 +6,12 @@ import edu.wpi.first.wpilibj2.command.WaitCommand
 import frc.robot.Controls
 import frc.robot.Ports.intakeMotorId
 import frc.robot.Ports.intakeSolenoid
-import lib.instantCommand
 import kotlin.properties.Delegates
+import lib.instantCommand
 import lib.runCommand
-import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.units.amps
-import org.ghrobotics.lib.mathematics.units.inAmps
 import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
 import org.ghrobotics.lib.motors.rev.falconMAX
 import org.ghrobotics.lib.wrappers.FalconDoubleSolenoid
@@ -30,7 +28,7 @@ object IntakeSubsystem : FalconSubsystem() {
         intakeMotor.setNeutral()
     }
 
-     val intakeMotor = falconMAX(intakeMotorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
+    val intakeMotor = falconMAX(intakeMotorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         canSparkMax.apply {
             restoreFactoryDefaults()
             setSecondaryCurrentLimit(30.0)
@@ -55,56 +53,50 @@ object IntakeSubsystem : FalconSubsystem() {
         secondarySmolPistonSolenoid.state = if (nowWantsExtended) FalconSolenoid.State.Forward else FalconSolenoid.State.Reverse
     }
     fun toggleIntakeExtensionCommand() {
-        if(open){
+        if (open) {
             retractIntakeCommand()
-        }
-        else {
+        } else {
             extendIntakeCommand()
         }
     }
-    fun toggleMiniIntakeExtensionCommand(){
-        if(miniOpen){
+    fun toggleMiniIntakeExtensionCommand() {
+        if (miniOpen) {
             miniRetractIntakeCommand()
-        }
-        else {
+        } else {
             miniExtendIntakeCommand()
         }
     }
 
+    fun miniRetractIntakeCommand() = setSmolPistonExtension(false)
 
-     fun miniRetractIntakeCommand() = setSmolPistonExtension(false)
+    fun miniExtendIntakeCommand() = setSmolPistonExtension(true)
 
-     fun miniExtendIntakeCommand() = setSmolPistonExtension(true);
-
-
-
-     fun extendIntakeCommand() = sequential {
+    fun extendIntakeCommand() = sequential {
         +instantCommand(IntakeSubsystem) { setSmolPistonExtension(true); }
-         +instantCommand(IntakeSubsystem) { intakeMotor.setDutyCycle(0.5)}
+        +instantCommand(IntakeSubsystem) { intakeMotor.setDutyCycle(0.5) }
         +WaitCommand(0.2)
-         +instantCommand { IntakeSubsystem.intakeMotor.setNeutral() }
+        +instantCommand { IntakeSubsystem.intakeMotor.setNeutral() }
         +instantCommand(IntakeSubsystem) { setChungusPistonExtension(true) }
     }
 
-     fun retractIntakeCommand() = sequential {
-            +instantCommand(IntakeSubsystem) { setChungusPistonExtension(false);  }
-         +instantCommand(IntakeSubsystem) { intakeMotor.setDutyCycle(-0.5)}
-            +WaitCommand(0.2)
-         +instantCommand(IntakeSubsystem) { intakeMotor.setNeutral()}
-            +instantCommand(IntakeSubsystem) { setSmolPistonExtension(false) }
-        }
+    fun retractIntakeCommand() = sequential {
+        +instantCommand(IntakeSubsystem) { setChungusPistonExtension(false); }
+        +instantCommand(IntakeSubsystem) { intakeMotor.setDutyCycle(-0.5) }
+        +WaitCommand(0.2)
+        +instantCommand(IntakeSubsystem) { intakeMotor.setNeutral() }
+        +instantCommand(IntakeSubsystem) { setSmolPistonExtension(false) }
+    }
 
     override fun lateInit() {
 
         defaultCommand = runCommand({
             setSpeed(speedSource())
-            if(speedSource() > 0.1 && !holdIntake){
+            if (speedSource() > 0.1 && !holdIntake) {
                 miniExtendIntakeCommand()
-            }else if(!holdIntake){
+            } else if (!holdIntake) {
                 miniRetractIntakeCommand()
             }
         }, this)
-
 
         SmartDashboard.putData("retract intake", retractIntakeCommand())
         SmartDashboard.putData("extend intake", extendIntakeCommand())
@@ -125,4 +117,3 @@ object IntakeSubsystem : FalconSubsystem() {
         }
     }
 }
-

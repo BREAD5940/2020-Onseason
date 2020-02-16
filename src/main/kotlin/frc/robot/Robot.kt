@@ -9,8 +9,6 @@ import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.HoodSubsystem
-import org.ghrobotics.lib.utils.monitor
-import org.ghrobotics.lib.utils.onChangeToTrue
 import org.ghrobotics.lib.wrappers.FalconTimedRobot
 
 object Robot : FalconTimedRobot() {
@@ -27,8 +25,8 @@ object Robot : FalconTimedRobot() {
         +FlywheelSubsystem
         +IntakeSubsystem
         +HoodSubsystem
-        //+BumperGrabberSubsystem
-        //+VisionSubsystem
+        // +BumperGrabberSubsystem
+        // +VisionSubsystem
 
         SmartDashboard.putData(CommandScheduler.getInstance())
 
@@ -36,7 +34,6 @@ object Robot : FalconTimedRobot() {
 
         super.robotInit()
     }
-
 
     override fun teleopPeriodic() {
     }
@@ -48,18 +45,15 @@ object Robot : FalconTimedRobot() {
     }
 
     override fun disabledInit() {
-
     }
 
     override fun teleopInit() {
         HoodSubsystem.enabledReset()
     }
 
-
     override fun autonomousInit() {
         HoodSubsystem.enabledReset()
     }
-
 }
 
 fun main() {

@@ -1,19 +1,14 @@
 package frc.robot
 
 // import frc.robot.subsystems.drive.VisionDriveCommand
-import edu.wpi.first.wpilibj.GenericHID
 import edu.wpi.first.wpilibj.XboxController
-import edu.wpi.first.wpilibj.system.plant.FlywheelSystem
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.HoodSubsystem
 import frc.robot.subsystems.shooter.ShootCommand
-import lib.instantCommand
-import lib.runCommand
 import org.ghrobotics.lib.mathematics.units.derived.degrees
-import org.ghrobotics.lib.mathematics.units.derived.radians
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.wrappers.hid.*
 
@@ -24,18 +19,18 @@ object Controls {
     val driverWpiXbox = XboxController(0)
     val driverFalconXbox = driverWpiXbox.mapControls {
         val reZeroCommand = { DriveSubsystem.setGyroAngle(0.degrees.toRotation2d()) }
-        //button(kBumperLeft).changeOn(reZeroCommand)
+        // button(kBumperLeft).changeOn(reZeroCommand)
         button(kStart).changeOn(reZeroCommand)
 
         //   state({ !isClimbing }) {
 
         // todo stuff
 
-      //  button(kBumperRight).changeOn{IntakeSubsystem.toggleIntakeExtensionCommand()}
-        //button(kBumperLeft).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
+        //  button(kBumperRight).changeOn{IntakeSubsystem.toggleIntakeExtensionCommand()}
+        // button(kBumperLeft).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
         button(kY).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kX).changeOn(IntakeSubsystem.retractIntakeCommand())
-        //button(kX).changeOn{IntakeSubsystem.miniRetractIntakeCommand()}
+        // button(kX).changeOn{IntakeSubsystem.miniRetractIntakeCommand()}
 //        button(kY).change(runCommand(FlywheelSubsystem) { FlywheelSubsystem.shootAtPower(1.0) }).changeOff{FlywheelSubsystem.setNeutral()}
 
         pov(0).changeOn { HoodSubsystem.wantedAngle = 42.degrees }
@@ -44,8 +39,8 @@ object Controls {
         pov(270).change(VisionDriveCommand())
 
         button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
-        button(kBumperLeft).changeOn {FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
-        button(kB).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5)}.changeOff{ FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false}
+        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
+        button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false }
 
         button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter }).alongWith(VisionDriveCommand()))
     }
@@ -54,12 +49,12 @@ object Controls {
     val operatorFalconXbox = operatorXbox.mapControls {
 
         button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
-        button(kBumperLeft).changeOn {FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
-        button(kB).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5)}.changeOff{FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false}
+        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
+        button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false }
         button(kX).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kY).change(ShootCommand().alongWith(VisionDriveCommand()))
         pov(0).change(ShootCommand())
-        //todo make climb shit
+        // todo make climb shit
 
         button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter }).alongWith(VisionDriveCommand()))
     }
@@ -71,7 +66,6 @@ object Controls {
 }
 
 private operator fun Boolean.invoke(b: Boolean) {
-
 }
 
 // private fun Command.andThen(block: () -> Unit) = sequential { +this@andThen ; +InstantCommand(Runnable(block)) }

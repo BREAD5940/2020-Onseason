@@ -2,6 +2,9 @@ package frc.robot.subsystems
 
 import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.autonomous.routines.TenPCAutoRoutine
+import java.io.File
+import javax.imageio.ImageIO
+import javax.swing.JFrame
 import org.ghrobotics.lib.mathematics.units.kFeetToMeter
 import org.jfree.chart.ChartFactory
 import org.jfree.chart.ChartPanel
@@ -9,9 +12,6 @@ import org.jfree.chart.plot.PlotOrientation
 import org.jfree.data.xy.XYDataItem
 import org.jfree.data.xy.XYSeriesCollection
 import org.junit.Test
-import java.io.File
-import javax.imageio.ImageIO
-import javax.swing.JFrame
 
 class TrajectoryDisplayTest {
 

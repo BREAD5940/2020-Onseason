@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.system.LinearSystem
 import edu.wpi.first.wpiutil.math.numbers.N3
 import frc.team4069.keigen.*
 import frc.team4069.keigen.Vector
+import java.util.*
 import lib.interpolate
 import org.ghrobotics.lib.localization.TimePoseInterpolatableBuffer
 import org.ghrobotics.lib.mathematics.units.*
@@ -15,7 +16,6 @@ import org.ghrobotics.lib.mathematics.units.derived.radians
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.operations.div
 import org.ghrobotics.lib.utils.Source
-import java.util.*
 
 /**
  * A kalman filter designed to run at 200hz
@@ -32,8 +32,8 @@ object DrivetrainLocalizer {
                     zeros(`3`, `3`),
                     vec(`3`).fill(-4.0, -4.0, -12.0),
                     vec(`3`).fill(4.0, 4.0, 12.0)),
-            vec(`3`).fill(0.1, 0.1, 0.1),  // state weights
-            vec(`3`).fill(4.0, 4.0, 4.0),  // measurement weights
+            vec(`3`).fill(0.1, 0.1, 0.1), // state weights
+            vec(`3`).fill(4.0, 4.0, 4.0), // measurement weights
             dt)
 
     private val pastPoseBuffer = TimePoseInterpolatableBuffer()
@@ -57,23 +57,22 @@ object DrivetrainLocalizer {
     fun update(nowInput: Vector<N3>, measuredPose: Pose2d? = null, timestamp: SIUnit<Second> = (-1).seconds) {
 
         // if we see a target, roll back the filter, apply the measurement and roll forward
-        if(measuredPose != null) {
+        if (measuredPose != null) {
             // Latency compensation; reset observer pose to the pose when the frame was in sight,
             // add correction factor, and replay all predictions into the future
             val thenPose = pastPoseBuffer[timestamp]
-            if(thenPose != null) {
+            if (thenPose != null) {
 
                 val firstIdx = pastInputs.keys.indexOf(timestamp)
 
-                if(pastInputs.keys.size >= 2 && firstIdx != -1) {
+                if (pastInputs.keys.size >= 2 && firstIdx != -1) {
                     val inputsToReplay = pastInputs.values.toList().subList(firstIdx, pastInputs.size - 1)
-
 
                     observer.xhat = thenPose.toVec()
 
                     observer.correct(pastInputs.values.toList()[firstIdx], measuredPose.toVec())
 
-                    for(v in inputsToReplay) {
+                    for (v in inputsToReplay) {
                         observer.predict(v, dt)
                     }
                 }
@@ -84,7 +83,7 @@ object DrivetrainLocalizer {
         val now = Timer.getFPGATimestamp().second
         val iterator = pastInputs.iterator()
         iterator.forEach {
-            if(now - it.key >= 1.second) {
+            if (now - it.key >= 1.second) {
                 iterator.remove()
             }
         }
@@ -92,7 +91,6 @@ object DrivetrainLocalizer {
         pastInputs[now] = nowInput
         pastPoseBuffer[timestamp] = observer.xhat.toPose()
     }
-
 }
 
 private fun Vector<N3>.toPose() = Pose2d(get(0), get(1), get(0).radians.toRotation2d())

@@ -2,9 +2,7 @@ package frc.robot.subsystems.shooter
 
 import com.revrobotics.CANSparkMaxLowLevel
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-import edu.wpi.first.wpilibj.system.plant.DCMotor
 import edu.wpi.first.wpilibj2.command.CommandBase
 import frc.robot.Constants
 import frc.robot.Ports.armSolenoid
@@ -46,10 +44,9 @@ object FlywheelSubsystem : FalconSubsystem() {
         controller.i = 0.0
         controller.d = 0.0006
         controller.ff = 0.0
-
     }
 
-    private val feedForward = SimpleMotorFeedforward(0.65,  12.0 / 5676.revolutionsPerMinute.value * 0.9)
+    private val feedForward = SimpleMotorFeedforward(0.65, 12.0 / 5676.revolutionsPerMinute.value * 0.9)
 
     private val shooterSlave = falconMAX(shooterGearboxIds[1], CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         with(canSparkMax) {
@@ -68,7 +65,7 @@ object FlywheelSubsystem : FalconSubsystem() {
             armSolenoid[0], armSolenoid[1], kPcmId
     )
 
-     val kickWheelMotor = falconMAX(collectorAgitatorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
+    val kickWheelMotor = falconMAX(collectorAgitatorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         with(canSparkMax) {
             restoreFactoryDefaults()
             setSecondaryCurrentLimit(35.0)
@@ -123,11 +120,13 @@ object FlywheelSubsystem : FalconSubsystem() {
     }
 
     val defaultShotLookupTable = Constants.defaultShotLookupTable
-
 }
 
-data class ShotParameter(val hoodAngle: SIUnit<Radian>, val speed: SIUnit<Velocity<Radian>>,
-                         val offset: SIUnit<Radian> = 0.degrees) : Interpolatable<ShotParameter> {
+data class ShotParameter(
+    val hoodAngle: SIUnit<Radian>,
+    val speed: SIUnit<Velocity<Radian>>,
+    val offset: SIUnit<Radian> = 0.degrees
+) : Interpolatable<ShotParameter> {
 
     override fun interpolate(endValue: ShotParameter, t: Double) =
             ShotParameter(SIUnit(hoodAngle.value.lerp(endValue.hoodAngle.value, t)),
@@ -139,11 +138,11 @@ data class ShotParameter(val hoodAngle: SIUnit<Radian>, val speed: SIUnit<Veloci
     }
 
     override fun equals(other: Any?): Boolean {
-        if(other == null) return false
-        if(other !is ShotParameter) return false
-        return (other.hoodAngle - hoodAngle).absoluteValue.inDegrees() < 0.1
-                && (other.speed - speed).value < 0.1
-                && (other.offset - offset).absoluteValue.inDegrees() < 0.1
+        if (other == null) return false
+        if (other !is ShotParameter) return false
+        return (other.hoodAngle - hoodAngle).absoluteValue.inDegrees() < 0.1 &&
+                (other.speed - speed).value < 0.1 &&
+                (other.offset - offset).absoluteValue.inDegrees() < 0.1
     }
 
     override fun toString() = "ShotParameter: angle ${hoodAngle.inDegrees()}, speed ${speed.inRpm()}, offset ${offset.inDegrees()}"

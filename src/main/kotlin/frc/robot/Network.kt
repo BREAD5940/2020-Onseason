@@ -5,22 +5,20 @@
 
 package frc.robot
 
-import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import frc.robot.autonomous.Autonomous
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.HoodSubsystem
+import kotlin.math.roundToInt
 import lib.inRpm
 import lib.revolutionsPerMinute
 import org.ghrobotics.lib.mathematics.units.derived.inDegrees
 import org.ghrobotics.lib.mathematics.units.derived.radians
 import org.ghrobotics.lib.wrappers.networktables.enumSendableChooser
 import org.ghrobotics.lib.wrappers.networktables.tab
-import kotlin.math.roundToInt
 
 object Network {
     fun update() {

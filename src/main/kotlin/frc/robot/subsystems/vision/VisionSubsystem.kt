@@ -1,7 +1,5 @@
 package frc.robot.subsystems.vision
 
-import edu.wpi.first.networktables.NetworkTable
-import edu.wpi.first.networktables.NetworkTableInstance
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.vision.ChameleonCamera
 

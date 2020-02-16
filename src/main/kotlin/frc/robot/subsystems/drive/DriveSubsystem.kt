@@ -114,7 +114,6 @@ object DriveSubsystem : FalconSubsystem() {
         //        "brAngle, brAzimuthVolt, brDriveAngle, brDriveVolt,")
 
         compressor.start()
-
     }
 
     fun setGyroAngle(angle: Rotation2d) {
@@ -149,10 +148,9 @@ object DriveSubsystem : FalconSubsystem() {
     fun followTrajectory2(trajectory: Trajectory, endHeading: Source<SIUnit<Radian>>) =
             SwerveTrajectoryFollowerCommand({ trajectory }, endHeading.map { it.toRotation2d() })
 
-
     fun followTrajectory(trajectory: Trajectory, endHeading: Source<Rotation2d>, mirrored: BooleanSource = { false }) =
             SwerveTrajectoryFollowerCommand(mirrored.map(trajectory.mirror(), trajectory),
-                    mirrored.map { if(mirrored()) endHeading().mirror() else endHeading() })
+                    mirrored.map { if (mirrored()) endHeading().mirror() else endHeading() })
 
     fun followTrajectory(trajectory: Trajectory, endHeading: Rotation2d, mirrored: BooleanSource) =
             SwerveTrajectoryFollowerCommand(trajectory, endHeading, mirrored)

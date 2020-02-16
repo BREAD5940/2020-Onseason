@@ -36,7 +36,7 @@ class InterpolatingTableTest {
         assertEquals(table.get(12.2), ShotParameter(61.5.degrees, 2100.revolutionsPerMinute, 0.5.degrees))
         assertEquals(table.get(16.2), ShotParameter(60.5.degrees, 1900.revolutionsPerMinute, 0.5.degrees))
 
-        assertEquals(ShotParameter(64.75.degrees, ((3500.0+2600.0) / 2.0).revolutionsPerMinute, 1.degrees), table.get(2.3))
+        assertEquals(ShotParameter(64.75.degrees, ((3500.0 + 2600.0) / 2.0).revolutionsPerMinute, 1.degrees), table.get(2.3))
     }
 }
 

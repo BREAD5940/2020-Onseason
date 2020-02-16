@@ -9,17 +9,17 @@ import org.ejml.dense.row.CommonOps_DDRM
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM
 import org.ejml.simple.SimpleMatrix
 
-fun <R: Num, C: Num> zeros(rows: Nat<R>, cols: Nat<C>): Matrix<R, C> = Matrix(SimpleMatrix(rows.num, cols.num))
-fun <D: Num> zeros(size: Nat<D>): Matrix<D, N1> = Matrix(SimpleMatrix(size.num, 1))
+fun <R : Num, C : Num> zeros(rows: Nat<R>, cols: Nat<C>): Matrix<R, C> = Matrix(SimpleMatrix(rows.num, cols.num))
+fun <D : Num> zeros(size: Nat<D>): Matrix<D, N1> = Matrix(SimpleMatrix(size.num, 1))
 
-fun <D: Num> eye(size: Nat<D>): Matrix<D, D> = Matrix(SimpleMatrix.identity(size.num))
+fun <D : Num> eye(size: Nat<D>): Matrix<D, D> = Matrix(SimpleMatrix.identity(size.num))
 
-fun <R: Num, C: Num> ones(rows: Nat<R>, cols: Nat<C>): Matrix<R, C> {
+fun <R : Num, C : Num> ones(rows: Nat<R>, cols: Nat<C>): Matrix<R, C> {
     val out = SimpleMatrix(rows.num, cols.num)
     CommonOps_DDRM.fill(out.ddrm, 1.0)
     return Matrix(out)
 }
-fun <D: Num> ones(size: Nat<D>): Matrix<D, N1> {
+fun <D : Num> ones(size: Nat<D>): Matrix<D, N1> {
     val out = SimpleMatrix(size.num, 1)
     CommonOps_DDRM.fill(out.ddrm, 1.0)
     return Matrix(out)
@@ -29,8 +29,8 @@ fun <R : Num, C : Num> mat(rows: Nat<R>, cols: Nat<C>) = MatBuilder(rows, cols)
 
 typealias Vector<D> = Matrix<D, N1>
 
-operator fun <D: Num> Matrix<D, N1>.get(i: Int) = storage[i, 0]
-operator fun <D: Num> Matrix<D, N1>.set(i: Int, j: Double) {
+operator fun <D : Num> Matrix<D, N1>.get(i: Int) = storage[i, 0]
+operator fun <D : Num> Matrix<D, N1>.set(i: Int, j: Double) {
     storage[i, 0] = j
 }
 

@@ -116,9 +116,9 @@ class ChameleonCamera(cameraName: String) {
         }
 
     data class ChameleonTrackedTarget(
-            val pitch: Double,
-            val yaw: Double,
-            val area: Double,
-            val cameraRelativePose: Pose2d
+        val pitch: Double,
+        val yaw: Double,
+        val area: Double,
+        val cameraRelativePose: Pose2d
     )
 }

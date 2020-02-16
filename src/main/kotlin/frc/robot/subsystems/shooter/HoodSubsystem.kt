@@ -7,13 +7,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
 import frc.robot.Ports
 import kotlin.math.PI
+import kotlin.math.absoluteValue
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.mathematics.units.derived.*
-import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnitRotationModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.rev.falconMAX
-import kotlin.math.absoluteValue
 
 object HoodSubsystem : FalconSubsystem() {
 
@@ -60,12 +59,12 @@ object HoodSubsystem : FalconSubsystem() {
 
         lastProfiledReference = setpoint
 
-        if((hoodAngle - wantedAngle).absoluteValue > 1.degrees) {
+        if ((hoodAngle - wantedAngle).absoluteValue > 1.degrees) {
             hoodMotor.setDutyCycle(hoodPidController.calculate(hoodAngle.inRadians(), setpoint.position))
             wasInOnSPARKClosedLoop = false
         } else {
 
-            if(!wasInOnSPARKClosedLoop) {
+            if (!wasInOnSPARKClosedLoop) {
                 wasInOnSPARKClosedLoop = true
                 hoodMotor.encoder.resetPosition(hoodAngle)
 //                lastBrushlessEncoderAngle = hoodMotor.encoder.position
@@ -74,7 +73,5 @@ object HoodSubsystem : FalconSubsystem() {
             // hold the last encoder angle
             hoodMotor.setPosition(wantedAngle)
         }
-
-
     }
 }
