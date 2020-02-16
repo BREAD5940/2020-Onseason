@@ -26,6 +26,10 @@ object IntakeSubsystem : FalconSubsystem() {
     val chungusPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[0], intakeSolenoid[1], 9)
     val secondarySmolPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[2], intakeSolenoid[3], 8)
 
+    override fun setNeutral() {
+        intakeMotor.setNeutral()
+    }
+
      val intakeMotor = falconMAX(intakeMotorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         canSparkMax.apply {
             restoreFactoryDefaults()
@@ -91,6 +95,7 @@ object IntakeSubsystem : FalconSubsystem() {
         }
 
     override fun lateInit() {
+
         defaultCommand = runCommand({
             setSpeed(speedSource())
             if(speedSource() > 0.1 && !holdIntake){
@@ -99,6 +104,7 @@ object IntakeSubsystem : FalconSubsystem() {
                 miniRetractIntakeCommand()
             }
         }, this)
+
 
         SmartDashboard.putData("retract intake", retractIntakeCommand())
         SmartDashboard.putData("extend intake", extendIntakeCommand())
@@ -111,7 +117,9 @@ object IntakeSubsystem : FalconSubsystem() {
     // Operator joystick memes
     val speedSource by lazy {
         { Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kRight) -
-                Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft) }
+                Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft)
+            + Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kRight) -
+                Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kLeft) }
     }
 }
 

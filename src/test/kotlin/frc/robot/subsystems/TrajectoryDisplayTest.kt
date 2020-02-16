@@ -1,24 +1,28 @@
 package frc.robot.subsystems
 
 import frc.robot.auto.paths.TrajectoryFactory
-import java.io.File
-import javax.imageio.ImageIO
-import javax.swing.JFrame
+import frc.robot.autonomous.routines.TenPCAutoRoutine
 import org.ghrobotics.lib.mathematics.units.kFeetToMeter
 import org.jfree.chart.ChartFactory
 import org.jfree.chart.ChartPanel
 import org.jfree.chart.plot.PlotOrientation
 import org.jfree.data.xy.XYDataItem
-import org.jfree.data.xy.XYSeries
 import org.jfree.data.xy.XYSeriesCollection
 import org.junit.Test
+import java.io.File
+import javax.imageio.ImageIO
+import javax.swing.JFrame
 
 class TrajectoryDisplayTest {
-    @Test
-    fun main() {
-        var seriesX = XYSeries("x")
 
-        TrajectoryFactory.grabThreeFromTrench.states.forEach {
+    @Test fun testDuration() {
+        println(TenPCAutoRoutine().duration)
+    }
+
+    @Test
+    fun displayTrajectory() {
+        var seriesX = org.jfree.data.xy.XYSeries("x")
+        TrajectoryFactory.tenPointAutoTrenchToShoot.states.forEach {
             seriesX.add(XYDataItem(it.poseMeters.translation.x / kFeetToMeter, it.poseMeters.translation.y / kFeetToMeter))
         }
 
@@ -41,6 +45,6 @@ class TrajectoryDisplayTest {
         frame.setSize(2598 / 3, 1299 / 3)
         frame.setVisible(true)
         Thread.sleep(100000)
-         return
+        return
     }
 }

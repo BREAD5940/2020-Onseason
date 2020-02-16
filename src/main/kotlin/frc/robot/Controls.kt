@@ -1,12 +1,15 @@
 package frc.robot
 
 // import frc.robot.subsystems.drive.VisionDriveCommand
+import edu.wpi.first.wpilibj.GenericHID
 import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.system.plant.FlywheelSystem
 import frc.robot.subsystems.drive.DriveSubsystem
+import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.HoodSubsystem
+import frc.robot.subsystems.shooter.ShootCommand
 import lib.instantCommand
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.radians
@@ -37,6 +40,8 @@ object Controls {
         pov(0).changeOn { HoodSubsystem.wantedAngle = 42.degrees }
         pov(180).changeOn { HoodSubsystem.wantedAngle = 60.degrees }
 
+        triggerAxisButton(GenericHID.Hand.kRight).change(VisionDriveCommand())
+
         //button(kB).changeOn{  }
         // }
     }
@@ -44,18 +49,25 @@ object Controls {
     val operatorXbox = XboxController(1)
     val operatorFalconXbox = operatorXbox.mapControls {
 
-        button(kBumperRight).changeOn{ FlywheelSubsystem.kickWheelMotor.setDutyCycle((1.0))}.changeOff{FlywheelSubsystem.kickWheelMotor.setNeutral()}
+        button(kBumperRight).whileOn{
+            FlywheelSubsystem.wantsShootMode = true
+            FlywheelSubsystem.shooterMaster.setDutyCycle(1.0)}
+                .changeOff{FlywheelSubsystem.shooterMaster.setNeutral(); }
 
-                .changeOff{FlywheelSubsystem.setNeutral(); }
-        button(kBumperLeft).changeOn{FlywheelSubsystem.shootAtPower(0.5)}.changeOff{FlywheelSubsystem.setNeutral()}
-        button(kB).changeOn{
-            IntakeSubsystem.intakeMotor.setDutyCycle(-0.5); FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5)}
-                .changeOff{IntakeSubsystem.intakeMotor.setNeutral(); FlywheelSubsystem.kickWheelMotor.setNeutral(); }
-        button(kA).whileOn{IntakeSubsystem.holdIntake = true}.changeOff{IntakeSubsystem.holdIntake = false}
+        button(kBumperLeft).changeOn{
+            FlywheelSubsystem.wantsShootMode = true
+            FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}
+                .changeOff{FlywheelSubsystem.kickWheelMotor.setNeutral()}
 
-        pov(0).changeOn{FlywheelSubsystem.shootAtPower(1.0)}.changeOff { FlywheelSubsystem.setNeutral() }
-        pov(180).changeOn{FlywheelSubsystem.shootAtPower(0.60)}.changeOff { FlywheelSubsystem.setNeutral() }
+        button(kB).changeOn{IntakeSubsystem.intakeMotor.setDutyCycle(-0.5); FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5)}.changeOff{IntakeSubsystem.intakeMotor.setNeutral(); FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false}
+        button(kA).whileOn{IntakeSubsystem.holdIntake = true}.whileOff{IntakeSubsystem.holdIntake = false}
+
+//        pov(0).changeOn{FlywheelSubsystem.shootAtPower(1.0)}.changeOff { FlywheelSubsystem.setNeutral() }
+//        pov(180).changeOn{FlywheelSubsystem.shootAtPower(0.60)}.changeOff { FlywheelSubsystem.setNeutral() }
+
+        pov(0).change(ShootCommand())
         //todo make climb shit
+
     }
 
     fun update() {
