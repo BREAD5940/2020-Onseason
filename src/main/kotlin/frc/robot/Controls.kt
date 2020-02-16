@@ -32,13 +32,15 @@ object Controls {
 
         button(kBumperRight).changeOn{IntakeSubsystem.toggleIntakeExtensionCommand()}
         button(kBumperLeft).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
-
-        triggerAxisButton(GenericHID.Hand.kRight).change(VisionDriveCommand())
-
         button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())
         button(kX).changeOn{IntakeSubsystem.miniRetractIntakeCommand()}
-        button(kY).changeOn{ FlywheelSubsystem.shootAtPower(1.0)}.changeOff{FlywheelSubsystem.setNeutral()}
+//        button(kY).changeOn{ FlywheelSubsystem.shootAtPower(1.0)}.changeOff{FlywheelSubsystem.setNeutral()}
+
+        pov(0).changeOn { HoodSubsystem.wantedAngle = 42.degrees }
+        pov(180).changeOn { HoodSubsystem.wantedAngle = 60.degrees }
+
+        triggerAxisButton(GenericHID.Hand.kRight).change(VisionDriveCommand())
 
         //button(kB).changeOn{  }
         // }
@@ -46,7 +48,6 @@ object Controls {
 
     val operatorXbox = XboxController(1)
     val operatorFalconXbox = operatorXbox.mapControls {
-
 
         button(kBumperRight).whileOn{
             FlywheelSubsystem.wantsShootMode = true
@@ -60,6 +61,9 @@ object Controls {
 
         button(kB).changeOn{IntakeSubsystem.intakeMotor.setDutyCycle(-0.5); FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5)}.changeOff{IntakeSubsystem.intakeMotor.setNeutral(); FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false}
         button(kA).whileOn{IntakeSubsystem.holdIntake = true}.whileOff{IntakeSubsystem.holdIntake = false}
+
+//        pov(0).changeOn{FlywheelSubsystem.shootAtPower(1.0)}.changeOff { FlywheelSubsystem.setNeutral() }
+//        pov(180).changeOn{FlywheelSubsystem.shootAtPower(0.60)}.changeOff { FlywheelSubsystem.setNeutral() }
 
         pov(0).change(ShootCommand())
         //todo make climb shit
