@@ -28,10 +28,5 @@ class MoveOffStart: AutoRoutine() {
     override val routine
         get() = sequential {
             +DriveSubsystem.followTrajectory2(path1) { 0.0.degrees }
-//            +DriveSubsystem.followTrajectory2(path2) {
-//                if(Rectangle2d(Translation2d(0.0, 0.0), Translation2d(2.0,2.0))
-//                                .contains(DriveSubsystem.robotPosition.translation))
-//                    45.degrees else 50.degrees
-//            }
         }
 }
