@@ -41,13 +41,17 @@ object Constants {
      */
     val defaultShotLookupTable = InterpolatingTable(
             // maybe we'll do target pitch for now?
-            -3.9 to ShotParameter(67.degrees, 4000.revolutionsPerMinute),
-            0.3 to ShotParameter(64.5.degrees, 3500.revolutionsPerMinute, (1).degrees),
-            4.3 to ShotParameter(65.degrees, 2600.revolutionsPerMinute, (1).degrees),
-            5.4 to ShotParameter(63.8.degrees, 2400.revolutionsPerMinute, (0.5).degrees),
-            8.6 to ShotParameter(62.5.degrees, 2400.revolutionsPerMinute, (0.5).degrees),
-            12.2 to ShotParameter(61.5.degrees, 2100.revolutionsPerMinute, 0.5.degrees),
-            16.2 to ShotParameter(60.5.degrees, 1900.revolutionsPerMinute, 0.5.degrees)
+            -13.0 to ShotParameter(68.8.degrees, 4100.revolutionsPerMinute,0.degrees),
+            -11.0 to ShotParameter(68.6.degrees, 3350.revolutionsPerMinute,0.degrees),
+            -10.4 to ShotParameter(68.5.degrees, 3150.revolutionsPerMinute, 2.degrees),
+            -6.2 to ShotParameter(68.degrees, 3100.revolutionsPerMinute, 0.degrees),
+            -3.5 to ShotParameter(68.degrees, 3000.revolutionsPerMinute),
+            0.1 to ShotParameter(65.5.degrees, 2800.revolutionsPerMinute, (1).degrees),
+            4.4 to ShotParameter(65.degrees, 2300.revolutionsPerMinute, (1).degrees),
+            5.1 to ShotParameter(64.4.degrees, 2200.revolutionsPerMinute, (0.5).degrees),
+            8.6 to ShotParameter(63.degrees, 2200.revolutionsPerMinute, (0.5).degrees),
+            12.2 to ShotParameter(62.degrees, 2100.revolutionsPerMinute, 0.5.degrees),
+            16.2 to ShotParameter(59.degrees, 1850.revolutionsPerMinute, 0.5.degrees)
     )
 
     val rightBelowGoalParameter = ShotParameter(44.degrees, 1600.revolutionsPerMinute)

@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.ShotParameter
 import frc.robot.subsystems.vision.VisionSubsystem
+import lib.revolutionsPerMinute
 import kotlin.math.absoluteValue
 import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
 import org.ghrobotics.lib.mathematics.units.derived.degrees
@@ -32,8 +33,8 @@ class VisionDriveCommand : HolomonicDriveCommand() {
         forward *= forward.absoluteValue
         strafe *= strafe.absoluteValue
 
-        val shotParameter = FlywheelSubsystem.defaultShotLookupTable.get(VisionSubsystem.ps3eye.pitch.degrees) ?: ShotParameter.DefaultParameter
-//        val shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
+//        val shotParameter = FlywheelSubsystem.defaultShotLookupTable.get(VisionSubsystem.ps3eye.pitch.degrees) ?: ShotParameter.DefaultParameter
+        val shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
 
         when {
             VisionSubsystem.ps3eye.isValid -> {

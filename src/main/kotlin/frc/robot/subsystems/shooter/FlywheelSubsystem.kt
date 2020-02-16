@@ -107,7 +107,7 @@ object FlywheelSubsystem : FalconSubsystem() {
     }
 
     fun agitateAndShoot(shootTime: SIUnit<Second> = 5.seconds): CommandBase = sequential {
-        +ShootCommand(true)
+        +ShootCommand(true).withTimeout(2.0)
         +parallel {
             +instantCommand { runKickWheel(0.3) }.perpetually().withTimeout(shootTime.inSeconds())
             +ShootCommand().withTimeout(shootTime.inSeconds())

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.subsystems.vision.VisionSubsystem
 import kotlin.math.abs
 import lib.inRpm
+import lib.revolutionsPerMinute
 import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.derived.Radian
@@ -32,8 +33,8 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
     }
 
     override fun execute() {
-        val wantedParameter = parameterSupplier()
-//        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
+//        val wantedParameter = parameterSupplier()
+        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
 
         FlywheelSubsystem.shootAtSpeed(wantedParameter.speed)
         HoodSubsystem.wantedAngle = wantedParameter.hoodAngle
