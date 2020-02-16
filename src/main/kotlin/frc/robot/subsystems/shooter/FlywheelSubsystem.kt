@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj.system.plant.DCMotor
 import edu.wpi.first.wpilibj2.command.CommandBase
+import frc.robot.Constants
 import frc.robot.Ports.armSolenoid
 import frc.robot.Ports.collectorAgitatorId
 import frc.robot.Ports.kPcmId
@@ -121,19 +122,7 @@ object FlywheelSubsystem : FalconSubsystem() {
         SmartDashboard.putData(FlywheelSubsystem)
     }
 
-    /**
-     * The default shot lookup table, in degrees of elevation to ShotParameters
-     */
-    val defaultShotLookupTable = InterpolatingTable(
-            // maybe we'll do target pitch for now?
-            -3.9 to ShotParameter(67.degrees, 4000.revolutionsPerMinute),
-            0.3 to ShotParameter(64.5.degrees, 3500.revolutionsPerMinute, (1).degrees),
-            4.3 to ShotParameter(65.degrees, 2600.revolutionsPerMinute, (1).degrees),
-            5.4 to ShotParameter(63.8.degrees, 2400.revolutionsPerMinute, (0.5).degrees),
-            8.6 to ShotParameter(62.5.degrees, 2400.revolutionsPerMinute, (0.5).degrees),
-            12.2 to ShotParameter(61.5.degrees, 2100.revolutionsPerMinute, 0.5.degrees),
-            16.2 to ShotParameter(60.5.degrees, 1900.revolutionsPerMinute, 0.5.degrees)
-    )
+    val defaultShotLookupTable = Constants.defaultShotLookupTable
 
 }
 
@@ -142,9 +131,20 @@ data class ShotParameter(val hoodAngle: SIUnit<Radian>, val speed: SIUnit<Veloci
 
     override fun interpolate(endValue: ShotParameter, t: Double) =
             ShotParameter(SIUnit(hoodAngle.value.lerp(endValue.hoodAngle.value, t)),
-                    SIUnit(speed.value.lerp(endValue.speed.value, t)))
+                    SIUnit(speed.value.lerp(endValue.speed.value, t)),
+                    SIUnit(offset.value.lerp(endValue.offset.value, t)))
 
     companion object {
         val DefaultParameter = ShotParameter(45.degrees, 5000.revolutionsPerMinute)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if(other == null) return false
+        if(other !is ShotParameter) return false
+        return (other.hoodAngle - hoodAngle).absoluteValue.inDegrees() < 0.1
+                && (other.speed - speed).value < 0.1
+                && (other.offset - offset).absoluteValue.inDegrees() < 0.1
+    }
+
+    override fun toString() = "ShotParameter: angle ${hoodAngle.inDegrees()}, speed ${speed.inRpm()}, offset ${offset.inDegrees()}"
 }

@@ -2,6 +2,9 @@ package frc.robot
 
 import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics
+import frc.robot.subsystems.shooter.ShotParameter
+import lib.InterpolatingTable
+import lib.revolutionsPerMinute
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.feet
@@ -31,5 +34,19 @@ object Constants {
             kModulePositions[1],
             kModulePositions[2],
             kModulePositions[3]
+    )
+
+    /**
+     * The default shot lookup table, in degrees of elevation to ShotParameters
+     */
+    val defaultShotLookupTable = InterpolatingTable(
+            // maybe we'll do target pitch for now?
+            -3.9 to ShotParameter(67.degrees, 4000.revolutionsPerMinute),
+            0.3 to ShotParameter(64.5.degrees, 3500.revolutionsPerMinute, (1).degrees),
+            4.3 to ShotParameter(65.degrees, 2600.revolutionsPerMinute, (1).degrees),
+            5.4 to ShotParameter(63.8.degrees, 2400.revolutionsPerMinute, (0.5).degrees),
+            8.6 to ShotParameter(62.5.degrees, 2400.revolutionsPerMinute, (0.5).degrees),
+            12.2 to ShotParameter(61.5.degrees, 2100.revolutionsPerMinute, 0.5.degrees),
+            16.2 to ShotParameter(60.5.degrees, 1900.revolutionsPerMinute, 0.5.degrees)
     )
 }
