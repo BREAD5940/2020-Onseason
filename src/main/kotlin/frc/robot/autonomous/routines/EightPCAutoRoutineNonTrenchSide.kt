@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.subsystems.drive.DriveSubsystem
+import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import lib.revolutionsPerMinute
@@ -40,12 +41,9 @@ class EightPCAutoRoutineNonTrenchSide: AutoRoutine() {
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
             +DriveSubsystem.followTrajectory(path2) { (160.0).degrees.toRotation2d() }
-                    .andThen(
-//                            runCommand(FlywheelSubsystem)
-//                    { FlywheelSubsystem.shootAtSpeed(6000.revolutionsPerMinute); FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.5) }
-//                            .withTimeout(4.0))
-                            FlywheelSubsystem.agitateAndShoot(4.seconds))
-                    .andThen(Runnable { FlywheelSubsystem.setNeutral() }, FlywheelSubsystem)
+
+            +(FlywheelSubsystem.agitateAndShoot((4.seconds)))
+                    .deadlineWith(VisionDriveCommand())
 
             +DriveSubsystem.followTrajectory(path3) { 24.0.degrees.toRotation2d() }
                     .alongWith(
@@ -54,8 +52,9 @@ class EightPCAutoRoutineNonTrenchSide: AutoRoutine() {
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
             +DriveSubsystem.followTrajectory(path4) { 160.0.degrees.toRotation2d() }
-                    .andThen(FlywheelSubsystem.agitateAndShoot((4.seconds)))
-                    .andThen(Runnable { FlywheelSubsystem.setNeutral() }, FlywheelSubsystem)
+
+            +(FlywheelSubsystem.agitateAndShoot((4.seconds)))
+                    .deadlineWith(VisionDriveCommand())
 
 
 
