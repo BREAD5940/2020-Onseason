@@ -108,6 +108,9 @@ object FlywheelSubsystem : FalconSubsystem() {
         +instantCommand { setNeutral() }
     }
 
+    /**
+     * The default shot lookup table, in degrees of elevation to ShotParameters
+     */
     val defaultShotLookupTable = InterpolatingTable(
             // maybe we'll do target pitch for now?
             60.0 to ShotParameter(10.degrees, 4000.revolutionsPerMinute),

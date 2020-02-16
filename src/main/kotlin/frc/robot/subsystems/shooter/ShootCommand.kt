@@ -19,7 +19,7 @@ import kotlin.math.abs
  */
 class ShootCommand(private val parameterSupplier: () -> ShotParameter, private val endAfterSpinup: Boolean = false) : FalconCommand(FlywheelSubsystem, HoodSubsystem) {
 
-    constructor(endAfterSpinup: Boolean = false) : this({ FlywheelSubsystem.defaultShotLookupTable.get(VisionSubsystem.yOffset) ?: ShotParameter.DefaultParameter }, endAfterSpinup)
+    constructor(endAfterSpinup: Boolean = false) : this({ FlywheelSubsystem.defaultShotLookupTable.get(VisionSubsystem.ps3eye.yaw.degrees) ?: ShotParameter.DefaultParameter }, endAfterSpinup)
 
     constructor(hoodAngle: SIUnit<Radian>, speed: SIUnit<Velocity<Radian>>, endAfterSpinup: Boolean = false) : this( { ShotParameter(hoodAngle, speed) }, endAfterSpinup )
 
