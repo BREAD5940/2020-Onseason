@@ -19,11 +19,11 @@ import org.ghrobotics.lib.mathematics.units.derived.velocity
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.mathematics.units.seconds
 
-class TenPCAutoRoutine: AutoRoutine() {
-    private val path1 = TrajectoryFactory.tenPCAutoToShieldGenerator
-    private val path2 = TrajectoryFactory.tenPCAutoShieldGeneratorToShoot
-    private val path3 = TrajectoryFactory.tenPCAutoPCFromTrench
-    private val path4 = TrajectoryFactory.tenPCAutoTrenchToShoot
+class EightPCAutoRoutineNonTrenchSide: AutoRoutine() {
+    private val path1 = TrajectoryFactory.eightPCAutoStartToOpposingTrench
+    private val path2 = TrajectoryFactory.eightPCAutoOpposingTrenchToShoot
+    private val path3 = TrajectoryFactory.eightPCAutoShootToShieldGenerator
+    private val path4 = TrajectoryFactory.eightPCShieldGeneratorToShoot
 
     override val duration: SIUnit<Second>
         get() = path1.duration +
@@ -33,13 +33,13 @@ class TenPCAutoRoutine: AutoRoutine() {
 
     override val routine
         get() = sequential {
-            +DriveSubsystem.followTrajectory2(path1) { (-68).degrees }
+            +DriveSubsystem.followTrajectory2(path1) { 0.0.degrees }
                     .alongWith(
                             IntakeSubsystem.extendIntakeCommand()
                                     .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(0.5) }))
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
-            +DriveSubsystem.followTrajectory(path2) { (180.0).degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path2) { (160.0).degrees.toRotation2d() }
                     .andThen(
 //                            runCommand(FlywheelSubsystem)
 //                    { FlywheelSubsystem.shootAtSpeed(6000.revolutionsPerMinute); FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.5) }
@@ -47,13 +47,13 @@ class TenPCAutoRoutine: AutoRoutine() {
                             FlywheelSubsystem.agitateAndShoot(4.seconds))
                     .andThen(Runnable { FlywheelSubsystem.setNeutral() }, FlywheelSubsystem)
 
-            +DriveSubsystem.followTrajectory(path3) { 0.0.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path3) { 24.0.degrees.toRotation2d() }
                     .alongWith(
                             IntakeSubsystem.extendIntakeCommand()
                                     .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(0.5) }))
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
-            +DriveSubsystem.followTrajectory(path4) { 180.0.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path4) { 160.0.degrees.toRotation2d() }
                     .andThen(FlywheelSubsystem.agitateAndShoot((4.seconds)))
                     .andThen(Runnable { FlywheelSubsystem.setNeutral() }, FlywheelSubsystem)
 
