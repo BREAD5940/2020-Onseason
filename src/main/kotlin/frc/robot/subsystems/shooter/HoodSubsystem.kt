@@ -20,22 +20,22 @@ object HoodSubsystem : FalconSubsystem() {
             restoreFactoryDefaults()
             setSecondaryCurrentLimit(35.0)
         }
-        controller.setOutputRange(-0.1, 0.1)
+        controller.setOutputRange(-0.3, 0.3)
     }
 
     private val hoodAngleEncoder = AnalogInput(Ports.hoodEncoderPort)
     val hoodAngle
         get() = ((hoodAngleEncoder.voltage / RobotController.getVoltage5V() * 2.0 * PI).radians + 3.degrees)
 
-    var wantedAngle = 56.degrees
+    var wantedAngle = 57.degrees
 
-    val hoodPidController = PIDController(5.0, 0.0, 0.0).apply {
+    val hoodPidController = PIDController(6.0, 0.0, 0.0).apply {
 //        enableContinuousInput(-PI, PI)
         disableContinuousInput()
     }
 
     var lastProfiledReference = TrapezoidProfile.State(hoodAngle.value, 0.0)
-    private val constraints = TrapezoidProfile.Constraints(20.degrees.inRadians(), 40.degrees.inRadians())
+    private val constraints = TrapezoidProfile.Constraints(50.degrees.inRadians(), 40.degrees.inRadians())
 
     fun enabledReset() {
         lastProfiledReference = TrapezoidProfile.State(hoodAngle.value, 0.0)

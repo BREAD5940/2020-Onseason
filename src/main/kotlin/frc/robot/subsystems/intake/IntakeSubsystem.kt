@@ -105,7 +105,7 @@ object IntakeSubsystem : FalconSubsystem() {
     }
 
     override fun periodic() {
-        println(intakeMotor.drawnCurrent.inAmps())
+//        println(intakeMotor.drawnCurrent.inAmps())
     }
 
     // Operator joystick memes

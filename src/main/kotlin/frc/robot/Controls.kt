@@ -23,18 +23,22 @@ object Controls {
         //button(kBumperLeft).changeOn(reZeroCommand)
         button(kStart).changeOn(reZeroCommand)
 
-     //   state({ !isClimbing }) {
+        //   state({ !isClimbing }) {
 
-            // todo stuff
+        // todo stuff
 
-            button(kBumperRight).changeOn{IntakeSubsystem.toggleIntakeExtensionCommand()}
-            button(kBumperLeft).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
-            button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
-            button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())
-            button(kX).changeOn{IntakeSubsystem.miniRetractIntakeCommand()}
-            button(kY).changeOn{ FlywheelSubsystem.shootAtPower(1.0)}.changeOff{FlywheelSubsystem.setNeutral()}
-            //button(kB).changeOn{  }
-       // }
+        button(kBumperRight).changeOn{IntakeSubsystem.toggleIntakeExtensionCommand()}
+        button(kBumperLeft).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
+        button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
+        button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())
+        button(kX).changeOn{IntakeSubsystem.miniRetractIntakeCommand()}
+//        button(kY).changeOn{ FlywheelSubsystem.shootAtPower(1.0)}.changeOff{FlywheelSubsystem.setNeutral()}
+
+        pov(0).changeOn { HoodSubsystem.wantedAngle = 42.degrees }
+        pov(180).changeOn { HoodSubsystem.wantedAngle = 60.degrees }
+
+        //button(kB).changeOn{  }
+        // }
     }
 
     val operatorXbox = XboxController(1)
@@ -42,14 +46,15 @@ object Controls {
 
         button(kBumperRight).changeOn{ FlywheelSubsystem.kickWheelMotor.setDutyCycle((1.0))}.changeOff{FlywheelSubsystem.kickWheelMotor.setNeutral()}
 
-                .changeOff{FlywheelSubsystem.shooterMaster.setNeutral(); }
-        button(kBumperLeft).changeOn{FlywheelSubsystem.shootAtPower(1.0)}.changeOff{FlywheelSubsystem.setNeutral()}
+                .changeOff{FlywheelSubsystem.setNeutral(); }
+        button(kBumperLeft).changeOn{FlywheelSubsystem.shootAtPower(0.5)}.changeOff{FlywheelSubsystem.setNeutral()}
         button(kB).changeOn{
             IntakeSubsystem.intakeMotor.setDutyCycle(-0.5); FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5)}
                 .changeOff{IntakeSubsystem.intakeMotor.setNeutral(); FlywheelSubsystem.kickWheelMotor.setNeutral(); }
         button(kA).whileOn{IntakeSubsystem.holdIntake = true}.changeOff{IntakeSubsystem.holdIntake = false}
-        pov(0).changeOn{IntakeSubsystem.extendIntakeCommand()}
-        pov(180).changeOn{IntakeSubsystem.retractIntakeCommand()}
+
+        pov(0).changeOn{FlywheelSubsystem.shootAtPower(1.0)}.changeOff { FlywheelSubsystem.setNeutral() }
+        pov(180).changeOn{FlywheelSubsystem.shootAtPower(0.60)}.changeOff { FlywheelSubsystem.setNeutral() }
         //todo make climb shit
     }
 
