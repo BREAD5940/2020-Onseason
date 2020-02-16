@@ -11,6 +11,7 @@ import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.HoodSubsystem
 import frc.robot.subsystems.shooter.ShootCommand
 import lib.instantCommand
+import lib.runCommand
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.radians
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
@@ -31,16 +32,18 @@ object Controls {
         // todo stuff
 
         button(kBumperRight).changeOn{IntakeSubsystem.toggleIntakeExtensionCommand()}
-        button(kBumperLeft).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
+        button(kBumperLeft).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
         button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())
         button(kX).changeOn{IntakeSubsystem.miniRetractIntakeCommand()}
-//        button(kY).changeOn{ FlywheelSubsystem.shootAtPower(1.0)}.changeOff{FlywheelSubsystem.setNeutral()}
+//        button(kY).change(runCommand(FlywheelSubsystem) { FlywheelSubsystem.shootAtPower(1.0) }).changeOff{FlywheelSubsystem.setNeutral()}
 
         pov(0).changeOn { HoodSubsystem.wantedAngle = 42.degrees }
         pov(180).changeOn { HoodSubsystem.wantedAngle = 60.degrees }
 
-        triggerAxisButton(GenericHID.Hand.kRight).change(VisionDriveCommand())
+        pov(270).change(VisionDriveCommand())
+
+        button(kY).change(ShootCommand().alongWith(VisionDriveCommand()))
 
         //button(kB).changeOn{  }
         // }
@@ -49,15 +52,8 @@ object Controls {
     val operatorXbox = XboxController(1)
     val operatorFalconXbox = operatorXbox.mapControls {
 
-        button(kBumperRight).whileOn{
-            FlywheelSubsystem.wantsShootMode = true
-            FlywheelSubsystem.shooterMaster.setDutyCycle(1.0)}
-                .changeOff{FlywheelSubsystem.shooterMaster.setNeutral(); }
-
-        button(kBumperLeft).changeOn{
-            FlywheelSubsystem.wantsShootMode = true
-            FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}
-                .changeOff{FlywheelSubsystem.kickWheelMotor.setNeutral()}
+        button(kBumperLeft).change(ShootCommand().alongWith(VisionDriveCommand()))
+        button(kBumperRight).changeOn {FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
 
         button(kB).changeOn{IntakeSubsystem.intakeMotor.setDutyCycle(-0.5); FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5)}.changeOff{IntakeSubsystem.intakeMotor.setNeutral(); FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false}
         button(kA).whileOn{IntakeSubsystem.holdIntake = true}.whileOff{IntakeSubsystem.holdIntake = false}

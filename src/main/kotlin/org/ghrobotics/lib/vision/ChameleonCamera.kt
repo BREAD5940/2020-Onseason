@@ -28,15 +28,15 @@ class ChameleonCamera(cameraName: String) {
     private val table: NetworkTable = FalconNetworkTable.getTable("chameleon-vision").getSubTable(cameraName)
 
     // Entries for the NetworkTable
-    private val pitchEntry = table["pitch"]
-    private val yawEntry = table["yaw"]
+    private val pitchEntry = table["targetPitch"]
+    private val yawEntry = table["targetYaw"]
     private val pipelineEntry = table["pipeline"]
     private val latencyEntry = table["latency"]
-    private val driverModeEntry = table["driver_mode"]
-    private val isValidEntry = table["is_valid"]
+    private val driverModeEntry = table["driverMode"]
+    private val isValidEntry = table["isValid"]
     private val areaEntry = table["area"]
     private val poseListEntry = table["poseList"]
-    private val altTargetEntry = table["aux_targets"]
+    private val altTargetEntry = table["auxTargets"]
 
     private val gson = Gson()
 

@@ -2,6 +2,9 @@ package frc.robot.subsystems.shooter
 
 import com.revrobotics.CANSparkMaxLowLevel
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import edu.wpi.first.wpilibj.system.plant.DCMotor
 import edu.wpi.first.wpilibj2.command.CommandBase
 import frc.robot.Ports.armSolenoid
 import frc.robot.Ports.collectorAgitatorId
@@ -26,25 +29,32 @@ import org.ghrobotics.lib.wrappers.FalconSolenoid
 
 object FlywheelSubsystem : FalconSubsystem() {
 
+    private val model = NativeUnitRotationModel(0.81.nativeUnits)
     val shooterMaster = falconMAX(shooterGearboxIds[0],
-            CANSparkMaxLowLevel.MotorType.kBrushless, NativeUnitRotationModel(0.81.nativeUnits)) {
+            CANSparkMaxLowLevel.MotorType.kBrushless, model) {
         with(canSparkMax) {
             restoreFactoryDefaults()
         }
-        controller.setOutputRange(-1.0, 1.0)
-        controller.p = 0.00005
-        controller.i = 0.0
-        controller.d = 0.0
-        controller.ff = 2.0E-5
+        smartCurrentLimit = 50.amps
 
         outputInverted = true
         brakeMode = false
+
+        controller.setOutputRange(-1.0, 1.0)
+        controller.p = 0.0005
+        controller.i = 0.0
+        controller.d = 0.0006
+        controller.ff = 0.0
+
     }
+
+    private val feedForward = SimpleMotorFeedforward(0.65,  12.0 / 5676.revolutionsPerMinute.value * 0.9)
 
     private val shooterSlave = falconMAX(shooterGearboxIds[1], CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         with(canSparkMax) {
             restoreFactoryDefaults()
         }
+        smartCurrentLimit = 50.amps
         controller.setOutputRange(-1.0, 1.0)
         outputInverted = true
         brakeMode = false
@@ -82,12 +92,11 @@ object FlywheelSubsystem : FalconSubsystem() {
 
     val flywheelSpeed = shooterMaster.encoder.velocity
 
-    // feedforward
-    private val feedForward = SimpleMotorFeedforward(0.0, 0.015)
-
     fun shootAtSpeed(speed: SIUnit<Velocity<Radian>>) {
         wantsShootMode = true
-        shooterMaster.setVelocity(speed, feedForward.calculate(speed.value).volts)
+        val ff = feedForward.calculate(speed.value).volts
+        println("shooting at speed ${speed.inRpm()} with ff ${ff.value}")
+        shooterMaster.setVelocity(speed, ff)
     }
 
     fun shootAtPower(power: Double) {
@@ -108,15 +117,24 @@ object FlywheelSubsystem : FalconSubsystem() {
         +instantCommand { setNeutral() }
     }
 
+    override fun lateInit() {
+        SmartDashboard.putData(FlywheelSubsystem)
+    }
+
     /**
      * The default shot lookup table, in degrees of elevation to ShotParameters
      */
     val defaultShotLookupTable = InterpolatingTable(
             // maybe we'll do target pitch for now?
-            60.0 to ShotParameter(10.degrees, 4000.revolutionsPerMinute),
-            40.0 to ShotParameter(40.degrees, 5000.revolutionsPerMinute),
-            30.0 to ShotParameter(30.degrees, 6000.revolutionsPerMinute)
+            -3.9 to ShotParameter(67.degrees, 4000.revolutionsPerMinute),
+            0.3 to ShotParameter(64.5.degrees, 3500.revolutionsPerMinute, (1).degrees),
+            4.3 to ShotParameter(65.degrees, 2600.revolutionsPerMinute, (1).degrees),
+            5.4 to ShotParameter(63.8.degrees, 2400.revolutionsPerMinute, (0.5).degrees),
+            8.6 to ShotParameter(62.5.degrees, 2400.revolutionsPerMinute, (0.5).degrees),
+            12.2 to ShotParameter(61.5.degrees, 2100.revolutionsPerMinute, 0.5.degrees),
+            16.2 to ShotParameter(60.5.degrees, 1900.revolutionsPerMinute, 0.5.degrees)
     )
+
 }
 
 data class ShotParameter(val hoodAngle: SIUnit<Radian>, val speed: SIUnit<Velocity<Radian>>,

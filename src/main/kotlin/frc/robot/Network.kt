@@ -15,6 +15,7 @@ import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.HoodSubsystem
 import lib.inRpm
+import lib.revolutionsPerMinute
 import org.ghrobotics.lib.mathematics.units.derived.inDegrees
 import org.ghrobotics.lib.mathematics.units.derived.radians
 import org.ghrobotics.lib.wrappers.networktables.enumSendableChooser
@@ -51,6 +52,7 @@ object Network {
                 number("Hood Error, Deg") { HoodSubsystem.hoodPidController.positionError.radians.inDegrees().roundToInt().toDouble() }
                 number("Hood Output, Volt") { HoodSubsystem.hoodMotor.voltageOutput.value }
                 number("Last ref pos, deg") { HoodSubsystem.lastProfiledReference.position.radians.inDegrees().roundToInt().toDouble() }
+                number("Shooter error, RPM") { (FlywheelSubsystem.shooterMaster.encoder.velocity - 3000.revolutionsPerMinute).inRpm() }
                 position(2, 0)
                 size(1, 4)
             }

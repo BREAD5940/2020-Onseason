@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter
 
+import edu.wpi.first.networktables.NetworkTableEntry
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.subsystems.vision.VisionSubsystem
 import lib.inRpm
@@ -23,8 +24,8 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
 
     constructor(hoodAngle: SIUnit<Radian>, speed: SIUnit<Velocity<Radian>>, endAfterSpinup: Boolean = false) : this( { ShotParameter(hoodAngle, speed) }, endAfterSpinup )
 
-    val angleEntry = SmartDashboard.getEntry("hoodAngle")
-    val rpmEntry = SmartDashboard.getEntry("rpm")
+    private val angleEntry: NetworkTableEntry = SmartDashboard.getEntry("hoodAngle")
+    private val rpmEntry: NetworkTableEntry = SmartDashboard.getEntry("rpm")
 
     override fun initialize() {
         angleEntry.setDefaultDouble(45.0)
@@ -32,16 +33,16 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
     }
 
     override fun execute() {
-//        val wantedParameter = parameterSupplier()
-        val wantedParameter = ShotParameter(rpmEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
+        val wantedParameter = parameterSupplier()
+//        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
 
         FlywheelSubsystem.shootAtSpeed(wantedParameter.speed)
         HoodSubsystem.wantedAngle = wantedParameter.hoodAngle
 
-        println("hood ${wantedParameter.hoodAngle.inDegrees()}, rpm ${wantedParameter.speed.inRpm()}")
+//        println("hood ${wantedParameter.hoodAngle.inDegrees()}, rpm ${wantedParameter.speed.inRpm()}")
     }
 
-    fun isOnTarget(): Boolean {
+    private fun isOnTarget(): Boolean {
         val wantedParameter = parameterSupplier()
         return abs(wantedParameter.speed.inRpm() - FlywheelSubsystem.flywheelSpeed.inRpm()) < 50
                 && abs(HoodSubsystem.wantedAngle.inDegrees() - wantedParameter.hoodAngle.inDegrees()) < 3
