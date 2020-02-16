@@ -1,12 +1,15 @@
 package frc.robot
 
 // import frc.robot.subsystems.drive.VisionDriveCommand
+import edu.wpi.first.wpilibj.GenericHID
 import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.system.plant.FlywheelSystem
 import frc.robot.subsystems.drive.DriveSubsystem
+import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.HoodSubsystem
+import frc.robot.subsystems.shooter.ShootCommand
 import lib.instantCommand
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.radians
@@ -23,18 +26,22 @@ object Controls {
         //button(kBumperLeft).changeOn(reZeroCommand)
         button(kStart).changeOn(reZeroCommand)
 
-     //   state({ !isClimbing }) {
+        //   state({ !isClimbing }) {
 
-            // todo stuff
+        // todo stuff
 
-            button(kBumperRight).changeOn{IntakeSubsystem.toggleIntakeExtensionCommand()}
-            button(kBumperLeft).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
-            button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
-            button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())
-            button(kX).changeOn{IntakeSubsystem.miniRetractIntakeCommand()}
-            button(kY).changeOn{ FlywheelSubsystem.shootAtPower(1.0)}.changeOff{FlywheelSubsystem.setNeutral()}
-            //button(kB).changeOn{  }
-       // }
+        button(kBumperRight).changeOn{IntakeSubsystem.toggleIntakeExtensionCommand()}
+        button(kBumperLeft).changeOn{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)}.changeOff{FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0)}
+
+        triggerAxisButton(GenericHID.Hand.kRight).change(VisionDriveCommand())
+
+        button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
+        button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())
+        button(kX).changeOn{IntakeSubsystem.miniRetractIntakeCommand()}
+        button(kY).changeOn{ FlywheelSubsystem.shootAtPower(1.0)}.changeOff{FlywheelSubsystem.setNeutral()}
+
+        //button(kB).changeOn{  }
+        // }
     }
 
     val operatorXbox = XboxController(1)
@@ -54,10 +61,9 @@ object Controls {
         button(kB).changeOn{IntakeSubsystem.intakeMotor.setDutyCycle(-0.5); FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5)}.changeOff{IntakeSubsystem.intakeMotor.setNeutral(); FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false}
         button(kA).whileOn{IntakeSubsystem.holdIntake = true}.whileOff{IntakeSubsystem.holdIntake = false}
 
-        pov(0).changeOn{IntakeSubsystem.extendIntakeCommand()}
-        pov(180).changeOn{IntakeSubsystem.retractIntakeCommand()}
+        pov(0).change(ShootCommand())
         //todo make climb shit
-        
+
     }
 
     fun update() {
