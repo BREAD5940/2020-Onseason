@@ -17,12 +17,13 @@ import org.ghrobotics.lib.mathematics.units.derived.radians
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.derived.velocity
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
+import org.ghrobotics.lib.mathematics.units.seconds
 
 class TenPCAutoRoutine: AutoRoutine() {
-    private val path1 = TrajectoryFactory.tenPointAutoToShieldGenerator
-    private val path2 = TrajectoryFactory.tenPointAutoShieldGeneratorToShoot
-    private val path3 = TrajectoryFactory.tenPointAutoPCFromTrench
-    private val path4 = TrajectoryFactory.tenPointAutoTrenchToShoot
+    private val path1 = TrajectoryFactory.tenPCAutoToShieldGenerator
+    private val path2 = TrajectoryFactory.tenPCAutoShieldGeneratorToShoot
+    private val path3 = TrajectoryFactory.tenPCAutoPCFromTrench
+    private val path4 = TrajectoryFactory.tenPCAutoTrenchToShoot
 
     override val duration: SIUnit<Second>
         get() = path1.duration +
@@ -39,9 +40,11 @@ class TenPCAutoRoutine: AutoRoutine() {
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
             +DriveSubsystem.followTrajectory(path2) { (180.0).degrees.toRotation2d() }
-                    .andThen(runCommand(FlywheelSubsystem)
-                    { FlywheelSubsystem.shootAtSpeed(6000.revolutionsPerMinute); FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.5) }
-                            .withTimeout(4.0))
+                    .andThen(
+//                            runCommand(FlywheelSubsystem)
+//                    { FlywheelSubsystem.shootAtSpeed(6000.revolutionsPerMinute); FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.5) }
+//                            .withTimeout(4.0))
+                            FlywheelSubsystem.agitateAndShoot(4.seconds))
                     .andThen(Runnable { FlywheelSubsystem.setNeutral() }, FlywheelSubsystem)
 
             +DriveSubsystem.followTrajectory(path3) { 0.0.degrees.toRotation2d() }
@@ -51,9 +54,7 @@ class TenPCAutoRoutine: AutoRoutine() {
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
             +DriveSubsystem.followTrajectory(path4) { 180.0.degrees.toRotation2d() }
-                    .andThen(runCommand(FlywheelSubsystem)
-                    { FlywheelSubsystem.shootAtSpeed(6000.revolutionsPerMinute); FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.5) }
-                            .withTimeout(4.0))
+                    .andThen(FlywheelSubsystem.agitateAndShoot((4.seconds)))
                     .andThen(Runnable { FlywheelSubsystem.setNeutral() }, FlywheelSubsystem)
 
 

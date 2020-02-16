@@ -3,23 +3,18 @@ package frc.robot.subsystems.shooter
 import com.revrobotics.CANSparkMaxLowLevel
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj2.command.CommandBase
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import frc.robot.Ports.armSolenoid
 import frc.robot.Ports.collectorAgitatorId
 import frc.robot.Ports.kPcmId
 import frc.robot.Ports.shooterGearboxIds
 import frc.robot.Ports.shooterShifterSolenoid
-import kotlin.math.abs
 import kotlin.properties.Delegates
 import lib.*
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.commands.parallel
 import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.lerp
-import org.ghrobotics.lib.mathematics.units.Frac
-import org.ghrobotics.lib.mathematics.units.SIUnit
-import org.ghrobotics.lib.mathematics.units.Second
-import org.ghrobotics.lib.mathematics.units.amps
+import org.ghrobotics.lib.mathematics.units.*
 import org.ghrobotics.lib.mathematics.units.derived.*
 import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnitRotationModel
@@ -100,16 +95,17 @@ object FlywheelSubsystem : FalconSubsystem() {
         shooterMaster.setDutyCycle(power)
     }
 
-    fun runAgitator(speed: Double) {
+    fun runKickWheel(speed: Double) {
         kickWheelMotor.setDutyCycle(speed)
     }
 
-    fun agitateAndShoot(): CommandBase = sequential {
+    fun agitateAndShoot(shootTime: SIUnit<Second> = 5.seconds): CommandBase = sequential {
         +ShootCommand(true)
         +parallel {
-            +instantCommand { runAgitator(0.3) }.perpetually().withTimeout(5.0)
-            +ShootCommand().withTimeout(5.0)
+            +instantCommand { runKickWheel(0.3) }.perpetually().withTimeout(shootTime.inSeconds())
+            +ShootCommand().withTimeout(shootTime.inSeconds())
         }
+        +instantCommand { setNeutral() }
     }
 
     val defaultShotLookupTable = InterpolatingTable(

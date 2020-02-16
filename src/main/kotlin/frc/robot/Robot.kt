@@ -29,7 +29,7 @@ object Robot : FalconTimedRobot() {
 
         SmartDashboard.putData(CommandScheduler.getInstance())
 
-        SmartDashboard.putData("agitate", StartEndCommand(Runnable { FlywheelSubsystem.runAgitator(1.0) }, Runnable { FlywheelSubsystem.setNeutral() }, FlywheelSubsystem))
+        SmartDashboard.putData("agitate", StartEndCommand(Runnable { FlywheelSubsystem.runKickWheel(1.0) }, Runnable { FlywheelSubsystem.setNeutral() }, FlywheelSubsystem))
 
         super.robotInit()
     }
