@@ -1,11 +1,14 @@
 package frc.robot.subsystems.shooter
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.subsystems.vision.VisionSubsystem
 import lib.inRpm
+import lib.revolutionsPerMinute
 import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.derived.Radian
 import org.ghrobotics.lib.mathematics.units.derived.Velocity
+import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.inDegrees
 import kotlin.math.abs
 
@@ -20,10 +23,22 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
 
     constructor(hoodAngle: SIUnit<Radian>, speed: SIUnit<Velocity<Radian>>, endAfterSpinup: Boolean = false) : this( { ShotParameter(hoodAngle, speed) }, endAfterSpinup )
 
+    val angleEntry = SmartDashboard.getEntry("hoodAngle")
+    val rpmEntry = SmartDashboard.getEntry("rpm")
+
+    override fun initialize() {
+        angleEntry.setDefaultDouble(45.0)
+        rpmEntry.setDefaultDouble(0.0)
+    }
+
     override fun execute() {
-        val wantedParameter = parameterSupplier()
+//        val wantedParameter = parameterSupplier()
+        val wantedParameter = ShotParameter(rpmEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
+
         FlywheelSubsystem.shootAtSpeed(wantedParameter.speed)
         HoodSubsystem.wantedAngle = wantedParameter.hoodAngle
+
+        println("hood ${wantedParameter.hoodAngle.inDegrees()}, rpm ${wantedParameter.speed.inRpm()}")
     }
 
     fun isOnTarget(): Boolean {

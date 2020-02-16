@@ -116,7 +116,8 @@ object FlywheelSubsystem : FalconSubsystem() {
     )
 }
 
-data class ShotParameter(val hoodAngle: SIUnit<Radian>, val speed: SIUnit<Velocity<Radian>>) : Interpolatable<ShotParameter> {
+data class ShotParameter(val hoodAngle: SIUnit<Radian>, val speed: SIUnit<Velocity<Radian>>,
+                         val offset: SIUnit<Radian> = 0.degrees) : Interpolatable<ShotParameter> {
 
     override fun interpolate(endValue: ShotParameter, t: Double) =
             ShotParameter(SIUnit(hoodAngle.value.lerp(endValue.hoodAngle.value, t)),

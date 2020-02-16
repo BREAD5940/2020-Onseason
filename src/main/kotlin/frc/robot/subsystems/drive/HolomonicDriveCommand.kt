@@ -14,7 +14,7 @@ import org.ghrobotics.lib.utils.withDeadband
 import org.ghrobotics.lib.wrappers.hid.getX
 import org.ghrobotics.lib.wrappers.hid.getY
 
-class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
+open class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
 
     private var lastSpeed: ChassisSpeeds = ChassisSpeeds()
     private var wasEvading = false
