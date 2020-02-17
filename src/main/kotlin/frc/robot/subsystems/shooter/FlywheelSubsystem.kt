@@ -112,7 +112,7 @@ object FlywheelSubsystem : FalconSubsystem() {
             +instantCommand { runKickWheel(0.3) }.perpetually().withTimeout(shootTime.inSeconds())
             +ShootCommand().withTimeout(shootTime.inSeconds())
         }
-        +instantCommand(this@FlywheelSubsystem) { setNeutral() }
+        +instantCommand { setNeutral() }
     }
 
     override fun lateInit() {
