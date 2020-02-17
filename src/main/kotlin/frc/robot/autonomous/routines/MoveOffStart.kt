@@ -27,27 +27,22 @@ class MoveOffStart : AutoRoutine() {
     override val routine
         get() = sequential {
             +instantCommand(DriveSubsystem) { DriveSubsystem.setGyroAngle(0.degrees.toRotation2d()) }
-            +IntakeSubsystem.extendIntakeCommand()
-
-
             +runCommand(DriveSubsystem) {
                 DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(
                         ChassisSpeeds(-0.2, 0.0, 0.0)) }
                     .withTimeout(1.0)
-                    .andThen(Runnable { DriveSubsystem.setNeutral() })
 
             +parallelRace {
                 +VisionDriveCommand()
                 +ShootCommand()
                 +sequential {
                     +WaitCommand(2.0)
-                    +runCommand() { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }
+                    +runCommand(IntakeSubsystem) { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }
                             .withTimeout(5.0)
                 }
             }
 
-            +instantCommand() { IntakeSubsystem.setNeutral(); FlywheelSubsystem.setNeutral() }
-
+            +IntakeSubsystem.extendIntakeCommand()
 
         }
 }

@@ -3,8 +3,11 @@ package frc.robot
 // import frc.robot.subsystems.drive.VisionDriveCommand
 import edu.wpi.first.wpilibj.XboxController
 import frc.robot.subsystems.drive.DriveSubsystem
+<<<<<<< HEAD
 import frc.robot.subsystems.drive.HoldAngleCommand
 import frc.robot.subsystems.drive.HolomonicDriveCommand
+=======
+>>>>>>> parent of e9bde76... use gyro when shooting
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
@@ -42,9 +45,6 @@ object Controls {
 
         button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
         button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
-                .change(ShootCommand().alongWith(HoldAngleCommand()))
-
-
         button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false }
 
         button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter }))//.alongWith(VisionDriveCommand()))
@@ -55,12 +55,9 @@ object Controls {
 
         button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
         button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
-                .change(ShootCommand().alongWith(HoldAngleCommand()))
-
         button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false }
         button(kX).changeOn(IntakeSubsystem.extendIntakeCommand())
-        button(kY).changeOn(IntakeSubsystem.retractIntakeCommand())
-//        button(kY).change(ShootCommand().alongWith(VisionDriveCommand()))
+        button(kY).change(ShootCommand().alongWith(VisionDriveCommand()))
         pov(0).change(ShootCommand())
         // todo make climb shit
 
