@@ -16,8 +16,8 @@ import org.ghrobotics.lib.mathematics.units.seconds
 class TenPCAutoRoutine : AutoRoutine() {
     private val path1 = TrajectoryFactory.tenPCAutoToShieldGenerator
     private val path2 = TrajectoryFactory.tenPCAutoShieldGeneratorToShoot
-    private val path3 = TrajectoryFactory.tenPCAutoPCFromTrench
-    private val path4 = TrajectoryFactory.tenPCAutoTrenchToShoot
+    private val path3 = TrajectoryFactory.getPCFromTrench
+    private val path4 = TrajectoryFactory.trenchToShoot
 
     override val duration: SIUnit<Second>
         get() = path1.duration +

@@ -13,7 +13,7 @@ import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.seconds
 
-class EightPCAutoRoutineNonTrenchSide : AutoRoutine() {
+class EightPCAutoRoutineOpposingSide : AutoRoutine() {
     private val path1 = TrajectoryFactory.eightPCAutoStartToOpposingTrench
     private val path2 = TrajectoryFactory.eightPCAutoOpposingTrenchToShoot
     private val path3 = TrajectoryFactory.eightPCAutoShootToShieldGenerator

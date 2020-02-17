@@ -9,10 +9,11 @@ import org.ghrobotics.lib.mathematics.units.Second
 
 class EightPCFromTrenchRoutine : AutoRoutine() {
     private val path1 = TrajectoryFactory.shootThree // three we have
-    private val path2 = TrajectoryFactory.grabFiveAndShoot // grab 5 from trench and drive to shooting position
+    private val path2 = TrajectoryFactory.getPCFromTrench // grab 5 from trench and drive to shooting position
+    private val path3 = TrajectoryFactory.trenchToShoot
 
     override val duration: SIUnit<Second>
-        get() = SIUnit<Second>(path1.totalTimeSeconds + path2.totalTimeSeconds)
+        get() = SIUnit<Second>(path1.totalTimeSeconds + path2.totalTimeSeconds + path3.totalTimeSeconds)
     override val routine
         get() = sequential {
             // if intake isn't automatic this will need to be refactored to run the intake

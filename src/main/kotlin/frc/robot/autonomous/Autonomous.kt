@@ -6,10 +6,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand
 import frc.robot.Network
 import frc.robot.Robot
 import frc.robot.autonomous.paths.TrajectoryWaypoints
-import frc.robot.autonomous.routines.EightPCFromShieldGeneratorRoutine
-import frc.robot.autonomous.routines.EightPCFromTrenchRoutine
-import frc.robot.autonomous.routines.SixPCFromTrenchRoutine
-import frc.robot.autonomous.routines.ThreePCRoutine
+import frc.robot.autonomous.routines.*
 import frc.robot.subsystems.drive.DriveSubsystem
 import org.ghrobotics.lib.mathematics.twodim.geometry.mirror
 import org.ghrobotics.lib.utils.Source
@@ -61,9 +58,13 @@ object Autonomous {
     private val possibleAutos = hashMapOf(
             Mode.EIGHT_PC_TRENCH to EightPCFromTrenchRoutine()(),
             Mode.THREE_PC to ThreePCRoutine()(),
-            Mode.EIGHT_PC_SHIELD_GENERATOR to EightPCFromShieldGeneratorRoutine()(),
+//            Mode.EIGHT_PC_SHIELD_GENERATOR to EightPCFromShieldGeneratorRoutine()(),
             Mode.SIX_PC_TRENCH to SixPCFromTrenchRoutine()(),
+            Mode.EIGHT_PC_OPPOSING_TRENCH to EightPCAutoRoutineOpposingSide()(),
+            Mode.TEN_PC to TenPCAutoRoutine()(),
+            Mode.MOVE_OFF_START to MoveOffStart()(),
             Mode.DO_NOTHING to InstantCommand()
+
 
     )
     private var selectedAutonomous: CommandBase = InstantCommand()
@@ -85,5 +86,5 @@ object Autonomous {
         RIGHT(TrajectoryWaypoints.kSideStart.mirror()),
     }
 
-    enum class Mode { THREE_PC, SIX_PC_TRENCH, EIGHT_PC_TRENCH, EIGHT_PC_SHIELD_GENERATOR, DO_NOTHING }
+    enum class Mode { THREE_PC, SIX_PC_TRENCH, EIGHT_PC_TRENCH, EIGHT_PC_SHIELD_GENERATOR, EIGHT_PC_OPPOSING_TRENCH, TEN_PC, MOVE_OFF_START, DO_NOTHING }
 }
