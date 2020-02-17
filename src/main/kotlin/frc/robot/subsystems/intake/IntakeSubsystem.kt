@@ -16,6 +16,7 @@ import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
 import org.ghrobotics.lib.motors.rev.falconMAX
 import org.ghrobotics.lib.wrappers.FalconDoubleSolenoid
 import org.ghrobotics.lib.wrappers.FalconSolenoid
+import kotlin.math.absoluteValue
 
 object IntakeSubsystem : FalconSubsystem() {
     val open = false
@@ -31,9 +32,9 @@ object IntakeSubsystem : FalconSubsystem() {
     val intakeMotor = falconMAX(intakeMotorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         canSparkMax.apply {
             restoreFactoryDefaults()
-            setSecondaryCurrentLimit(30.0)
+            setSecondaryCurrentLimit(40.0)
         }
-        smartCurrentLimit = 25.amps
+        smartCurrentLimit = 35.amps
     }
 
     fun setSpeed(intakeSpeed: Double) {
@@ -91,7 +92,7 @@ object IntakeSubsystem : FalconSubsystem() {
 
         defaultCommand = runCommand({
             setSpeed(speedSource())
-            if (speedSource() > 0.1 && !holdIntake) {
+            if (speedSource().absoluteValue > 0.1 && !holdIntake) {
                 miniExtendIntakeCommand()
             } else if (!holdIntake) {
                 miniRetractIntakeCommand()
