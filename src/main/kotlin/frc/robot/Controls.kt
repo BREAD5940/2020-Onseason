@@ -4,6 +4,7 @@ package frc.robot
 import edu.wpi.first.wpilibj.XboxController
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.HoldAngleCommand
+import frc.robot.subsystems.drive.HolomonicDriveCommand
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
@@ -16,14 +17,14 @@ import org.ghrobotics.lib.wrappers.hid.*
 object Controls {
 
     var isClimbing = false
-
+    var isRobotRelative = false
     val driverWpiXbox = XboxController(0)
     val driverFalconXbox = driverWpiXbox.mapControls {
         val reZeroCommand = { DriveSubsystem.setGyroAngle(0.degrees.toRotation2d()) }
         // button(kBumperLeft).changeOn(reZeroCommand)
         button(kStart).changeOn(reZeroCommand)
-
-        //   state({ !isClimbing }) {
+        button(kStickLeft).changeOn{isRobotRelative = true}.whileOff{ isRobotRelative = false}
+        //   state({ !isClimbng }) {
 
         // todo stuff
 
@@ -46,7 +47,7 @@ object Controls {
 
         button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false }
 
-        button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter }).alongWith(VisionDriveCommand()))
+        button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter }))//.alongWith(VisionDriveCommand()))
     }
 
     val operatorXbox = XboxController(1)
@@ -63,7 +64,7 @@ object Controls {
         pov(0).change(ShootCommand())
         // todo make climb shit
 
-        button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter }).alongWith(VisionDriveCommand()))
+        button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter }))//.alongWith(VisionDriveCommand()))
     }
 
     fun update() {

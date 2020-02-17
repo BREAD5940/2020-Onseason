@@ -9,6 +9,12 @@ object VisionSubsystem : FalconSubsystem() {
 
     val ps3eye = ChameleonCamera("ps3eye")
 
+    override fun lateInit() {
+        lifecam.driverMode = true
+        lifecam.pipeline = -1.0
+        ps3eye.pipeline = 1.0
+    }
+
 //    private val table: NetworkTable = NetworkTableInstance.getDefault().getTable("limelight")
 //
 //    // /////////////////////
