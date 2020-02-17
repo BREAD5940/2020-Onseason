@@ -49,6 +49,4 @@ object Constants {
             12.2 to ShotParameter(61.5.degrees, 2100.revolutionsPerMinute, 0.5.degrees),
             16.2 to ShotParameter(60.5.degrees, 1900.revolutionsPerMinute, 0.5.degrees)
     )
-
-    val rightBelowGoalParameter = ShotParameter(44.degrees, 1600.revolutionsPerMinute)
 }
