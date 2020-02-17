@@ -49,6 +49,12 @@ class EightPCAutoRoutineNonTrenchSide : AutoRoutine() {
             +DriveSubsystem.followTrajectory(path4) { 160.0.degrees.toRotation2d() }
                     .andThen(FlywheelSubsystem.agitateAndShoot((4.seconds)))
                     .andThen(Runnable { FlywheelSubsystem.setNeutral() }, FlywheelSubsystem)
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> parent of 30ecc66... get vision to run w/ shooter during auto
 
 //            +DriveSubsystem.followTrajectory2(path2) {
 //                if(Rectangle2d(Translation2d(0.0, 0.0), Translation2d(2.0,2.0))
