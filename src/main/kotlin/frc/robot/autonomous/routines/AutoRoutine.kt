@@ -20,7 +20,6 @@ abstract class AutoRoutine : SequentialCommandGroup(), Source<Command> {
     override fun invoke() = sequential {
         +InstantCommand(Runnable {
             println("[AutoRoutine] Starting routine...")
-            DriveSubsystem.odometry.resetPosition(Autonomous.startingPosition().pose, DriveSubsystem.gyro())
         })
         +routine
     }.raceWith(WaitUntilCommand { /*Robot.emergencyActive*/ false }) as CommandBase

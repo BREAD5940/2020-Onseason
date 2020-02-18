@@ -122,7 +122,11 @@ object DriveSubsystem : FalconSubsystem() {
 
     val currentSwerveModuleStates get() = listOf(flModule.state, frModule.state, blModule.state, brModule.state)
 
-    val robotPosition get() = periodicIO.pose
+    var robotPosition
+        get() = periodicIO.pose
+        set(value) {
+            odometry.resetPosition(value, gyro())
+        }
 
     override fun periodic() {
 
