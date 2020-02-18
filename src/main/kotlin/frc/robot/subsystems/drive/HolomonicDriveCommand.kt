@@ -53,10 +53,10 @@ open class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
         val speeds: ChassisSpeeds
 
         speeds = if (isRobotRelative()) {
-            println("in robot relative")
+//            println("in robot relative")
             ChassisSpeeds(translation.x, translation.y, rotation)
         } else {
-            println("field relative")
+//            println("field relative")
             ChassisSpeeds.fromFieldRelativeSpeeds(translation.x, translation.y, rotation, DriveSubsystem.periodicIO.pose.rotation)
         }
 

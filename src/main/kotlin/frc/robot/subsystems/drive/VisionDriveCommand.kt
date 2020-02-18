@@ -1,6 +1,8 @@
 package frc.robot.subsystems.drive
 
 import edu.wpi.first.networktables.NetworkTableEntry
+import edu.wpi.first.wpilibj.LinearFilter
+import edu.wpi.first.wpilibj.MedianFilter
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -25,7 +27,10 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
 
     override fun initialize() {
         angleEntry.setDefaultDouble(0.0)
+        headingAveragingBuffer.reset()
     }
+
+    private val headingAveragingBuffer = MedianFilter(5)
 
     override fun execute() {
         var forward = -xSource() / 1.0
@@ -38,16 +43,12 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
 
         when {
             VisionSubsystem.ps3eye.isValid -> {
-                val speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                        forward, strafe, -controller.calculate(VisionSubsystem.ps3eye.yaw.radians, shotParameter.offset.inRadians()),
-                        DriveSubsystem.robotPosition.rotation)
 
-                DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds, centerOfRotation)
-            }
-            VisionSubsystem.lifecam.isValid -> {
+                val avHeading = headingAveragingBuffer.calculate(VisionSubsystem.ps3eye.yaw.radians + DriveSubsystem.robotPosition.rotation.radians)
 
                 val speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                        forward, strafe, -controller.calculate(VisionSubsystem.lifecam.yaw.radians, shotParameter.offset.inRadians()),
+                        forward, strafe, controller.calculate(DriveSubsystem.robotPosition.rotation.radians,
+                        avHeading + shotParameter.offset.inRadians()),
                         DriveSubsystem.robotPosition.rotation)
 
                 DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds, centerOfRotation)

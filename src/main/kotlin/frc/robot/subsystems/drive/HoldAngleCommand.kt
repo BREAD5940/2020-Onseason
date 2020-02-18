@@ -20,7 +20,7 @@ class HoldAngleCommand: VisionDriveCommand() {
         strafe *= strafe.absoluteValue
 
         val speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                forward, strafe, -controller.calculate(DriveSubsystem.robotPosition.rotation.radians, wantedAngle.radians),
+                forward, strafe, controller.calculate(DriveSubsystem.robotPosition.rotation.radians, wantedAngle.radians),
                 DriveSubsystem.robotPosition.rotation)
 
         DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds, centerOfRotation)
