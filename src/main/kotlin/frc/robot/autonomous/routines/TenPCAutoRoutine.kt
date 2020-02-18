@@ -45,25 +45,9 @@ class TenPCAutoRoutine : AutoRoutine() {
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
             +DriveSubsystem.followTrajectory(path4) { 180.0.degrees.toRotation2d() }
-<<<<<<< HEAD
-                    .andThen(FlywheelSubsystem.agitateAndShoot((4.seconds)))
-                    .andThen(Runnable { FlywheelSubsystem.setNeutral() }, FlywheelSubsystem)
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> parent of 30ecc66... get vision to run w/ shooter during auto
-=======
 
             +(FlywheelSubsystem.agitateAndShoot((4.seconds)))
                     .deadlineWith(VisionDriveCommand())
->>>>>>> parent of 9e18daa... Revert "get vision to run w/ shooter during auto"
-
-//            +DriveSubsystem.followTrajectory2(path2) {
-//                if(Rectangle2d(Translation2d(0.0, 0.0), Translation2d(2.0,2.0))
-//                                .contains(DriveSubsystem.robotPosition.translation))
-//                    45.degrees else 50.degrees
 //            }
         }
 }
