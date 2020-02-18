@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState
 import frc.robot.Controls
-import frc.robot.Controls.isRobotRelative
 import kotlin.math.absoluteValue
 import lib.* // ktlint-disable no-wildcard-imports
 import org.ghrobotics.lib.commands.FalconCommand
@@ -53,13 +52,15 @@ open class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
         // calculate wheel speeds from field oriented chassis state
         val speeds: ChassisSpeeds
 
-        speeds = if (Controls.isRobotRelative) {
+        speeds = if (isRobotRelative()) {
+            println("in robot relative")
             ChassisSpeeds(translation.x, translation.y, rotation)
         } else {
+            println("field relative")
             ChassisSpeeds.fromFieldRelativeSpeeds(translation.x, translation.y, rotation, DriveSubsystem.periodicIO.pose.rotation)
         }
 
-        DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds)
+        DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds, Translation2d())
 
         this.lastSpeed = speeds
     }
@@ -71,7 +72,7 @@ open class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
         val zSource by lazy { Controls.driverFalconXbox.getX(kTranslationHand).withDeadband(0.1) }
         val rotSource by lazy { Controls.driverFalconXbox.getX(kRotHand).withDeadband(0.06) }
 
-
+         val isRobotRelative by lazy { Controls.driverFalconXbox.getRawButton(9) }
     }
 
 }
