@@ -1,5 +1,6 @@
 package frc.robot.autonomous.routines
 
+import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import frc.robot.auto.paths.TrajectoryFactory
@@ -23,6 +24,7 @@ class ThreePCRoutine : AutoRoutine() {
         get() = SIUnit<Second>(path1.totalTimeSeconds)
     override val routine
         get() = sequential {
+            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 0.degrees.toRotation2d()) }
 
             +runCommand(DriveSubsystem) {
                 DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(ChassisSpeeds(-.2, 0.0, 0.0), Translation2d())

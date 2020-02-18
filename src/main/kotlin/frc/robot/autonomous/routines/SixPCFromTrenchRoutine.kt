@@ -1,11 +1,13 @@
 package frc.robot.autonomous.routines
 
+import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
+import lib.instantCommand
 import lib.runCommand
 import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.units.SIUnit
@@ -23,6 +25,8 @@ class SixPCFromTrenchRoutine : AutoRoutine() {
         get() = SIUnit<Second>(path1.totalTimeSeconds + path2.totalTimeSeconds + path3.totalTimeSeconds)
     override val routine
         get() = sequential {
+            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 0.degrees.toRotation2d()) }
+
             +DriveSubsystem.followTrajectory(path1) { 160.0.degrees.toRotation2d() }
 
             +(FlywheelSubsystem.agitateAndShoot(4.seconds))
