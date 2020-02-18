@@ -16,13 +16,11 @@ import org.ghrobotics.lib.wrappers.hid.*
 object Controls {
 
     var isClimbing = false
-    var isRobotRelative = false
     val driverWpiXbox = XboxController(0)
     val driverFalconXbox = driverWpiXbox.mapControls {
         val reZeroCommand = { DriveSubsystem.setGyroAngle(0.degrees.toRotation2d()) }
         // button(kBumperLeft).changeOn(reZeroCommand)
         button(kStart).changeOn(reZeroCommand)
-        button(kStickLeft).changeOn{isRobotRelative = true}.whileOff{ isRobotRelative = false}
         //   state({ !isClimbng }) {
 
         // todo stuff
