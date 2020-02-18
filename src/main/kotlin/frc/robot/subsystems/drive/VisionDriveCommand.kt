@@ -1,7 +1,6 @@
 package frc.robot.subsystems.drive
 
 import edu.wpi.first.networktables.NetworkTableEntry
-import edu.wpi.first.wpilibj.LinearFilter
 import edu.wpi.first.wpilibj.MedianFilter
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
@@ -9,10 +8,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.ShotParameter
 import frc.robot.subsystems.vision.VisionSubsystem
-import lib.revolutionsPerMinute
+import lib.toRotation2d
 import kotlin.math.absoluteValue
 import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
-import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.inRadians
 import org.ghrobotics.lib.mathematics.units.inches
 import org.ghrobotics.lib.mathematics.units.meters
@@ -22,6 +20,8 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
     init {
         SmartDashboard.putData("vision PID", controller)
     }
+
+    private val useTracker = true
 
     private val angleEntry: NetworkTableEntry = SmartDashboard.getEntry("offset")
 
@@ -44,14 +44,32 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
         when {
             VisionSubsystem.ps3eye.isValid -> {
 
-                val avHeading = headingAveragingBuffer.calculate(VisionSubsystem.ps3eye.yaw.radians + DriveSubsystem.robotPosition.rotation.radians)
+                val speeds: ChassisSpeeds
+                @Suppress("ConstantConditionIf", "LiftReturnOrAssignment")
+                if(useTracker) {
+//                    val avHeading = //headingAveragingBuffer.calculate(VisionSubsystem.ps3eye.yaw.radians + DriveSubsystem.robotPosition.rotation.radians)
 
-                val speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                        forward, strafe, controller.calculate(DriveSubsystem.robotPosition.rotation.radians,
-                        avHeading + shotParameter.offset.inRadians()),
-                        DriveSubsystem.robotPosition.rotation)
+                    val bestPose = VisionSubsystem.Tracker.getBestTarget()?.averagePose
+                    if(bestPose == null) {
+                        super.execute()
+                        return // todo do smth else?
+                    }
+                    val angle = bestPose.relativeTo(DriveSubsystem.robotPosition).translation.toRotation2d()
+
+                    speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                            forward, strafe, controller.calculate(angle.radians, shotParameter.offset.inRadians()),
+                            DriveSubsystem.robotPosition.rotation)
+                } else {
+                    val avHeading = headingAveragingBuffer.calculate(VisionSubsystem.ps3eye.yaw.radians + DriveSubsystem.robotPosition.rotation.radians)
+
+                    speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                            forward, strafe, controller.calculate(DriveSubsystem.robotPosition.rotation.radians,
+                            avHeading + shotParameter.offset.inRadians()),
+                            DriveSubsystem.robotPosition.rotation)
+                }
 
                 DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds, centerOfRotation)
+
             }
             else -> {
                 super.execute()

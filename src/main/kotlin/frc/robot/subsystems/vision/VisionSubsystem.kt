@@ -1,7 +1,23 @@
 package frc.robot.subsystems.vision
 
+import edu.wpi.first.wpilibj.Timer
+import edu.wpi.first.wpilibj.geometry.Rotation2d
+import edu.wpi.first.wpilibj.geometry.Transform2d
+import frc.robot.subsystems.drive.DriveSubsystem
+import lib.InterpolatingTable
+import lib.interpolate
 import org.ghrobotics.lib.commands.FalconSubsystem
+import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
+import org.ghrobotics.lib.mathematics.units.derived.degrees
+import org.ghrobotics.lib.mathematics.units.derived.inDegrees
+import org.ghrobotics.lib.mathematics.units.derived.inRadians
+import org.ghrobotics.lib.mathematics.units.feet
+import org.ghrobotics.lib.mathematics.units.inches
+import org.ghrobotics.lib.mathematics.units.seconds
+import org.ghrobotics.lib.types.Interpolatable
 import org.ghrobotics.lib.vision.ChameleonCamera
+import org.ghrobotics.lib.vision.TargetTracker
+import kotlin.math.tan
 
 object VisionSubsystem : FalconSubsystem() {
 
@@ -15,54 +31,61 @@ object VisionSubsystem : FalconSubsystem() {
         ps3eye.pipeline = 1.0
     }
 
-//    private val table: NetworkTable = NetworkTableInstance.getDefault().getTable("limelight")
-//
-//    // /////////////////////
-//    // Reading Functions //
-//    // /////////////////////
-//    val hasTargets
-//        get() = (table.getEntry("tv").getNumber(0) == 1)
-//
-//    val xOffset
-//        get() = table.getEntry("tx").getDouble(0.0)
-//
-//    val yOffset
-//        get() = table.getEntry("ty").getDouble(0.0)
-//
-//    val targetArea
-//        get() = table.getEntry("ta").getDouble(0.0)
-//
-//    // /////////////////////
-//    // Writing Functions //
-//    // /////////////////////
-//
-//    // LED functions
-//    fun setLEDOff() {
-//        table.getEntry("ledMode").setValue(1)
-//    }
-//
-//    fun setLEDBlink() {
-//        table.getEntry("ledMode").setValue(2)
-//    }
-//
-//    fun setLEDOn() {
-//        table.getEntry("ledMode").setValue(3)
-//    }
-//
-//    // mode setting functions
-//    fun setAsVisionProcessor() {
-//        table.getEntry("camMode").setValue(0)
-//    }
-//
-//    fun setAsDriverCamera() {
-//        table.getEntry("camMode").setValue(1)
-//    }
-//
-//    fun setPipeline(pipeline: Int) {
-//        if (pipeline in 0..9) { // in range
-//            table.getEntry("pipeline").setValue(pipeline)
-//        } else {
-//            return
-//        }
-//    }
+    object Tracker : TargetTracker(TargetTrackerConstants(0.6.seconds, 14.inches, 6)) {
+        /**
+         * Find the target that's closest to the robot per it's averagedPose2dRelativeToBot
+         */
+        fun getBestTarget() = synchronized(targets) {
+            targets.asSequence()
+                    .filter {
+                        if (!it.isReal) return@filter false
+                        val x = it.averagePose.relativeTo(DriveSubsystem.robotPosition).translation.x
+                        x >= 0.0
+                    }.minBy { it.averagePose.relativeTo(DriveSubsystem.robotPosition).translation.norm }
+        }
+    }
+
+    override fun periodic() {
+        updateTracker()
+    }
+
+    /**
+     * Lookup table to convert target rotation to left/right offset.
+     * TODO fill this table
+     */
+    private val skewLUT = InterpolatingTable(
+            0.0 to 0.interpolatable()
+    )
+
+    private fun updateTracker() {
+        if(!ps3eye.isValid) return
+        val d = (targetHeight - camHeight) / tan(ps3eye.pitch.radians + camAngle.inRadians())
+        val yaw = ps3eye.yaw
+
+        var skew = if(ps3eye.minRectHeight > ps3eye.minRectWidth) ps3eye.minRectSkew + 90.degrees else ps3eye.minRectSkew
+
+        while (skew < (-180).degrees) skew += 180.degrees
+        while (skew > 180.degrees) skew -= 180.degrees
+
+        val offset = skewLUT.get(skew.inDegrees())?.number ?: 0.0
+
+        Tracker.addSamples(Timer.getFPGATimestamp().seconds - ps3eye.latency,
+                listOf(DriveSubsystem.robotPosition.plus(Transform2d(
+                        Translation2d(d, yaw), Rotation2d.fromDegrees(offset)
+                ))))
+
+        Tracker.update()
+    }
+
+    private val targetHeight = 9.feet + 9.inches + 1.feet + 5.inches
+    private val camHeight = 13.inches // todo check
+    private val camAngle = 30.degrees
+
 }
+
+inline class InterpolatingDouble(val number: Double) : Interpolatable<InterpolatingDouble> {
+    override fun interpolate(endValue: InterpolatingDouble, t: Double) =
+            InterpolatingDouble(number.interpolate(endValue.number, t))
+}
+
+fun Number.interpolatable() = InterpolatingDouble(toDouble())
