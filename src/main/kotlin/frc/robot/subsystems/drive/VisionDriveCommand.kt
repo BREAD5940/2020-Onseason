@@ -5,13 +5,18 @@ import edu.wpi.first.wpilibj.MedianFilter
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import frc.robot.autonomous.paths.transformBy
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.ShotParameter
 import frc.robot.subsystems.vision.VisionSubsystem
 import lib.toRotation2d
+import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
 import kotlin.math.absoluteValue
 import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
+import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.inRadians
+import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
+import org.ghrobotics.lib.mathematics.units.feet
 import org.ghrobotics.lib.mathematics.units.inches
 import org.ghrobotics.lib.mathematics.units.meters
 
@@ -54,7 +59,9 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
                         super.execute()
                         return // todo do smth else?
                     }
-                    val angle = bestPose.relativeTo(DriveSubsystem.robotPosition).translation.toRotation2d()
+                    val angle = bestPose.relativeTo(DriveSubsystem.robotPosition)
+                            .transformBy(Pose2d(2.feet + 5.inches, 0.inches, 0.degrees.toRotation2d())) // offset to get inner port
+                            .translation.toRotation2d() // 
 
                     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                             forward, strafe, controller.calculate(angle.radians, shotParameter.offset.inRadians()),
