@@ -52,7 +52,6 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
                 val speeds: ChassisSpeeds
                 @Suppress("ConstantConditionIf", "LiftReturnOrAssignment")
                 if(useTracker) {
-//                    val avHeading = //headingAveragingBuffer.calculate(VisionSubsystem.ps3eye.yaw.radians + DriveSubsystem.robotPosition.rotation.radians)
 
                     val bestPose = VisionSubsystem.Tracker.getBestTarget()?.averagePose
                     if(bestPose == null) {
@@ -61,7 +60,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
                     }
                     val angle = bestPose.relativeTo(DriveSubsystem.robotPosition)
                             .transformBy(Pose2d(2.feet + 5.inches, 0.inches, 0.degrees.toRotation2d())) // offset to get inner port
-                            .translation.toRotation2d() // 
+                            .translation.toRotation2d()
 
                     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                             forward, strafe, controller.calculate(angle.radians, shotParameter.offset.inRadians()),

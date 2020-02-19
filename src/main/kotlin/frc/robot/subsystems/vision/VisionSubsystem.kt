@@ -69,6 +69,8 @@ object VisionSubsystem : FalconSubsystem() {
 
         val offset = skewLUT.get(skew.inDegrees())?.number ?: 0.0
 
+        println("skew ${skew.inDegrees()} deg | offset $offset deg")
+
         Tracker.addSamples(Timer.getFPGATimestamp().seconds - ps3eye.latency,
                 listOf(DriveSubsystem.robotPosition.plus(Transform2d(
                         Translation2d(d, yaw), Rotation2d.fromDegrees(offset)
