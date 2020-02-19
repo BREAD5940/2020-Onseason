@@ -39,8 +39,10 @@ import org.ghrobotics.lib.utils.map
 
 object DriveSubsystem : FalconSubsystem() {
 
-    val navX = AHRS(SPI.Port.kMXP)
-    val gyro = { Rotation2d.fromDegrees(navX.fusedHeading.toDouble()) }
+    val navX = AHRS(SPI.Port.kMXP).apply {
+
+    }
+    val gyro = { -Rotation2d.fromDegrees(navX.fusedHeading.toDouble()) }
 
     val compressor = Compressor(8).apply { clearAllPCMStickyFaults() }
 
@@ -197,7 +199,8 @@ object DriveSubsystem : FalconSubsystem() {
                 val states = kinematics.toSwerveModuleStates(output.chassisSpeed, output.centerOfRotation)
                 SwerveDriveKinematics.normalizeWheelSpeeds(states, 1.0)
 
-//                println("chassis speeds: ${output.chassisSpeed.omegaRadiansPerSecond} states:\n" + states.map { it.angle.degrees })
+//                println("chassis speeds: ${output.chassisSpeed} \ncor ${output.centerOfRotation}\nangles:\n" + states.map { it.angle.degrees }
+//                + "\n wheel speeds:\n"+states.map { it.speedMetersPerSecond })
 
                 flModule.output = Mk2SwerveModule.Output.Percent(
                         states[0].speedMetersPerSecond,

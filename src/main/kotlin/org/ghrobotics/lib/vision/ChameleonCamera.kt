@@ -15,9 +15,11 @@ import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.Second
+import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.milli
 import org.ghrobotics.lib.wrappers.networktables.FalconNetworkTable
 import org.ghrobotics.lib.wrappers.networktables.get
+import org.ghrobotics.lib.wrappers.networktables.tab
 
 /**
  * Represents a camera connected to a co-processor which is running
@@ -37,6 +39,13 @@ class ChameleonCamera(cameraName: String) {
     private val areaEntry = table["area"]
     private val poseListEntry = table["poseList"]
     private val altTargetEntry = table["auxTargets"]
+    private val minRectHeightEntry = table["targetFittedHeight"]
+    private val minRectWidthEntry = table["targetFittedWidth"]
+    private val minRectSkewEntry = table["targetRotation"]
+
+    val minRectWidth get() = minRectWidthEntry.getDouble(-1.0)
+    val minRectHeight get() = minRectHeightEntry.getDouble(-1.0)
+    val minRectSkew get() = minRectSkewEntry.getDouble(0.0).degrees
 
     private val gson = Gson()
 
