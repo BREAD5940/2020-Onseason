@@ -1,10 +1,12 @@
 package frc.robot.autonomous.routines
 
+import edu.wpi.first.wpilibj.geometry.Pose2d
 import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
+import lib.instantCommand
 import lib.runCommand
 import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.units.SIUnit
@@ -16,8 +18,8 @@ import org.ghrobotics.lib.mathematics.units.seconds
 class TenPCAutoRoutine : AutoRoutine() {
     private val path1 = TrajectoryFactory.tenPCAutoToShieldGenerator
     private val path2 = TrajectoryFactory.tenPCAutoShieldGeneratorToShoot
-    private val path3 = TrajectoryFactory.tenPCAutoPCFromTrench
-    private val path4 = TrajectoryFactory.tenPCAutoTrenchToShoot
+    private val path3 = TrajectoryFactory.getPCFromTrench
+    private val path4 = TrajectoryFactory.trenchToShoot
 
     override val duration: SIUnit<Second>
         get() = path1.duration +
@@ -27,6 +29,8 @@ class TenPCAutoRoutine : AutoRoutine() {
 
     override val routine
         get() = sequential {
+            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 0.degrees.toRotation2d()) }
+
             +DriveSubsystem.followTrajectory2(path1) { (-68).degrees }
                     .alongWith(
                             IntakeSubsystem.extendIntakeCommand()
@@ -48,11 +52,6 @@ class TenPCAutoRoutine : AutoRoutine() {
 
             +(FlywheelSubsystem.agitateAndShoot((4.seconds)))
                     .deadlineWith(VisionDriveCommand())
-
-//            +DriveSubsystem.followTrajectory2(path2) {
-//                if(Rectangle2d(Translation2d(0.0, 0.0), Translation2d(2.0,2.0))
-//                                .contains(DriveSubsystem.robotPosition.translation))
-//                    45.degrees else 50.degrees
 //            }
         }
 }

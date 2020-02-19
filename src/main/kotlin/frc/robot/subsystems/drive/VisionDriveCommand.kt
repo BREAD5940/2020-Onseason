@@ -20,7 +20,7 @@ import org.ghrobotics.lib.mathematics.units.feet
 import org.ghrobotics.lib.mathematics.units.inches
 import org.ghrobotics.lib.mathematics.units.meters
 
-open class VisionDriveCommand : HolomonicDriveCommand() {
+class VisionDriveCommand : HolomonicDriveCommand() {
 
     init {
         SmartDashboard.putData("vision PID", controller)
@@ -86,5 +86,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
     companion object {
         val centerOfRotation = Translation2d(0.meters, 8.inches)
         val controller = PIDController(2.8, 0.0, 0.3)
+
+        val rightBelowGoalParameter = ShotParameter(44.degrees, 1600.revolutionsPerMinute)
     }
 }

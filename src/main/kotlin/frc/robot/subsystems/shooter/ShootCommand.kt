@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.subsystems.vision.VisionSubsystem
 import kotlin.math.abs
 import lib.inRpm
-import lib.revolutionsPerMinute
 import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.derived.Radian
