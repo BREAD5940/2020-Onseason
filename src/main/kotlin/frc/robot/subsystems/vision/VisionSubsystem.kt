@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Transform2d
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.subsystems.drive.DriveSubsystem
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -62,21 +61,20 @@ object VisionSubsystem : FalconSubsystem() {
     )
 
     private fun updateTracker() {
-        if(!ps3eye.isValid) return
+        if (!ps3eye.isValid) return
 
         // check that the pose is valid -- if not, it defaults to 0.0 for x, y, and rotation
         val solvePnpPose = ps3eye.bestPose
-        if(solvePnpPose.translation.x epsilonEquals 0.0 && solvePnpPose.translation.y epsilonEquals 0.0
-                && solvePnpPose.rotation.radians epsilonEquals 0.0) return
+        if (solvePnpPose.translation.x epsilonEquals 0.0 && solvePnpPose.translation.y epsilonEquals 0.0 &&
+                solvePnpPose.rotation.radians epsilonEquals 0.0) return
 
         Tracker.addSamples(Timer.getFPGATimestamp().seconds - ps3eye.latency,
-                listOf(DriveSubsystem.robotPosition
-                        + kCameraPos // transform by camera position
-                        + solvePnpPose // transform camera pos by measured pose
+                listOf(DriveSubsystem.robotPosition +
+                        kCameraPos + // transform by camera position
+                        solvePnpPose // transform camera pos by measured pose
                 ))
 
         Tracker.update()
-
 
         //        val d = (targetHeight - camHeight) / tan(ps3eye.pitch.radians + camAngle.inRadians())
 
@@ -99,7 +97,6 @@ object VisionSubsystem : FalconSubsystem() {
 //        val pose = DriveSubsystem.robotPosition.plus(Transform2d(
 //                Translation2d(d, yaw), Rotation2d.fromDegrees(offset)
 //        ))
-
     }
 
     private val targetHeight = 9.feet + 9.inches + 1.feet + 5.inches
@@ -109,7 +106,6 @@ object VisionSubsystem : FalconSubsystem() {
     private val focalLen = (44 /* px */ * sqrt(10.feet.inMeters().pow(2) +
             targetHeight.inMeters().pow(2))) / (width.inMeters()) / 0.35
     private val kCameraPos = Pose2d(Translation2d(0.meters, 8.inches), Rotation2d())
-
 }
 
 private operator fun Pose2d.plus(other: Pose2d) = this.transformBy(Transform2d(other.translation, other.rotation))
