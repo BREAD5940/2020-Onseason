@@ -38,6 +38,7 @@ class ChameleonCamera(cameraName: String) {
     private val isValidEntry = table["isValid"]
     private val areaEntry = table["area"]
     private val poseListEntry = table["poseList"]
+    private val bestPoseEntry = table["targetPose"]
     private val altTargetEntry = table["auxTargets"]
     private val minRectHeightEntry = table["targetFittedHeight"]
     private val minRectWidthEntry = table["targetFittedWidth"]
@@ -76,8 +77,12 @@ class ChameleonCamera(cameraName: String) {
     /**
      * The camera relative pose of the best target.
      */
-    val pose: Pose2d?
-        get() = targetPoses.firstOrNull()
+    val bestPose: Pose2d
+        get() {
+            val default = doubleArrayOf(0.0, 0.0, 0.0)
+            val array = bestPoseEntry.getDoubleArray(default)
+            return Pose2d(array[0], array[1], Rotation2d.fromDegrees(array[2]))
+        }
 
     /**
      * Represents the latency in the pipeline between the capture

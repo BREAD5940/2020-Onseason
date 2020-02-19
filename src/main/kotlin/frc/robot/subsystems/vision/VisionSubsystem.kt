@@ -1,23 +1,23 @@
 package frc.robot.subsystems.vision
 
 import edu.wpi.first.wpilibj.Timer
+import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Transform2d
 import frc.robot.subsystems.drive.DriveSubsystem
 import lib.InterpolatingTable
 import lib.interpolate
 import org.ghrobotics.lib.commands.FalconSubsystem
+import org.ghrobotics.lib.mathematics.epsilonEquals
 import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
 import org.ghrobotics.lib.mathematics.units.derived.degrees
-import org.ghrobotics.lib.mathematics.units.derived.inDegrees
-import org.ghrobotics.lib.mathematics.units.derived.inRadians
 import org.ghrobotics.lib.mathematics.units.feet
 import org.ghrobotics.lib.mathematics.units.inches
+import org.ghrobotics.lib.mathematics.units.meters
 import org.ghrobotics.lib.mathematics.units.seconds
 import org.ghrobotics.lib.types.Interpolatable
 import org.ghrobotics.lib.vision.ChameleonCamera
 import org.ghrobotics.lib.vision.TargetTracker
-import kotlin.math.tan
 
 object VisionSubsystem : FalconSubsystem() {
 
@@ -59,22 +59,28 @@ object VisionSubsystem : FalconSubsystem() {
 
     private fun updateTracker() {
         if(!ps3eye.isValid) return
-        val d = (targetHeight - camHeight) / tan(ps3eye.pitch.radians + camAngle.inRadians())
-        val yaw = ps3eye.yaw
+//        val d = (targetHeight - camHeight) / tan(ps3eye.pitch.radians + camAngle.inRadians())
+//        val yaw = ps3eye.yaw
 
-        var skew = if(ps3eye.minRectHeight > ps3eye.minRectWidth) ps3eye.minRectSkew + 90.degrees else ps3eye.minRectSkew
+//        var skew = if(ps3eye.minRectHeight > ps3eye.minRectWidth) ps3eye.minRectSkew + 90.degrees else ps3eye.minRectSkew
+//
+//        while (skew < (-180).degrees) skew += 180.degrees
+//        while (skew > 180.degrees) skew -= 180.degrees
+//
+//        val offset = skewLUT.get(skew.inDegrees())?.number ?: 0.0
+//
+//        println("skew ${skew.inDegrees()} deg | offset $offset deg")
 
-        while (skew < (-180).degrees) skew += 180.degrees
-        while (skew > 180.degrees) skew -= 180.degrees
-
-        val offset = skewLUT.get(skew.inDegrees())?.number ?: 0.0
-
-        println("skew ${skew.inDegrees()} deg | offset $offset deg")
+        // check that the pose is valid -- if not, it defaults to 0.0 for x, y, and rotation
+        val solvePnpPose = ps3eye.bestPose
+        if(solvePnpPose.translation.x epsilonEquals 0.0 && solvePnpPose.translation.y epsilonEquals 0.0
+                && solvePnpPose.rotation.radians epsilonEquals 0.0) return
 
         Tracker.addSamples(Timer.getFPGATimestamp().seconds - ps3eye.latency,
-                listOf(DriveSubsystem.robotPosition.plus(Transform2d(
-                        Translation2d(d, yaw), Rotation2d.fromDegrees(offset)
-                ))))
+                listOf(DriveSubsystem.robotPosition
+                        + kCameraPos // transform by camera position
+                        + solvePnpPose // transform camera pos by measured pose
+                ))
 
         Tracker.update()
     }
@@ -83,7 +89,11 @@ object VisionSubsystem : FalconSubsystem() {
     private val camHeight = 13.inches // todo check
     private val camAngle = 30.degrees
 
+    private val kCameraPos = Pose2d(Translation2d(0.meters, 8.inches), Rotation2d())
+
 }
+
+private operator fun Pose2d.plus(other: Pose2d) = this.transformBy(Transform2d(other.translation, other.rotation))
 
 inline class InterpolatingDouble(val number: Double) : Interpolatable<InterpolatingDouble> {
     override fun interpolate(endValue: InterpolatingDouble, t: Double) =
