@@ -5,7 +5,6 @@
 
 package frc.robot
 
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import frc.robot.autonomous.Autonomous
@@ -33,8 +32,8 @@ object Network {
         val table = tab("OBINAN") {
 
             list("Autonomous") {
-                position(0,0)
-                size(2,2)
+                position(0, 0)
+                size(2, 2)
                 sendable("Auto Mode", autoModeChooser) {
                     autoModeChooser.setDefaultOption(Autonomous.Mode.DO_NOTHING.name, Autonomous.Mode.DO_NOTHING)
                 }

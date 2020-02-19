@@ -9,9 +9,10 @@ import frc.robot.autonomous.paths.transformBy
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.ShotParameter
 import frc.robot.subsystems.vision.VisionSubsystem
+import kotlin.math.absoluteValue
+import lib.revolutionsPerMinute
 import lib.toRotation2d
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
-import kotlin.math.absoluteValue
 import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.inRadians
@@ -51,10 +52,10 @@ class VisionDriveCommand : HolomonicDriveCommand() {
 
                 val speeds: ChassisSpeeds
                 @Suppress("ConstantConditionIf", "LiftReturnOrAssignment")
-                if(useTracker) {
+                if (useTracker) {
 
                     val bestPose = VisionSubsystem.Tracker.getBestTarget()?.averagePose
-                    if(bestPose == null) {
+                    if (bestPose == null) {
                         super.execute()
                         return // todo do smth else?
                     }
@@ -75,7 +76,6 @@ class VisionDriveCommand : HolomonicDriveCommand() {
                 }
 
                 DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds, centerOfRotation)
-
             }
             else -> {
                 super.execute()

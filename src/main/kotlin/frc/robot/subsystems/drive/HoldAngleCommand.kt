@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import kotlin.math.absoluteValue
 
-class HoldAngleCommand: VisionDriveCommand() {
+class HoldAngleCommand : VisionDriveCommand() {
 
     lateinit var wantedAngle: Rotation2d
 
@@ -25,5 +25,4 @@ class HoldAngleCommand: VisionDriveCommand() {
 
         DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds, centerOfRotation)
     }
-
 }

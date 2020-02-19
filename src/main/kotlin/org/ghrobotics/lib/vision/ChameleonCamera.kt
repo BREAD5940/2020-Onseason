@@ -19,7 +19,6 @@ import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.milli
 import org.ghrobotics.lib.wrappers.networktables.FalconNetworkTable
 import org.ghrobotics.lib.wrappers.networktables.get
-import org.ghrobotics.lib.wrappers.networktables.tab
 
 /**
  * Represents a camera connected to a co-processor which is running

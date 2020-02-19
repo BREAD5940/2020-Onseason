@@ -41,7 +41,6 @@ import org.ghrobotics.lib.utils.map
 object DriveSubsystem : FalconSubsystem() {
 
     val navX = AHRS(SPI.Port.kMXP).apply {
-
     }
     val gyro = { -Rotation2d.fromDegrees(navX.fusedHeading.toDouble()) }
 

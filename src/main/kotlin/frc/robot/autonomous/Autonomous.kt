@@ -1,16 +1,10 @@
 package frc.robot.autonomous
 
-import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import frc.robot.Network
 import frc.robot.Robot
-import frc.robot.autonomous.paths.TrajectoryWaypoints
 import frc.robot.autonomous.routines.*
-import frc.robot.subsystems.drive.DriveSubsystem
-import org.ghrobotics.lib.mathematics.twodim.geometry.mirror
-import org.ghrobotics.lib.utils.Source
-import org.ghrobotics.lib.utils.and
 import org.ghrobotics.lib.utils.monitor
 import org.ghrobotics.lib.utils.onChangeToTrue
 import org.ghrobotics.lib.wrappers.FalconTimedRobot
@@ -42,7 +36,7 @@ object Autonomous {
 
         @Suppress("UNUSED_ANONYMOUS_PARAMETER")
         robotModeMonitor.onChange { newValue ->
-            if(newValue == FalconTimedRobot.Mode.TELEOP) selectedAutonomous.cancel()
+            if (newValue == FalconTimedRobot.Mode.TELEOP) selectedAutonomous.cancel()
         }
 
         isReadyMonitor.onChangeToTrue {

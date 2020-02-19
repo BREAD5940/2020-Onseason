@@ -1,7 +1,6 @@
 package frc.robot.autonomous.routines
 
 import edu.wpi.first.wpilibj.geometry.Pose2d
-import edu.wpi.first.wpilibj2.command.PrintCommand
 import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.VisionDriveCommand
