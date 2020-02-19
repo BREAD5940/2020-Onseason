@@ -6,7 +6,7 @@ import kotlin.math.absoluteValue
 
 class HoldAngleCommand : VisionDriveCommand() {
 
-    lateinit var wantedAngle: Rotation2d
+    private lateinit var wantedAngle: Rotation2d
 
     override fun initialize() {
         wantedAngle = DriveSubsystem.robotPosition.rotation

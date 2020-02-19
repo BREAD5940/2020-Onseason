@@ -21,7 +21,7 @@ import org.ghrobotics.lib.mathematics.units.feet
 import org.ghrobotics.lib.mathematics.units.inches
 import org.ghrobotics.lib.mathematics.units.meters
 
-class VisionDriveCommand : HolomonicDriveCommand() {
+open class VisionDriveCommand : HolomonicDriveCommand() {
 
     init {
         SmartDashboard.putData("vision PID", controller)
