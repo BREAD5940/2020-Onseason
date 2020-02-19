@@ -24,6 +24,7 @@ import lib.asSparkMax
 import lib.mirror
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.debug.FalconDashboard
+import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
 import org.ghrobotics.lib.mathematics.twodim.geometry.x_u
 import org.ghrobotics.lib.mathematics.twodim.geometry.y_u
 import org.ghrobotics.lib.mathematics.twodim.trajectory.mirror
@@ -82,7 +83,9 @@ object DriveSubsystem : FalconSubsystem() {
 
     val kinematics = Constants.kinematics
 
-    internal val odometry = SwerveDriveOdometry(kinematics, gyro())
+    internal val odometry = SwerveDriveOdometry(kinematics, gyro()).apply {
+        resetPosition(Pose2d(11.75.feet, 25.689.feet, 180.0.degrees), gyro())
+    }
 
     private val stateLock = Object()
     val periodicIO = PeriodicIO()
@@ -124,7 +127,11 @@ object DriveSubsystem : FalconSubsystem() {
 
     val currentSwerveModuleStates get() = listOf(flModule.state, frModule.state, blModule.state, brModule.state)
 
-    val robotPosition get() = periodicIO.pose
+    var robotPosition
+        get() = periodicIO.pose
+        set(value) {
+            odometry.resetPosition(value, gyro())
+        }
 
     override fun periodic() {
 
