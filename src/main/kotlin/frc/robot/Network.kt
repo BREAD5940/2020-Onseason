@@ -5,7 +5,6 @@
 
 package frc.robot
 
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import frc.robot.autonomous.Autonomous
@@ -24,17 +23,22 @@ object Network {
     fun update() {
     }
 
-    val startingPositionChooser = enumSendableChooser<Autonomous.StartingPositions>()
     val autoModeChooser = enumSendableChooser<Autonomous.Mode>()
 
     private val mainShuffleboardDisplay: ShuffleboardTab = Shuffleboard.getTab("OBINAN")
 
-    private val autoLayout = mainShuffleboardDisplay.getLayout("Autonomous", BuiltInLayouts.kList)
-            .withPosition(0, 0)
-            .withSize(2, 2)
     init {
 
         val table = tab("OBINAN") {
+
+            list("Autonomous") {
+                position(0, 0)
+                size(2, 2)
+                sendable("Auto Mode", autoModeChooser) {
+                    autoModeChooser.setDefaultOption(Autonomous.Mode.DO_NOTHING.name, Autonomous.Mode.DO_NOTHING)
+                }
+            }
+
             list("Angles") {
                 number("fl") { DriveSubsystem.flModule.state.angle.degrees.roundToInt().toDouble() }
                 number("fr") { DriveSubsystem.frModule.state.angle.degrees.roundToInt().toDouble() }
@@ -55,12 +59,5 @@ object Network {
                 size(1, 4)
             }
         }
-
-        startingPositionChooser.setDefaultOption(Autonomous.StartingPositions.LEFT.name, Autonomous.StartingPositions.LEFT)
-        autoModeChooser.setDefaultOption(Autonomous.Mode.DO_NOTHING.name, Autonomous.Mode.DO_NOTHING)
-
-        // Put choosers on dashboard
-        autoLayout.add("Auto Mode", autoModeChooser)
-        autoLayout.add("Starting Position", startingPositionChooser)
     }
 }

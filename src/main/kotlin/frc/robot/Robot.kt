@@ -3,9 +3,7 @@ package frc.robot
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.CommandScheduler
-import edu.wpi.first.wpilibj2.command.StartEndCommand
 import frc.robot.autonomous.Autonomous
-import frc.robot.autonomous.routines.MoveOffStart
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
@@ -28,11 +26,9 @@ object Robot : FalconTimedRobot() {
         +IntakeSubsystem
         +HoodSubsystem
         // +BumperGrabberSubsystem
-         +VisionSubsystem
+        +VisionSubsystem
 
         SmartDashboard.putData(CommandScheduler.getInstance())
-
-        SmartDashboard.putData("agitate", StartEndCommand(Runnable { FlywheelSubsystem.runKickWheel(1.0) }, Runnable { FlywheelSubsystem.setNeutral() }, FlywheelSubsystem))
 
         super.robotInit()
     }
@@ -41,7 +37,7 @@ object Robot : FalconTimedRobot() {
     }
 
     override fun robotPeriodic() {
-//        Autonomous.update()
+        Autonomous.update()
         Controls.update()
         Network.update()
     }
@@ -55,9 +51,6 @@ object Robot : FalconTimedRobot() {
 
     override fun autonomousInit() {
         HoodSubsystem.enabledReset()
-
-        // sketchy auto
-        MoveOffStart().routine.schedule()
     }
 }
 

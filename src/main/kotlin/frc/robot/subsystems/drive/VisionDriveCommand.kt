@@ -9,9 +9,10 @@ import frc.robot.autonomous.paths.transformBy
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.ShotParameter
 import frc.robot.subsystems.vision.VisionSubsystem
+import kotlin.math.absoluteValue
+import lib.revolutionsPerMinute
 import lib.toRotation2d
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
-import kotlin.math.absoluteValue
 import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.inRadians
@@ -20,7 +21,7 @@ import org.ghrobotics.lib.mathematics.units.feet
 import org.ghrobotics.lib.mathematics.units.inches
 import org.ghrobotics.lib.mathematics.units.meters
 
-open class VisionDriveCommand : HolomonicDriveCommand() {
+class VisionDriveCommand : HolomonicDriveCommand() {
 
     init {
         SmartDashboard.putData("vision PID", controller)
@@ -51,10 +52,10 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
 
                 val speeds: ChassisSpeeds
                 @Suppress("ConstantConditionIf", "LiftReturnOrAssignment")
-                if(useTracker) {
+                if (useTracker) {
 
                     val bestPose = VisionSubsystem.Tracker.getBestTarget()?.averagePose
-                    if(bestPose == null) {
+                    if (bestPose == null) {
                         super.execute()
                         return // todo do smth else?
                     }
@@ -75,7 +76,6 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
                 }
 
                 DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds, centerOfRotation)
-
             }
             else -> {
                 super.execute()
@@ -86,5 +86,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
     companion object {
         val centerOfRotation = Translation2d(0.meters, 8.inches)
         val controller = PIDController(2.8, 0.0, 0.3)
+
+        val rightBelowGoalParameter = ShotParameter(44.degrees, 1600.revolutionsPerMinute)
     }
 }

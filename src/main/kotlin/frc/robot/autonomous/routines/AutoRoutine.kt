@@ -3,7 +3,6 @@ package frc.robot.autonomous.routines
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.trajectory.Trajectory
 import edu.wpi.first.wpilibj2.command.*
-import frc.robot.autonomous.Autonomous
 import frc.robot.subsystems.drive.DriveSubsystem
 import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.commands.sequential
@@ -20,7 +19,6 @@ abstract class AutoRoutine : SequentialCommandGroup(), Source<Command> {
     override fun invoke() = sequential {
         +InstantCommand(Runnable {
             println("[AutoRoutine] Starting routine...")
-            DriveSubsystem.odometry.resetPosition(Autonomous.startingPosition().pose, DriveSubsystem.gyro())
         })
         +routine
     }.raceWith(WaitUntilCommand { /*Robot.emergencyActive*/ false }) as CommandBase

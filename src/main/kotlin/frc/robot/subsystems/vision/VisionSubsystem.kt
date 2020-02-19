@@ -4,12 +4,16 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Transform2d
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.subsystems.drive.DriveSubsystem
+import kotlin.math.pow
+import kotlin.math.sqrt
 import lib.InterpolatingTable
 import lib.interpolate
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.mathematics.epsilonEquals
 import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
+import org.ghrobotics.lib.mathematics.units.*
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.feet
 import org.ghrobotics.lib.mathematics.units.inches
@@ -59,17 +63,6 @@ object VisionSubsystem : FalconSubsystem() {
 
     private fun updateTracker() {
         if(!ps3eye.isValid) return
-//        val d = (targetHeight - camHeight) / tan(ps3eye.pitch.radians + camAngle.inRadians())
-//        val yaw = ps3eye.yaw
-
-//        var skew = if(ps3eye.minRectHeight > ps3eye.minRectWidth) ps3eye.minRectSkew + 90.degrees else ps3eye.minRectSkew
-//
-//        while (skew < (-180).degrees) skew += 180.degrees
-//        while (skew > 180.degrees) skew -= 180.degrees
-//
-//        val offset = skewLUT.get(skew.inDegrees())?.number ?: 0.0
-//
-//        println("skew ${skew.inDegrees()} deg | offset $offset deg")
 
         // check that the pose is valid -- if not, it defaults to 0.0 for x, y, and rotation
         val solvePnpPose = ps3eye.bestPose
@@ -83,12 +76,38 @@ object VisionSubsystem : FalconSubsystem() {
                 ))
 
         Tracker.update()
+
+
+        //        val d = (targetHeight - camHeight) / tan(ps3eye.pitch.radians + camAngle.inRadians())
+
+//        val w = ps3eye.minRectWidth
+//        val h = ps3eye.minRectHeight
+//        val width_ = if (w > h) w else h
+//
+//        val d = sqrt((width.inMeters() * focalLen / (width_)).pow(2) -
+//                (targetHeight - camHeight).inMeters().pow(2)).meters
+//
+//        val yaw = ps3eye.yaw
+//
+//        var skew = if (ps3eye.minRectHeight > ps3eye.minRectWidth) ps3eye.minRectSkew + 90.degrees else ps3eye.minRectSkew
+//
+//        while (skew < (-180).degrees) skew += 180.degrees
+//        while (skew > 180.degrees) skew -= 180.degrees
+//
+//        val offset = skewLUT.get(skew.inDegrees())?.number ?: 0.0
+//
+//        val pose = DriveSubsystem.robotPosition.plus(Transform2d(
+//                Translation2d(d, yaw), Rotation2d.fromDegrees(offset)
+//        ))
+
     }
 
     private val targetHeight = 9.feet + 9.inches + 1.feet + 5.inches
     private val camHeight = 13.inches // todo check
-    private val camAngle = 30.degrees
-
+    private val camAngle = 47.degrees
+    private val width = 19.625.inches * 2
+    private val focalLen = (44 /* px */ * sqrt(10.feet.inMeters().pow(2) +
+            targetHeight.inMeters().pow(2))) / (width.inMeters()) / 0.35
     private val kCameraPos = Pose2d(Translation2d(0.meters, 8.inches), Rotation2d())
 
 }
