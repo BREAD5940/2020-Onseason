@@ -69,7 +69,7 @@ object VisionSubsystem : FalconSubsystem() {
                 solvePnpPose.rotation.radians epsilonEquals 0.0) return
 
         Tracker.addSamples(Timer.getFPGATimestamp().seconds - ps3eye.latency,
-                listOf(DriveSubsystem.robotPosition +
+                listOf(DriveSubsystem.poseBuffer[Timer.getFPGATimestamp().seconds - ps3eye.latency] ?: DriveSubsystem.robotPosition +
                         kCameraPos + // transform by camera position
                         solvePnpPose // transform camera pos by measured pose
                 ))

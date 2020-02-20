@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel
 import edu.wpi.first.wpilibj.Compressor
 import edu.wpi.first.wpilibj.SPI
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
@@ -24,6 +25,7 @@ import lib.asSparkMax
 import lib.mirror
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.debug.FalconDashboard
+import org.ghrobotics.lib.localization.TimePoseInterpolatableBuffer
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
 import org.ghrobotics.lib.mathematics.twodim.geometry.x_u
 import org.ghrobotics.lib.mathematics.twodim.geometry.y_u
@@ -90,6 +92,12 @@ object DriveSubsystem : FalconSubsystem() {
     val periodicIO = PeriodicIO()
         get() = synchronized(stateLock) { field }
 
+    /**
+     * Buffer for storing the pose over a span of time. This is useful for
+     * Vision and latency compensation.
+     */
+    val poseBuffer = TimePoseInterpolatableBuffer()
+
     override fun lateInit() {
 
         flModule.driveMotor.asSparkMax()?.canSparkMax?.inverted = false
@@ -144,6 +152,8 @@ object DriveSubsystem : FalconSubsystem() {
         FalconDashboard.robotHeading = robotPosition.rotation.radians
         FalconDashboard.robotX = robotPosition.translation.x_u.inFeet()
         FalconDashboard.robotY = robotPosition.translation.y_u.inFeet()
+
+        poseBuffer[Timer.getFPGATimestamp().seconds] = robotPosition
     }
 
     fun followTrajectory(trajectory: Trajectory, endHeading: Rotation2d, mirrored: Boolean = false) =

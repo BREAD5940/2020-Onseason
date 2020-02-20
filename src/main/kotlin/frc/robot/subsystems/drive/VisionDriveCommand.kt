@@ -59,8 +59,17 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
                         super.execute()
                         return // todo do smth else?
                     }
-                    val angle = bestPose.relativeTo(DriveSubsystem.robotPosition)
-                            .transformBy(Pose2d(2.feet + 5.inches, 0.inches, 0.degrees.toRotation2d())) // offset to get inner port
+
+                    val targetPose = bestPose.relativeTo(DriveSubsystem.robotPosition)
+                    val shouldAimAtInnerGoal = targetPose.rotation.degrees.absoluteValue < 35
+
+                    SmartDashboard.putBoolean("shouldAimAtInnerGoal?", shouldAimAtInnerGoal)
+                    
+                    // decide between outer and inner goal poses to aim at
+                    val angle = (if(shouldAimAtInnerGoal)
+                        targetPose.transformBy(Pose2d(2.feet + 5.inches, 0.inches, 0.degrees.toRotation2d()))
+                    else
+                        targetPose)
                             .translation.toRotation2d()
 
                     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -86,7 +95,5 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
     companion object {
         val centerOfRotation = Translation2d(0.meters, 8.inches)
         val controller = PIDController(2.8, 0.0, 0.3)
-
-        val rightBelowGoalParameter = ShotParameter(44.degrees, 1600.revolutionsPerMinute)
     }
 }

@@ -39,7 +39,7 @@ object Constants {
     /**
      * The default shot lookup table, in degrees of elevation to ShotParameters
      */
-    val defaultShotLookupTable = InterpolatingTable(
+    val pitchLookupTable3v3 = InterpolatingTable(
             // maybe we'll do target pitch for now?
             -3.9 to ShotParameter(67.degrees, 4000.revolutionsPerMinute),
             0.3 to ShotParameter(64.5.degrees, 3500.revolutionsPerMinute, (1).degrees),
@@ -49,4 +49,22 @@ object Constants {
             12.2 to ShotParameter(61.5.degrees, 2100.revolutionsPerMinute, 0.5.degrees),
             16.2 to ShotParameter(60.5.degrees, 1900.revolutionsPerMinute, 0.5.degrees)
     )
+
+    /**
+     * The default shot lookup table, in degrees of elevation to ShotParameters
+     */
+    val pitchLookupTable5v = InterpolatingTable(
+            // maybe we'll do target pitch for now?
+            -3.9 to ShotParameter(55.degrees, 4000.revolutionsPerMinute),
+            0.3 to ShotParameter(51.5.degrees, 3500.revolutionsPerMinute, (1).degrees),
+            4.3 to ShotParameter(52.degrees, 2600.revolutionsPerMinute, (1).degrees),
+            5.4 to ShotParameter(50.3.degrees, 2400.revolutionsPerMinute, (0.5).degrees),
+            8.6 to ShotParameter(48.3.degrees, 2400.revolutionsPerMinute, (0.5).degrees),
+            12.2 to ShotParameter(46.8.degrees, 2100.revolutionsPerMinute, 0.5.degrees),
+            16.2 to ShotParameter(45.3.degrees, 1900.revolutionsPerMinute, 0.5.degrees)
+    )
+
+    val rightBelowGoalParameter3v3 = ShotParameter(44.degrees, 1600.revolutionsPerMinute)
+    val rightBelowGoalParameter5v = ShotParameter(21.degrees, 1600.revolutionsPerMinute)
+
 }

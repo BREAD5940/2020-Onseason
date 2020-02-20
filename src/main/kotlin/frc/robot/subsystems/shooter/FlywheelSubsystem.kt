@@ -119,7 +119,7 @@ object FlywheelSubsystem : FalconSubsystem() {
         SmartDashboard.putData(FlywheelSubsystem)
     }
 
-    val defaultShotLookupTable = Constants.defaultShotLookupTable
+    val defaultShotLookupTable = Constants.pitchLookupTable5v
 }
 
 data class ShotParameter(
@@ -146,4 +146,11 @@ data class ShotParameter(
     }
 
     override fun toString() = "ShotParameter: angle ${hoodAngle.inDegrees()}, speed ${speed.inRpm()}, offset ${offset.inDegrees()}"
+
+    override fun hashCode(): Int {
+        var result = hoodAngle.hashCode()
+        result = 31 * result + speed.hashCode()
+        result = 31 * result + offset.hashCode()
+        return result
+    }
 }
