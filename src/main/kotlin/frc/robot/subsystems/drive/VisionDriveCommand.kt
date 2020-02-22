@@ -64,7 +64,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
                     val shouldAimAtInnerGoal = targetPose.rotation.degrees.absoluteValue < 35
 
                     SmartDashboard.putBoolean("shouldAimAtInnerGoal?", shouldAimAtInnerGoal)
-                    
+
                     // decide between outer and inner goal poses to aim at
                     val angle = (if(shouldAimAtInnerGoal)
                         targetPose.transformBy(Pose2d(2.feet + 5.inches, 0.inches, 0.degrees.toRotation2d()))

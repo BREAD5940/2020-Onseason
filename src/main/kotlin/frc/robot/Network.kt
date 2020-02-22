@@ -55,6 +55,7 @@ object Network {
                 number("Hood Output, Volt") { HoodSubsystem.hoodMotor.voltageOutput.value }
                 number("Last ref pos, deg") { HoodSubsystem.lastProfiledReference.position.radians.inDegrees().roundToInt().toDouble() }
                 number("Shooter error, RPM") { (FlywheelSubsystem.shooterMaster.encoder.velocity - 3000.revolutionsPerMinute).inRpm() }
+                number("thru bore pos, deg") { FlywheelSubsystem.throughBoreEncoder.distance.radians.inDegrees()}
                 position(2, 0)
                 size(1, 4)
             }

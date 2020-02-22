@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Transform2d
+import frc.robot.autonomous.paths.transformBy
 import frc.robot.subsystems.drive.DriveSubsystem
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -68,11 +69,14 @@ object VisionSubsystem : FalconSubsystem() {
         if (solvePnpPose.translation.x epsilonEquals 0.0 && solvePnpPose.translation.y epsilonEquals 0.0 &&
                 solvePnpPose.rotation.radians epsilonEquals 0.0) return
 
+        val drivetrainPose = DriveSubsystem.poseBuffer[Timer.getFPGATimestamp().seconds - ps3eye.latency] ?: DriveSubsystem.robotPosition
+
+        val fieldRelativePose = drivetrainPose
+                .transformBy(kCameraPos)// transform by camera position
+                .transformBy(solvePnpPose) // transform camera pos by measured pose
+
         Tracker.addSamples(Timer.getFPGATimestamp().seconds - ps3eye.latency,
-                listOf(DriveSubsystem.poseBuffer[Timer.getFPGATimestamp().seconds - ps3eye.latency] ?: DriveSubsystem.robotPosition +
-                        kCameraPos + // transform by camera position
-                        solvePnpPose // transform camera pos by measured pose
-                ))
+                listOf(fieldRelativePose))
 
         Tracker.update()
 
