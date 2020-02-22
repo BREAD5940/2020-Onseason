@@ -21,7 +21,8 @@ class SixPCFromTrenchRoutine : AutoRoutine() {
     private val path3 = TrajectoryFactory.sixPCShieldGeneratorToShoot
 
     override val duration: SIUnit<Second>
-        get() = SIUnit<Second>(path1.totalTimeSeconds + path2.totalTimeSeconds + path3.totalTimeSeconds)
+        get() = SIUnit(path1.totalTimeSeconds + path2.totalTimeSeconds + path3.totalTimeSeconds)
+
     override val routine
         get() = sequential {
             +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 0.degrees.toRotation2d()) }

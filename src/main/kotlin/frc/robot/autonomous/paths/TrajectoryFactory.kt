@@ -20,7 +20,7 @@ object TrajectoryFactory {
 
     /** Constraints **/
 
-    val kMaxVelocity = 7.5.feet.velocity
+    val kMaxVelocity = 6.feet.velocity
     val kMaxAcceleration = 6.feet.acceleration
 
     /** Adjusted Poses **/
@@ -190,7 +190,7 @@ object TrajectoryFactory {
                         Pose2d(18.65.feet, 13.541.feet, 24.degrees).asWaypoint(),
                         Pose2d(19.134.feet, 12.347.feet, 24.degrees).asWaypoint()
                 ),
-                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
+                getConstraints(kMaxVelocity), 4.feet.velocity, kMaxAcceleration
         )
     }
 
