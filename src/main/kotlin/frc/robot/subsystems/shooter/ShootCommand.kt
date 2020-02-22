@@ -35,10 +35,10 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
         val wantedParameter = parameterSupplier()
 //        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
 
-        FlywheelSubsystem.shootAtSpeed(wantedParameter.speed)
         HoodSubsystem.wantedAngle = wantedParameter.hoodAngle
 
-//        println("hood ${wantedParameter.hoodAngle.inDegrees()}, rpm ${wantedParameter.speed.inRpm()}")
+        // call periodically to recalculate feedback
+        FlywheelSubsystem.shootAtSpeed(wantedParameter.speed)
     }
 
     private fun isOnTarget(): Boolean {

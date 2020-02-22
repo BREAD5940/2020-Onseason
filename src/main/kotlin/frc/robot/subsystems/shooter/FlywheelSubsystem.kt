@@ -115,6 +115,9 @@ object FlywheelSubsystem : FalconSubsystem() {
 //        get() = shooterMaster.encoder.velocity
         get() = throughBoreEncoder.rate.radians.velocity
 
+    /**
+     * Shoot at a speed. Must be called periodically!
+     */
     fun shootAtSpeed(speed: SIUnit<Velocity<Radian>>) {
         wantsShootMode = true
         val ff = feedForward.calculate(speed.value).volts
