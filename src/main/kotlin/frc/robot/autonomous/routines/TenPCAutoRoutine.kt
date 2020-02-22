@@ -15,31 +15,43 @@ import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.seconds
 
-class SixPCFromTrenchRoutine : AutoRoutine() {
-    private val path1 = TrajectoryFactory.sixPCStartToShoot
-    private val path2 = TrajectoryFactory.sixPCGetPCFromShieldGenerator
-    private val path3 = TrajectoryFactory.sixPCShieldGeneratorToShoot
+class TenPCAutoRoutine : AutoRoutine() {
+    private val path1 = TrajectoryFactory.tenPCAutoToShieldGenerator
+    private val path2 = TrajectoryFactory.tenPCAutoShieldGeneratorToShoot
+    private val path3 = TrajectoryFactory.getPCFromTrench
+    private val path4 = TrajectoryFactory.trenchToShoot
 
     override val duration: SIUnit<Second>
-        get() = SIUnit<Second>(path1.totalTimeSeconds + path2.totalTimeSeconds + path3.totalTimeSeconds)
+        get() = path1.duration +
+                path2.duration +
+                path3.duration +
+                path4.duration
+
     override val routine
         get() = sequential {
             +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 0.degrees.toRotation2d()) }
 
-            +DriveSubsystem.followTrajectory(path1) { 160.0.degrees.toRotation2d() }
-
-            +(FlywheelSubsystem.agitateAndShoot(4.seconds))
-                    .deadlineWith(VisionDriveCommand())
-
-            +DriveSubsystem.followTrajectory2(path2) { (24.0).degrees }
+            +DriveSubsystem.followTrajectory2(path1) { (-68).degrees }
                     .alongWith(
                             IntakeSubsystem.extendIntakeCommand()
                                     .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(0.5) }))
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
-            +DriveSubsystem.followTrajectory(path3) { 160.0.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path2) { (180.0).degrees.toRotation2d() }
 
-            +(FlywheelSubsystem.agitateAndShoot(4.seconds))
+            +(FlywheelSubsystem.agitateAndShoot((4.seconds)))
                     .deadlineWith(VisionDriveCommand())
+
+            +DriveSubsystem.followTrajectory(path3) { 0.0.degrees.toRotation2d() }
+                    .alongWith(
+                            IntakeSubsystem.extendIntakeCommand()
+                                    .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(0.5) }))
+                    .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
+
+            +DriveSubsystem.followTrajectory(path4) { 180.0.degrees.toRotation2d() }
+
+            +(FlywheelSubsystem.agitateAndShoot((4.seconds)))
+                    .deadlineWith(VisionDriveCommand())
+//            }
         }
 }

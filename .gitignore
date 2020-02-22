@@ -31,3 +31,4 @@ bin/*
 .gradle/*
 imgui.ini
 log/*
+*.kotlin_module

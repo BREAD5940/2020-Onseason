@@ -18,7 +18,11 @@ fun <K : SIKey> FalconMotor<K>.asSparkMax() = if (this is FalconMAX) this else n
 
 fun runCommand(block: () -> Unit, vararg reqs: Subsystem) = RunCommand(Runnable(block), *reqs)
 
+fun runCommand(vararg reqs: Subsystem, block: () -> Unit) = RunCommand(Runnable(block), *reqs)
+
 fun instantCommand(block: () -> Unit) = InstantCommand(Runnable(block))
+
+fun instantCommand(vararg reqs: Subsystem, block: () -> Unit) = InstantCommand(Runnable(block), *reqs)
 
 fun SIUnit<Velocity<Radian>>.inRpm() = this.value / 2.0 / PI * 60.0
 

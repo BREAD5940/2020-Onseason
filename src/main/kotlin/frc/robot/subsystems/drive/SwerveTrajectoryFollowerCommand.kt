@@ -50,7 +50,6 @@ class SwerveTrajectoryFollowerCommand(
 
     override fun initialize() {
         trajectory = trajectorySupplier()
-        targetHeading = headingSupplier()
 
         FalconDashboard.isFollowingPath = true
 
@@ -60,6 +59,9 @@ class SwerveTrajectoryFollowerCommand(
     }
 
     override fun execute() {
+
+        // update target heading
+        targetHeading = headingSupplier()
 
         // update the controller
         val time = timer.get()
