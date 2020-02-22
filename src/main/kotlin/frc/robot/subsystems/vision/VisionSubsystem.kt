@@ -26,13 +26,13 @@ import org.ghrobotics.lib.vision.TargetTracker
 
 object VisionSubsystem : FalconSubsystem() {
 
-    val lifecam = ChameleonCamera("lifecam") // TODO find actual name
+//    val lifecam = ChameleonCamera("lifecam") // TODO find actual name
 
-//    val ps3eye = ChameleonCamera("ps3eye")
+    val ps3eye = ChameleonCamera("ps3eye")
 
     override fun lateInit() {
-        lifecam.driverMode = false
-        lifecam.pipeline = 1.0
+        ps3eye.driverMode = false
+        ps3eye.pipeline = 1.0
     }
 
     object Tracker : TargetTracker(TargetTrackerConstants(1.0.seconds, 14.inches, 18)) {
@@ -62,14 +62,14 @@ object VisionSubsystem : FalconSubsystem() {
     )
 
     private fun updateTracker() {
-        if (!lifecam.isValid) return
+        if (!ps3eye.isValid) return
 
         // check that the pose is valid -- if not, it defaults to 0.0 for x, y, and rotation
-        val solvePnpPose = lifecam.bestPose
+        val solvePnpPose = ps3eye.bestPose
         if (solvePnpPose.translation.x epsilonEquals 0.0 && solvePnpPose.translation.y epsilonEquals 0.0 &&
                 solvePnpPose.rotation.radians epsilonEquals 0.0) return
 
-        val drivetrainPose = DriveSubsystem.poseBuffer[Timer.getFPGATimestamp().seconds - lifecam.latency] ?: DriveSubsystem.robotPosition
+        val drivetrainPose = DriveSubsystem.poseBuffer[Timer.getFPGATimestamp().seconds - ps3eye.latency] ?: DriveSubsystem.robotPosition
 
         val fieldRelativePose = drivetrainPose
                 .transformBy(kCameraPos)// transform by camera position
@@ -77,7 +77,7 @@ object VisionSubsystem : FalconSubsystem() {
 
         SmartDashboard.putString("field relative pose", fieldRelativePose.toString())
 
-        Tracker.addSamples(Timer.getFPGATimestamp().seconds - lifecam.latency,
+        Tracker.addSamples(Timer.getFPGATimestamp().seconds - ps3eye.latency,
                 listOf(fieldRelativePose))
 
         Tracker.update()

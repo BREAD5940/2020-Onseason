@@ -68,7 +68,7 @@ object DriveSubsystem : FalconSubsystem() {
             CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
             0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
 
-    val flModule = Mk2SwerveModule(8, 0, -24.degrees, FalconMAX(
+    val flModule = Mk2SwerveModule(8, 0, -24.degrees + 72.degrees - 180.degrees, FalconMAX(
             CANSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
             0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
 

@@ -110,7 +110,7 @@ object FlywheelSubsystem : FalconSubsystem() {
 
     val flywheelSpeed
 //        get() = shooterMaster.encoder.velocity
-        get() = throughBoreEncoder.rate.radians.velocity
+        get() = -throughBoreEncoder.rate.radians.velocity
 
     /**
      * Shoot at a speed. Must be called periodically!
@@ -118,9 +118,9 @@ object FlywheelSubsystem : FalconSubsystem() {
     fun shootAtSpeed(speed: SIUnit<Velocity<Radian>>) {
         wantsShootMode = true
         val ff = feedForward.calculate(speed.value).volts
-//        val fb = feedBack.calculate(flywheelSpeed.value, speed.value).volts
-//        shooterMaster.setVoltage(fb, ff)
-        shooterMaster.setVelocity(speed, ff)
+        val fb = feedBack.calculate(flywheelSpeed.value, speed.value).volts
+        shooterMaster.setVoltage(fb, ff)
+//        shooterMaster.setVelocity(speed, ff)
     }
 
     fun shootAtPower(power: Double) {
@@ -165,8 +165,8 @@ object FlywheelSubsystem : FalconSubsystem() {
     val defaultShotLookupTable = Constants.distanceLookupTable5v
 
     // STATE SPACE STUFF
-    private val feedForward = SimpleMotorFeedforward(0.65, 12.0 / 5676.revolutionsPerMinute.value * 0.9)
-    private val feedBack = PIDController(0.1, 0.0, 0.0)
+    private val feedForward = SimpleMotorFeedforward(0.6, 12.0 / 5676.revolutionsPerMinute.value * 0.9)
+    private val feedBack = PIDController(0.02, 0.0, 0.0)
 
 }
 

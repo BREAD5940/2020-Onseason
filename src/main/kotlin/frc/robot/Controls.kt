@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.XboxController
 import frc.robot.subsystems.climb.OpenLoopClimbCommand
 import frc.robot.subsystems.climb.openLoopClimbCommandGroup
 import frc.robot.subsystems.drive.DriveSubsystem
+import frc.robot.subsystems.drive.HoldAngleCommand
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
@@ -28,7 +29,7 @@ object Controls {
         // todo stuff
 
 //        button(kBumperRight).changeOn { IntakeSubsystem.toggleIntakeExtensionCommand() }
-        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
+//        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
         button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())
         button(kX).changeOn { IntakeSubsystem.miniRetractIntakeCommand() }
@@ -40,8 +41,11 @@ object Controls {
         pov(270).change(VisionDriveCommand())
 
         button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
-        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
-        button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false }
+        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }
+                .changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
+//                .change(HoldAngleCommand().alongWith(ShootCommand()))
+        button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }
+                .changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false }
 
         button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))//.alongWith(VisionDriveCommand()))
 
@@ -56,14 +60,12 @@ object Controls {
 
         button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
         button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
-        button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false }
+        button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
         button(kX).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kY).change(ShootCommand().alongWith(VisionDriveCommand()))
 
-        button(kBumperLeft).change(ShootCommand().alongWith(VisionDriveCommand()))
-        button(kBumperRight).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
-
-        button(kB).changeOn { IntakeSubsystem.intakeMotor.setDutyCycle(-0.5); FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { IntakeSubsystem.intakeMotor.setNeutral(); FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false }
+//        button(kBumperLeft).change(ShootCommand().alongWith(VisionDriveCommand()))
+//        button(kBumperRight).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
         button(kA).whileOn { IntakeSubsystem.holdIntake = true }.whileOff { IntakeSubsystem.holdIntake = false }
 
 //        pov(0).changeOn{FlywheelSubsystem.shootAtPower(1.0)}.changeOff { FlywheelSubsystem.setNeutral() }

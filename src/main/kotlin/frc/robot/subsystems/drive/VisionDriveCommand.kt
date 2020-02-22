@@ -46,10 +46,10 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
         forward *= forward.absoluteValue
         strafe *= strafe.absoluteValue
 
-//        val shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
+        val shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
 
         when {
-            VisionSubsystem.lifecam.isValid -> {
+            VisionSubsystem.ps3eye.isValid -> {
 
                 val speeds: ChassisSpeeds
                 @Suppress("ConstantConditionIf", "LiftReturnOrAssignment")
@@ -63,16 +63,16 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
 
                     SmartDashboard.putNumber("Distance to target", innerOrOuterGoalPose.translation.norm) // meters
 
-                    val shotParameter = Constants.distanceLookupTable5v.get(innerOrOuterGoalPose.translation.norm) ?: ShotParameter.DefaultParameter
+//                    val shotParameter = Constants.distanceLookupTable5v.get(innerOrOuterGoalPose.translation.norm) ?: ShotParameter.DefaultParameter
 
                     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                             forward, strafe, -controller.calculate(angle.radians, shotParameter.offset.inRadians()),
                             DriveSubsystem.robotPosition.rotation)
                 } else {
 
-                    val shotParameter = Constants.pitchLookupTable5v.get(VisionSubsystem.lifecam.pitch.degrees) ?: ShotParameter.DefaultParameter
+//                    val shotParameter = Constants.pitchLookupTable5v.get(VisionSubsystem.ps3eye.pitch.degrees) ?: Constants.rightBelowGoalParameter5v
 
-                    val avHeading = headingAveragingBuffer.calculate(VisionSubsystem.lifecam.yaw.radians + DriveSubsystem.robotPosition.rotation.radians)
+                    val avHeading = headingAveragingBuffer.calculate(VisionSubsystem.ps3eye.yaw.radians + DriveSubsystem.robotPosition.rotation.radians)
 
                     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                             forward, strafe, controller.calculate(DriveSubsystem.robotPosition.rotation.radians,
@@ -90,7 +90,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
 
     companion object {
         val centerOfRotation = Translation2d(0.meters, 8.inches)
-        val controller = PIDController(2.8, 0.0, 0.3)
+        val controller = PIDController(1.7, 0.0, 0.0)
 
         fun getTargetPose(): Pose2d? {
             val bestPose = VisionSubsystem.Tracker.getBestTarget()?.averagePose

@@ -22,7 +22,7 @@ object HoodSubsystem : FalconSubsystem() {
             setSecondaryCurrentLimit(35.0)
         }
         controller.setOutputRange(-0.3, 0.3)
-        controller.p = 0.2
+        controller.p = 0.3
     }
 
     private val hoodAngleEncoder = AnalogInput(Ports.hoodEncoderPort)
@@ -59,7 +59,7 @@ object HoodSubsystem : FalconSubsystem() {
 
         lastProfiledReference = setpoint
 
-        if ((hoodAngle - wantedAngle).absoluteValue > 1.degrees) {
+        if ((hoodAngle - wantedAngle).absoluteValue > 4.degrees) {
             hoodMotor.setDutyCycle(hoodPidController.calculate(hoodAngle.inRadians(), setpoint.position))
             wasInOnSPARKClosedLoop = false
         } else {

@@ -48,13 +48,13 @@ object Network {
                 size(1, 3)
             }
             list("Flywheel") {
-                number("Velocity, RPM") { FlywheelSubsystem.shooterMaster.encoder.velocity.inRpm() }
+                number("Velocity, RPM") { FlywheelSubsystem.flywheelSpeed.inRpm() }
                 number("Output, V") { FlywheelSubsystem.shooterMaster.voltageOutput.value }
                 number("Hood Angle, Deg") { HoodSubsystem.hoodAngle.inDegrees().roundToInt().toDouble() }
                 number("Hood Error, Deg") { HoodSubsystem.hoodPidController.positionError.radians.inDegrees().roundToInt().toDouble() }
                 number("Hood Output, Volt") { HoodSubsystem.hoodMotor.voltageOutput.value }
                 number("Last ref pos, deg") { HoodSubsystem.lastProfiledReference.position.radians.inDegrees().roundToInt().toDouble() }
-                number("Shooter error, RPM") { (FlywheelSubsystem.shooterMaster.encoder.velocity - 3000.revolutionsPerMinute).inRpm() }
+//                number("Shooter error, RPM") { (FlywheelSubsystem.shooterMaster.encoder.velocity - 3000.revolutionsPerMinute).inRpm() }
                 number("thru bore pos, deg") { FlywheelSubsystem.throughBoreEncoder.distance.radians.inDegrees()}
                 position(2, 0)
                 size(1, 4)
