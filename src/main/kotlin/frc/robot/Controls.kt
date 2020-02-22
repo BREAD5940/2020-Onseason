@@ -41,7 +41,7 @@ object Controls {
         button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
         button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false }
 
-         button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))//.alongWith(VisionDriveCommand()))
+        button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))//.alongWith(VisionDriveCommand()))
 
         button(kY).change(ShootCommand().alongWith(VisionDriveCommand()))
 
@@ -69,7 +69,7 @@ object Controls {
 
         pov(0).changeOn(openLoopClimbCommandGroup)
 
-          button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))//.alongWith(VisionDriveCommand()))
+        button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))//.alongWith(VisionDriveCommand()))
     }
 
     fun update() {

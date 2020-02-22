@@ -31,7 +31,7 @@ object HoodSubsystem : FalconSubsystem() {
 
     var wantedAngle = 35.degrees
 
-    val hoodPidController = PIDController(6.0, 0.0, 0.0).apply {
+    val hoodPidController = PIDController(2.0, 0.0, 0.0).apply {
         //        enableContinuousInput(-PI, PI)
         disableContinuousInput()
     }
@@ -46,7 +46,7 @@ object HoodSubsystem : FalconSubsystem() {
     }
 
     override fun lateInit() {
-        SmartDashboard.putData(hoodPidController)
+        SmartDashboard.putData("hoodPidController", hoodPidController)
     }
 
     var wasInOnSPARKClosedLoop = false

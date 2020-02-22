@@ -89,7 +89,7 @@ object FlywheelSubsystem : FalconSubsystem() {
     }
 
     fun engagePawl() {
-        pawlServo.angle = 15.0
+//        pawlServo.angle = 15.0
     }
 
     fun disengagePawl() {

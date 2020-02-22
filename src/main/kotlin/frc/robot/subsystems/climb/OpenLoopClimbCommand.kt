@@ -7,6 +7,7 @@ import frc.robot.subsystems.shooter.FlywheelSubsystem
 import lib.instantCommand
 import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.commands.sequential
+import org.ghrobotics.lib.utils.withDeadband
 import org.ghrobotics.lib.wrappers.hid.getY
 
 class OpenLoopClimbCommand : FalconCommand(FlywheelSubsystem) {
@@ -27,18 +28,24 @@ class OpenLoopClimbCommand : FalconCommand(FlywheelSubsystem) {
     }
 
     companion object {
-        val speedSource by lazy { Controls.operatorFalconXbox.getY(GenericHID.Hand.kRight) }
+        val speedSource by lazy { Controls.operatorFalconXbox.getY(GenericHID.Hand.kRight).withDeadband(0.15) }
     }
 }
 
 val openLoopClimbCommandGroup
     get() = sequential {
+        +instantCommand(BumperGrabberSubsystem) {
+            BumperGrabberSubsystem.wantsExtended = true
+        }
+        +WaitCommand(1.0)
         +instantCommand(FlywheelSubsystem) {
             FlywheelSubsystem.wantsShootMode = false
             FlywheelSubsystem.setClimberArmExtension(true)
             FlywheelSubsystem.disengagePawl()
         }
         +WaitCommand(2.0)
-                .alongWith(instantCommand(FlywheelSubsystem) { FlywheelSubsystem.climbAtPower(0.05) }) // to engage dog
+                // negative power is in opposite direction of ratchet,
+                // positive power climbs
+                .alongWith(instantCommand(FlywheelSubsystem) { FlywheelSubsystem.climbAtPower(-0.15) }) // to engage dog
         +OpenLoopClimbCommand()
     }

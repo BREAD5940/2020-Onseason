@@ -4,6 +4,7 @@ package frc.robot
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import frc.robot.autonomous.Autonomous
+import frc.robot.subsystems.climb.BumperGrabberSubsystem
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
@@ -25,7 +26,7 @@ object Robot : FalconTimedRobot() {
         +FlywheelSubsystem
         +IntakeSubsystem
         +HoodSubsystem
-        // +BumperGrabberSubsystem
+        +BumperGrabberSubsystem
         +VisionSubsystem
 
         SmartDashboard.putData(CommandScheduler.getInstance())

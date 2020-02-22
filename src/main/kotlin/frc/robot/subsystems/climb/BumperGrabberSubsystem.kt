@@ -18,16 +18,16 @@ import org.ghrobotics.lib.wrappers.FalconSolenoid
 object BumperGrabberSubsystem : FalconSubsystem() {
 
     private val bumperPiston = FalconDoubleSolenoid(bumperGrabberSolenoid[0], bumperGrabberSolenoid[1], kPcmId)
-    val bumperGrabMotor = falconMAX(bumperGrabberId,
-            CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
-        canSparkMax.apply {
-            restoreFactoryDefaults()
-            setSecondaryCurrentLimit(30.0)
-        }
-        smartCurrentLimit = 15.amps
-
-        controller.setOutputRange(0.0, 1.0)
-    }
+//    val bumperGrabMotor = falconMAX(bumperGrabberId,
+//            CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
+//        canSparkMax.apply {
+//            restoreFactoryDefaults()
+//            setSecondaryCurrentLimit(30.0)
+//        }
+//        smartCurrentLimit = 15.amps
+//
+//        controller.setOutputRange(0.0, 1.0)
+//    }
 
     var wantsExtended by Delegates.observable(false,
             { _, _, wantsOut ->
@@ -44,7 +44,7 @@ class GrabBumperCommand : FalconCommand(BumperGrabberSubsystem) {
             return
         }
         BumperGrabberSubsystem.wantsExtended = true
-        BumperGrabberSubsystem.bumperGrabMotor.setDutyCycle(speedSource())
+//        BumperGrabberSubsystem.bumperGrabMotor.setDutyCycle(speedSource())
     }
 
     companion object {
