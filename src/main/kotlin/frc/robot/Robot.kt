@@ -10,6 +10,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.HoodSubsystem
 import frc.robot.subsystems.vision.VisionSubsystem
+import org.ghrobotics.lib.mathematics.units.derived.inDegrees
 import org.ghrobotics.lib.wrappers.FalconTimedRobot
 
 object Robot : FalconTimedRobot() {
@@ -41,6 +42,7 @@ object Robot : FalconTimedRobot() {
         Autonomous.update()
         Controls.update()
         Network.update()
+//        println(FlywheelSubsystem.shooterMaster.encoder.position.inDegrees())
     }
 
     override fun disabledInit() {

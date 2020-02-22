@@ -1,26 +1,21 @@
 package frc.robot.subsystems.shooter
 
 import com.revrobotics.CANSparkMaxLowLevel
-import edu.wpi.first.wpilibj.CounterBase
 import edu.wpi.first.wpilibj.Encoder
 import edu.wpi.first.wpilibj.Servo
-import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-import edu.wpi.first.wpilibj.system.LinearSystem
-import edu.wpi.first.wpilibj.system.plant.DCMotor
 import edu.wpi.first.wpilibj2.command.CommandBase
-import edu.wpi.first.wpiutil.math.Nat
 import frc.robot.Constants
 import frc.robot.Ports.armSolenoid
 import frc.robot.Ports.collectorAgitatorId
 import frc.robot.Ports.kPcmId
 import frc.robot.Ports.shooterGearboxIds
 import frc.robot.Ports.shooterShifterSolenoid
-import kotlinx.coroutines.GlobalScope
-import kotlin.properties.Delegates
-import lib.*
+import lib.inRpm
+import lib.instantCommand
+import lib.revolutionsPerMinute
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.commands.parallel
 import org.ghrobotics.lib.commands.sequential
@@ -32,10 +27,10 @@ import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnitRotationModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.rev.falconMAX
 import org.ghrobotics.lib.types.Interpolatable
-import org.ghrobotics.lib.utils.launchFrequency
 import org.ghrobotics.lib.wrappers.FalconDoubleSolenoid
 import org.ghrobotics.lib.wrappers.FalconSolenoid
 import kotlin.math.PI
+import kotlin.properties.Delegates
 
 object FlywheelSubsystem : FalconSubsystem() {
 
@@ -82,18 +77,20 @@ object FlywheelSubsystem : FalconSubsystem() {
         smartCurrentLimit = 25.amps
     }
 
-    private val pawlServo = Servo(9)
+    val pawlServo = Servo(8).apply {
+        setBounds(2.1, 0.0, 0.0, 0.0, 0.9)
+    }
 
     val throughBoreEncoder = Encoder(0, 1).apply {
         distancePerPulse = 2.0 * PI / 0.81 / 2048.0
     }
 
     fun engagePawl() {
-//        pawlServo.angle = 15.0
+        pawlServo.set(0.8) // random number because of unknown reason, but engagement is good. between 0 and 1
     }
 
     fun disengagePawl() {
-        pawlServo.angle = 0.0
+        pawlServo.set(0.0)
     }
 
     var wantsShootMode by Delegates.observable(true,
@@ -151,8 +148,9 @@ object FlywheelSubsystem : FalconSubsystem() {
     override fun lateInit() {
         SmartDashboard.putData(FlywheelSubsystem)
         SmartDashboard.putData("flywheel PID", feedBack)
-        disengagePawl()
+        engagePawl()
         enableMotors()
+        wantsShootMode = true
     }
 
     fun disableMotors() {
@@ -163,7 +161,7 @@ object FlywheelSubsystem : FalconSubsystem() {
         shooterMaster.controller.setOutputRange(-1.0, 1.0)
     }
 
-    val defaultShotLookupTable = Constants.pitchLookupTable5v
+    val defaultShotLookupTable = Constants.distanceLookupTable5v
 
     // STATE SPACE STUFF
     private val feedForward = SimpleMotorFeedforward(0.65, 12.0 / 5676.revolutionsPerMinute.value * 0.9)

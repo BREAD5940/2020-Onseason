@@ -2,6 +2,7 @@ package frc.robot
 
 // import frc.robot.subsystems.drive.VisionDriveCommand
 import edu.wpi.first.wpilibj.XboxController
+import frc.robot.subsystems.climb.OpenLoopClimbCommand
 import frc.robot.subsystems.climb.openLoopClimbCommandGroup
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.VisionDriveCommand
@@ -10,6 +11,7 @@ import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.HoodSubsystem
 import frc.robot.subsystems.shooter.ShootCommand
 import org.ghrobotics.lib.mathematics.units.derived.degrees
+import org.ghrobotics.lib.mathematics.units.derived.radians
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.wrappers.hid.*
 
@@ -68,6 +70,13 @@ object Controls {
 //        pov(180).changeOn{FlywheelSubsystem.shootAtPower(0.60)}.changeOff { FlywheelSubsystem.setNeutral() }
 
         pov(0).changeOn(openLoopClimbCommandGroup)
+
+        pov(180).changeOn(OpenLoopClimbCommand().perpetually())
+
+//        pov(180).changeOn { FlywheelSubsystem.shooterMaster.encoder.resetPosition(0.radians) }
+
+//        pov(180).whileOn { FlywheelSubsystem.engagePawl(); println("on ${FlywheelSubsystem.pawlServo.angle}") }
+//        pov(0).whileOn { FlywheelSubsystem.disengagePawl(); println("off ${FlywheelSubsystem.pawlServo.angle}") }
 
         button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))//.alongWith(VisionDriveCommand()))
     }

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.MedianFilter
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import frc.robot.Constants
 import frc.robot.autonomous.paths.transformBy
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.ShotParameter
@@ -44,7 +45,6 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
         forward *= forward.absoluteValue
         strafe *= strafe.absoluteValue
 
-        val shotParameter = FlywheelSubsystem.defaultShotLookupTable.get(VisionSubsystem.ps3eye.pitch.degrees) ?: ShotParameter.DefaultParameter
 //        val shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
 
         when {
@@ -53,7 +53,6 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
                 val speeds: ChassisSpeeds
                 @Suppress("ConstantConditionIf", "LiftReturnOrAssignment")
                 if (useTracker) {
-
                     val bestPose = VisionSubsystem.Tracker.getBestTarget()?.averagePose
                     if (bestPose == null) {
                         super.execute()
@@ -66,16 +65,24 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
                     SmartDashboard.putBoolean("shouldAimAtInnerGoal?", shouldAimAtInnerGoal)
 
                     // decide between outer and inner goal poses to aim at
-                    val angle = (if(shouldAimAtInnerGoal)
+                    val innerOrOuterGoalPose = (if(shouldAimAtInnerGoal)
                         targetPose.transformBy(Pose2d(2.feet + 5.inches, 0.inches, 0.degrees.toRotation2d()))
                     else
                         targetPose)
-                            .translation.toRotation2d()
+
+                    val angle = innerOrOuterGoalPose.rotation
+
+                    SmartDashboard.putNumber("Distance to target", innerOrOuterGoalPose.translation.norm) // meters
+
+                    val shotParameter = Constants.distanceLookupTable5v.get(innerOrOuterGoalPose.translation.norm) ?: ShotParameter.DefaultParameter
 
                     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                             forward, strafe, controller.calculate(angle.radians, shotParameter.offset.inRadians()),
                             DriveSubsystem.robotPosition.rotation)
                 } else {
+
+                    val shotParameter = Constants.pitchLookupTable5v.get(VisionSubsystem.ps3eye.pitch.degrees) ?: ShotParameter.DefaultParameter
+
                     val avHeading = headingAveragingBuffer.calculate(VisionSubsystem.ps3eye.yaw.radians + DriveSubsystem.robotPosition.rotation.radians)
 
                     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
