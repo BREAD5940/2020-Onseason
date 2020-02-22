@@ -118,8 +118,9 @@ object FlywheelSubsystem : FalconSubsystem() {
     fun shootAtSpeed(speed: SIUnit<Velocity<Radian>>) {
         wantsShootMode = true
         val ff = feedForward.calculate(speed.value).volts
-        val fb = feedBack.calculate(flywheelSpeed.value, speed.value).volts
-        shooterMaster.setVoltage(fb, ff)
+//        val fb = feedBack.calculate(flywheelSpeed.value, speed.value).volts
+//        shooterMaster.setVoltage(fb, ff)
+        shooterMaster.setVelocity(speed, ff)
     }
 
     fun shootAtPower(power: Double) {

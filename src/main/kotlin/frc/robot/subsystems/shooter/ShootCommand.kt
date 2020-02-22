@@ -1,7 +1,9 @@
 package frc.robot.subsystems.shooter
 
 import edu.wpi.first.networktables.NetworkTableEntry
+import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.vision.VisionSubsystem
 import kotlin.math.abs
 import lib.inRpm
@@ -20,7 +22,9 @@ import org.ghrobotics.lib.mathematics.units.derived.inDegrees
  */
 class ShootCommand(private val parameterSupplier: () -> ShotParameter, private val endAfterSpinup: Boolean = false) : FalconCommand(FlywheelSubsystem, HoodSubsystem) {
 
-    constructor(endAfterSpinup: Boolean = false) : this({ FlywheelSubsystem.defaultShotLookupTable.get(VisionSubsystem.ps3eye.pitch.degrees) ?: ShotParameter.DefaultParameter }, endAfterSpinup)
+    constructor(endAfterSpinup: Boolean = false) : this(
+            { FlywheelSubsystem.defaultShotLookupTable.get((VisionDriveCommand.getTargetPose() ?: Pose2d()).translation.norm) ?: ShotParameter.DefaultParameter }
+            , endAfterSpinup)
 
     constructor(hoodAngle: SIUnit<Radian>, speed: SIUnit<Velocity<Radian>>, endAfterSpinup: Boolean = false) : this({ ShotParameter(hoodAngle, speed) }, endAfterSpinup)
 

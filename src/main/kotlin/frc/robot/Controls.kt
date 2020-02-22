@@ -27,7 +27,7 @@ object Controls {
 
         // todo stuff
 
-        button(kBumperRight).changeOn { IntakeSubsystem.toggleIntakeExtensionCommand() }
+//        button(kBumperRight).changeOn { IntakeSubsystem.toggleIntakeExtensionCommand() }
         button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
         button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())

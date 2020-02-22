@@ -3,6 +3,7 @@ package frc.robot.subsystems.drive
 import edu.wpi.first.networktables.NetworkTableEntry
 import edu.wpi.first.wpilibj.MedianFilter
 import edu.wpi.first.wpilibj.controller.PIDController
+import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.Constants
@@ -28,7 +29,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
         SmartDashboard.putData("vision PID", controller)
     }
 
-    private val useTracker = true
+    private val useTracker = false
 
     private val angleEntry: NetworkTableEntry = SmartDashboard.getEntry("offset")
 
@@ -48,28 +49,16 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
 //        val shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
 
         when {
-            VisionSubsystem.ps3eye.isValid -> {
+            VisionSubsystem.lifecam.isValid -> {
 
                 val speeds: ChassisSpeeds
                 @Suppress("ConstantConditionIf", "LiftReturnOrAssignment")
                 if (useTracker) {
-                    val bestPose = VisionSubsystem.Tracker.getBestTarget()?.averagePose
-                    if (bestPose == null) {
+                    val innerOrOuterGoalPose = getTargetPose()
+                    if(innerOrOuterGoalPose == null) {
                         super.execute()
-                        return // todo do smth else?
+                        return
                     }
-
-                    val targetPose = bestPose.relativeTo(DriveSubsystem.robotPosition)
-                    val shouldAimAtInnerGoal = targetPose.rotation.degrees.absoluteValue < 35
-
-                    SmartDashboard.putBoolean("shouldAimAtInnerGoal?", shouldAimAtInnerGoal)
-
-                    // decide between outer and inner goal poses to aim at
-                    val innerOrOuterGoalPose = (if(shouldAimAtInnerGoal)
-                        targetPose.transformBy(Pose2d(2.feet + 5.inches, 0.inches, 0.degrees.toRotation2d()))
-                    else
-                        targetPose)
-
                     val angle = innerOrOuterGoalPose.rotation
 
                     SmartDashboard.putNumber("Distance to target", innerOrOuterGoalPose.translation.norm) // meters
@@ -77,13 +66,13 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
                     val shotParameter = Constants.distanceLookupTable5v.get(innerOrOuterGoalPose.translation.norm) ?: ShotParameter.DefaultParameter
 
                     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                            forward, strafe, controller.calculate(angle.radians, shotParameter.offset.inRadians()),
+                            forward, strafe, -controller.calculate(angle.radians, shotParameter.offset.inRadians()),
                             DriveSubsystem.robotPosition.rotation)
                 } else {
 
-                    val shotParameter = Constants.pitchLookupTable5v.get(VisionSubsystem.ps3eye.pitch.degrees) ?: ShotParameter.DefaultParameter
+                    val shotParameter = Constants.pitchLookupTable5v.get(VisionSubsystem.lifecam.pitch.degrees) ?: ShotParameter.DefaultParameter
 
-                    val avHeading = headingAveragingBuffer.calculate(VisionSubsystem.ps3eye.yaw.radians + DriveSubsystem.robotPosition.rotation.radians)
+                    val avHeading = headingAveragingBuffer.calculate(VisionSubsystem.lifecam.yaw.radians + DriveSubsystem.robotPosition.rotation.radians)
 
                     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                             forward, strafe, controller.calculate(DriveSubsystem.robotPosition.rotation.radians,
@@ -102,5 +91,26 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
     companion object {
         val centerOfRotation = Translation2d(0.meters, 8.inches)
         val controller = PIDController(2.8, 0.0, 0.3)
+
+        fun getTargetPose(): Pose2d? {
+            val bestPose = VisionSubsystem.Tracker.getBestTarget()?.averagePose
+            if (bestPose == null) {
+                return null // todo do smth else?
+            }
+
+            val targetPose = bestPose.relativeTo(DriveSubsystem.robotPosition)
+            val shouldAimAtInnerGoal = targetPose.rotation.degrees.absoluteValue < 35
+
+            SmartDashboard.putBoolean("shouldAimAtInnerGoal?", shouldAimAtInnerGoal)
+
+            // decide between outer and inner goal poses to aim at
+            val innerOrOuterGoalPose = (if(shouldAimAtInnerGoal)
+                targetPose.transformBy(Pose2d(2.feet + 5.inches, 0.inches, 0.degrees.toRotation2d()))
+            else
+                targetPose)
+
+            return innerOrOuterGoalPose
+        }
+
     }
 }
