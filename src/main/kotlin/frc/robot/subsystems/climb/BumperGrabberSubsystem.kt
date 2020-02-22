@@ -1,4 +1,4 @@
-package frc.robot.subsystems.buddyClimb
+package frc.robot.subsystems.climb
 
 import com.revrobotics.CANSparkMaxLowLevel
 import edu.wpi.first.wpilibj.XboxController

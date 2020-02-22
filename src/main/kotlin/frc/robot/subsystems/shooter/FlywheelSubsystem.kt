@@ -102,7 +102,7 @@ object FlywheelSubsystem : FalconSubsystem() {
                 // todo switch native unit model?
             })
 
-    fun setClimberArmState(wantsUp: Boolean) {
+    fun setClimberArmExtension(wantsUp: Boolean) {
         armExtensionSolenoid.state = if (wantsUp) FalconSolenoid.State.Forward else FalconSolenoid.State.Reverse
     }
 
@@ -134,6 +134,11 @@ object FlywheelSubsystem : FalconSubsystem() {
         kickWheelMotor.setDutyCycle(speed)
     }
 
+    fun climbAtPower(power: Double) {
+        wantsShootMode = false
+        shooterMaster.setDutyCycle(power)
+    }
+
     fun agitateAndShoot(shootTime: SIUnit<Second> = 5.seconds): CommandBase = sequential {
         +ShootCommand(true).withTimeout(3.0) // TODO make less bad
         +parallel {
@@ -147,6 +152,15 @@ object FlywheelSubsystem : FalconSubsystem() {
         SmartDashboard.putData(FlywheelSubsystem)
         SmartDashboard.putData("flywheel PID", feedBack)
         disengagePawl()
+        enableMotors()
+    }
+
+    fun disableMotors() {
+        shooterMaster.controller.setOutputRange(0.0, 0.0)
+    }
+
+    fun enableMotors() {
+        shooterMaster.controller.setOutputRange(-1.0, 1.0)
     }
 
     val defaultShotLookupTable = Constants.pitchLookupTable5v
