@@ -13,7 +13,10 @@ import frc.robot.subsystems.drive.toTranslation2d
 import lib.normalize
 import org.ghrobotics.lib.mathematics.units.Meter
 import org.ghrobotics.lib.mathematics.units.SIUnit
+import org.ghrobotics.lib.mathematics.units.derived.degrees
+import org.ghrobotics.lib.mathematics.units.derived.inRadians
 import org.ghrobotics.lib.mathematics.units.derived.volts
+import org.ghrobotics.lib.utils.safeRangeTo
 
 class SwerveTrajectoryController(
     private val kinematics: SwerveDriveKinematics,
@@ -24,8 +27,8 @@ class SwerveTrajectoryController(
     private var prevState = listOf(
             SwerveModuleState(), SwerveModuleState(), SwerveModuleState(), SwerveModuleState())
 
-    private val forwardController = PIDController(1.0, 0.0, 0.0) // x meters per second per meter of error
-    private val strafeController = PIDController(1.0, 0.0, 0.0)
+    private val forwardController = PIDController(4.0, 0.0, 0.0) // x meters per second per meter of error
+    private val strafeController = PIDController(4.0, 0.0, 0.0)
     private val rotationController = PIDController(0.8, 0.0, 0.0) // rad per sec per radian of error
 
     fun calculate(
@@ -49,7 +52,8 @@ class SwerveTrajectoryController(
         val feedbackOutput = ChassisSpeeds.fromFieldRelativeSpeeds(
                 forwardController.calculate(currentPose.translation.x, state.poseMeters.translation.x) + velocity.x,
                 strafeController.calculate(currentPose.translation.y, state.poseMeters.translation.y) + velocity.y,
-                rotationController.calculate(currentPose.rotation.radians, targetHeading.radians),
+                rotationController.calculate(currentPose.rotation.radians, targetHeading.radians)
+                        .coerceIn(-50.degrees.inRadians(), 50.degrees.inRadians()),
                 currentPose.rotation
         )
 
