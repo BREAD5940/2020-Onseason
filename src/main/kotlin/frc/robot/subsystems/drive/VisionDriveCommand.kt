@@ -63,14 +63,14 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
 
                     SmartDashboard.putNumber("Distance to target", innerOrOuterGoalPose.translation.norm) // meters
 
-//                    val shotParameter = Constants.distanceLookupTable5v.get(innerOrOuterGoalPose.translation.norm) ?: ShotParameter.DefaultParameter
+                    val shotParameter = Constants.distanceLookupTable5v.get(innerOrOuterGoalPose.translation.norm) ?: ShotParameter.DefaultParameter
 
                     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                             forward, strafe, -controller.calculate(angle.radians, shotParameter.offset.inRadians()),
                             DriveSubsystem.robotPosition.rotation)
                 } else {
 
-//                    val shotParameter = Constants.pitchLookupTable5v.get(VisionSubsystem.ps3eye.pitch.degrees) ?: Constants.rightBelowGoalParameter5v
+                    val shotParameter = Constants.pitchLookupTable5v.get(VisionSubsystem.ps3eye.pitch.degrees) ?: Constants.rightBelowGoalParameter5v
 
                     val avHeading = headingAveragingBuffer.calculate(VisionSubsystem.ps3eye.yaw.radians + DriveSubsystem.robotPosition.rotation.radians)
 

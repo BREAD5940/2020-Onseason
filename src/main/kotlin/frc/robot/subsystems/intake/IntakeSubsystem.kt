@@ -16,6 +16,7 @@ import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
 import org.ghrobotics.lib.motors.rev.falconMAX
 import org.ghrobotics.lib.wrappers.FalconDoubleSolenoid
 import org.ghrobotics.lib.wrappers.FalconSolenoid
+import kotlin.math.absoluteValue
 
 object IntakeSubsystem : FalconSubsystem() {
     val open = false
@@ -90,8 +91,14 @@ object IntakeSubsystem : FalconSubsystem() {
     override fun lateInit() {
 
         defaultCommand = runCommand({
-            setSpeed(speedSource())
-            if (speedSource() > 0.1 && !holdIntake) {
+            val speed = Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kRight) -
+                    Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft)
+            + Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kRight) -
+                    Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kLeft)
+
+            println(speed)
+            setSpeed(speed)
+            if (speed.absoluteValue > 0.1 && !holdIntake) {
                 miniExtendIntakeCommand()
             } else if (!holdIntake) {
                 miniRetractIntakeCommand()
@@ -104,14 +111,5 @@ object IntakeSubsystem : FalconSubsystem() {
 
     override fun periodic() {
 //        println(intakeMotor.drawnCurrent.inAmps())
-    }
-
-    // Operator joystick memes
-    val speedSource by lazy {
-        { Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kRight) -
-                Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft)
-//            + Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kRight) -
-//                Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kLeft)
-        }
     }
 }

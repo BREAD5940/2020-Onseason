@@ -140,7 +140,7 @@ object FlywheelSubsystem : FalconSubsystem() {
     fun agitateAndShoot(shootTime: SIUnit<Second> = 5.seconds): CommandBase = sequential {
         +ShootCommand(true).withTimeout(3.0) // TODO make less bad
         +parallel {
-            +instantCommand { runKickWheel(0.3) }.perpetually().withTimeout(shootTime.inSeconds())
+            +instantCommand { runKickWheel(0.8) }.perpetually().withTimeout(shootTime.inSeconds())
             +ShootCommand().withTimeout(shootTime.inSeconds())
         }
         +instantCommand(this@FlywheelSubsystem) { setNeutral() }

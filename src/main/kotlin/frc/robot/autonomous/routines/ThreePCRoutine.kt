@@ -18,14 +18,12 @@ import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.seconds
 
 class ThreePCRoutine : AutoRoutine() {
-    private val path1 = TrajectoryFactory.moveForward5Feet
 
     override val duration: SIUnit<Second>
-        get() = SIUnit<Second>(path1.totalTimeSeconds)
+        get() = 0.seconds
+
     override val routine
         get() = sequential {
-            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 0.degrees.toRotation2d()) }
-
             +runCommand(DriveSubsystem) {
                 DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(ChassisSpeeds(-.2, 0.0, 0.0), Translation2d())
             }.withTimeout(1.0)

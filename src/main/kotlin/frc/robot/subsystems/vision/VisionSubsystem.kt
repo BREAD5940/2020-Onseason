@@ -35,7 +35,7 @@ object VisionSubsystem : FalconSubsystem() {
         ps3eye.pipeline = 1.0
     }
 
-    object Tracker : TargetTracker(TargetTrackerConstants(1.0.seconds, 14.inches, 18)) {
+    object Tracker : TargetTracker(TargetTrackerConstants(3.0.seconds, 10.feet, 150)) {
         /**
          * Find the target that's closest to the robot per it's averagedPose2dRelativeToBot
          */

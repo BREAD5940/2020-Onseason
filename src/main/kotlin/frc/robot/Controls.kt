@@ -31,7 +31,7 @@ object Controls {
 //        button(kBumperRight).changeOn { IntakeSubsystem.toggleIntakeExtensionCommand() }
 //        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
         button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
-        button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())
+//        button(kB).changeOn(IntakeSubsystem.retractIntakeCommand())
         button(kX).changeOn { IntakeSubsystem.miniRetractIntakeCommand() }
 //        button(kY).change(runCommand(FlywheelSubsystem) { FlywheelSubsystem.shootAtPower(1.0) }).changeOff{FlywheelSubsystem.setNeutral()}
 
@@ -45,7 +45,7 @@ object Controls {
                 .changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
 //                .change(HoldAngleCommand().alongWith(ShootCommand()))
         button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }
-                .changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.wantsShootMode = false }
+                .changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
 
         button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))//.alongWith(VisionDriveCommand()))
 
