@@ -27,9 +27,9 @@ class SwerveTrajectoryController(
     private var prevState = listOf(
             SwerveModuleState(), SwerveModuleState(), SwerveModuleState(), SwerveModuleState())
 
-    private val forwardController = PIDController(4.0, 0.0, 0.0) // x meters per second per meter of error
-    private val strafeController = PIDController(4.0, 0.0, 0.0)
-    private val rotationController = PIDController(0.8, 0.0, 0.0) // rad per sec per radian of error
+    private val forwardController = PIDController(6.0, 0.0, 0.0) // x meters per second per meter of error
+    private val strafeController = PIDController(6.0, 0.0, 0.0)
+    private val rotationController = PIDController(2.5, 0.0, 0.0) // rad per sec per radian of error
 
     fun calculate(
         time: Double,
@@ -53,7 +53,7 @@ class SwerveTrajectoryController(
                 forwardController.calculate(currentPose.translation.x, state.poseMeters.translation.x) + velocity.x,
                 strafeController.calculate(currentPose.translation.y, state.poseMeters.translation.y) + velocity.y,
                 rotationController.calculate(currentPose.rotation.radians, targetHeading.radians)
-                        .coerceIn(-50.degrees.inRadians(), 50.degrees.inRadians()),
+                        .coerceIn(-90.degrees.inRadians(), 90.degrees.inRadians()),
                 currentPose.rotation
         )
 

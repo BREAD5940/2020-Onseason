@@ -26,3 +26,24 @@ class HoldAngleCommand : VisionDriveCommand() {
         DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds, centerOfRotation)
     }
 }
+
+class PointTurnCommand(private val wantedAngle: Rotation2d) : VisionDriveCommand() {
+
+    override fun execute() {
+
+        val speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                0.0, 0.0, controller.calculate(DriveSubsystem.robotPosition.rotation.radians, wantedAngle.radians),
+                DriveSubsystem.robotPosition.rotation)
+
+        DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds, centerOfRotation)
+    }
+
+    override fun isFinished(): Boolean {
+        return (DriveSubsystem.robotPosition.rotation.minus(wantedAngle).degrees < 4)
+    }
+
+    override fun end(interrupted: Boolean) {
+        DriveSubsystem.setNeutral()
+    }
+
+}

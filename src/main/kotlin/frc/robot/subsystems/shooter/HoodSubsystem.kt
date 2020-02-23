@@ -39,7 +39,7 @@ object HoodSubsystem : FalconSubsystem() {
     var safeHoodAngles = 17.degrees..78.degrees
 
     var lastProfiledReference = TrapezoidProfile.State(hoodAngle.value, 0.0)
-    private val constraints = TrapezoidProfile.Constraints(50.degrees.inRadians(), 40.degrees.inRadians())
+    private val constraints = TrapezoidProfile.Constraints(80.degrees.inRadians(), 100.degrees.inRadians())
 
     fun enabledReset() {
         lastProfiledReference = TrapezoidProfile.State(hoodAngle.value, 0.0)

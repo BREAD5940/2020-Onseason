@@ -43,8 +43,8 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
     }
 
     override fun execute() {
-        val wantedParameter = parameterSupplier()
-//        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
+//        val wantedParameter = parameterSupplier()
+        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
 
         HoodSubsystem.wantedAngle = wantedParameter.hoodAngle
 
