@@ -100,6 +100,10 @@ object TrajectoryFactory {
                         VelocityLimitRegionConstraint(Rectangle2d(
                                 Translation2d(32.574, 22.449),
                                 Translation2d(29.09, 27.041)),
+                                3.feet.velocity),
+                        VelocityLimitRegionConstraint(Rectangle2d(
+                                Translation2d(27.752, 23.918),
+                                Translation2d(20.075, 25.434)),
                                 3.feet.velocity)
                 ), kMaxVelocity, kMaxAcceleration
         )
