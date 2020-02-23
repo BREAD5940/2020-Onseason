@@ -58,8 +58,8 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(11.75.feet, 25.689.feet, 180.degrees).asWaypoint(),
-                        Pose2d(17.682.feet, 21.939.feet, (-111).degrees).asWaypoint()
+                        Pose2d(11.75.feet, 25.689.feet, 270.degrees).asWaypoint(),
+                        Pose2d(11.5.feet, 22.feet, (270).degrees).asWaypoint()
                 ),
                 getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
@@ -91,6 +91,7 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
+                        Pose2d(11.5.feet, 22.feet, (270).degrees).asWaypoint()
                         Pose2d(17.682.feet, 21.939.feet, (-111).degrees).asWaypoint(),
                         Pose2d(19.445.feet, 24.719.feet, 0.0.degrees).asWaypoint(),
                         Pose2d(30.826.feet, 24.719.feet, 0.0.degrees).asWaypoint()
