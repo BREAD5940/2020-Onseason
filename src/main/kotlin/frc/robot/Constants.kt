@@ -58,9 +58,9 @@ object Constants {
             -21.1 to ShotParameter(64.degrees, 4000.revolutionsPerMinute, -1.degrees),
             -18.5 to ShotParameter(64.degrees, 4000.revolutionsPerMinute, -0.degrees),
             -16.3 to ShotParameter(55.degrees, 3100.revolutionsPerMinute, -1.degrees),
-            -11.8 to ShotParameter(54.degrees, 2500.revolutionsPerMinute, -3.degrees),
-            -4.8 to ShotParameter(50.degrees, 2000.revolutionsPerMinute, -6.degrees),
-            -4.5 to ShotParameter(52.degrees, 2100.revolutionsPerMinute, -5.degrees),
+            -11.8 to ShotParameter(55.degrees, 2500.revolutionsPerMinute, -3.degrees),
+            -4.8 to ShotParameter(56.degrees, 2100.revolutionsPerMinute, -6.degrees),
+            -4.5 to ShotParameter(56.degrees, 2100.revolutionsPerMinute, -5.degrees),
             17.0 to ShotParameter(42.5.degrees, 1800.revolutionsPerMinute, -6.degrees)
     )
 
