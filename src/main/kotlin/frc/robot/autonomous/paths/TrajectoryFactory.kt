@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstrai
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint
 import frc.robot.Constants.kinematics
 import frc.robot.autonomous.paths.TrajectoryWaypoints
+import lib.translation2d
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
 import org.ghrobotics.lib.mathematics.twodim.geometry.Rectangle2d
 import org.ghrobotics.lib.mathematics.twodim.trajectory.constraints.VelocityLimitRadiusConstraint
@@ -72,7 +73,16 @@ object TrajectoryFactory {
                         Pose2d(11.75.feet, 25.689.feet, 0.0.degrees).asWaypoint(),
                         Pose2d(20.383.feet, 18.592.feet, (-68).degrees).asWaypoint()
                 ),
-                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
+                listOf(
+                        SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
+                        VelocityLimitRegionConstraint(Rectangle2d(
+                                Translation2d(19.723, 17.536),
+                                Translation2d(22.344, 16.434)),
+                                3.feet.velocity),
+                        VelocityLimitRadiusConstraint(Translation2d(18.623, 16.526),
+                                1.5.feet,
+                                3.feet.velocity)
+                ), kMaxVelocity, kMaxAcceleration
         )
     }
 
@@ -102,8 +112,8 @@ object TrajectoryFactory {
                                 Translation2d(29.09, 27.041)),
                                 3.feet.velocity),
                         VelocityLimitRegionConstraint(Rectangle2d(
-                                Translation2d(27.752, 23.918),
-                                Translation2d(20.075, 25.434)),
+                                Translation2d(20.075, 25.434),
+                                Translation2d(27.752, 23.918)),
                                 3.feet.velocity)
                 ), kMaxVelocity, kMaxAcceleration
         )
@@ -132,8 +142,12 @@ object TrajectoryFactory {
                         SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
                         VelocityLimitRegionConstraint(Rectangle2d(
                                 Translation2d(21.552, 4.357),
-                                Translation2d(24.824, -0.051)
-                        ), 3.feet.velocity)
+                                Translation2d(24.824, -0.051)),
+                                3.feet.velocity),
+                        VelocityLimitRegionConstraint(Rectangle2d(
+                                Translation2d(20.998, 3.531),
+                                Translation2d(21.904, 1.051)),
+                                3.feet.velocity)
                 ), kMaxVelocity, kMaxAcceleration
         )
     }
@@ -147,7 +161,9 @@ object TrajectoryFactory {
                 ),
                 listOf(
                         SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
-                        VelocityLimitRadiusConstraint(Translation2d(18.624, 16.571), 1.5.feet, 3.feet.velocity)
+                        VelocityLimitRadiusConstraint(Translation2d(18.624, 16.571),
+                                1.5.feet,
+                                3.feet.velocity)
                 ), kMaxVelocity, kMaxAcceleration
         )
     }
@@ -160,7 +176,16 @@ object TrajectoryFactory {
                         Pose2d(18.65.feet, 13.541.feet, 24.degrees).asWaypoint(),
                         Pose2d(19.134.feet, 12.347.feet, 24.degrees).asWaypoint()
                 ),
-                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
+                listOf(
+                        SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
+                        VelocityLimitRadiusConstraint(Translation2d(18.624, 16.571),
+                                1.5.feet,
+                                3.feet.velocity),
+                        VelocityLimitRegionConstraint(Rectangle2d(
+                                Translation2d(21.468, 11.5),
+                                Translation2d(19.02, 15.286)),
+                                3.feet.velocity)
+                ), kMaxVelocity, kMaxAcceleration
         )
     }
 
@@ -171,7 +196,12 @@ object TrajectoryFactory {
                         Pose2d(11.79.feet, 1.281.feet, 0.0.degrees).asWaypoint(),
                         Pose2d(16.557.feet, 14.551.feet, 160.degrees).asWaypoint()
                 ),
-                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
+                listOf(
+                        SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
+                        VelocityLimitRadiusConstraint(Translation2d(18.624, 16.571),
+                                1.5.feet,
+                                3.feet.velocity)
+                ), kMaxVelocity, kMaxAcceleration
         )
     }
 
@@ -194,7 +224,13 @@ object TrajectoryFactory {
                         Pose2d(18.65.feet, 13.541.feet, 24.degrees).asWaypoint(),
                         Pose2d(19.134.feet, 12.347.feet, 24.degrees).asWaypoint()
                 ),
-                getConstraints(kMaxVelocity), 4.feet.velocity, kMaxAcceleration
+                listOf(
+                        SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value), 
+                        VelocityLimitRegionConstraint(Rectangle2d(
+                                Translation2d(21.468, 11.5),
+                                Translation2d(19.02, 15.286)),
+                                3.feet.velocity)
+                ), kMaxVelocity, kMaxAcceleration
         )
     }
 
