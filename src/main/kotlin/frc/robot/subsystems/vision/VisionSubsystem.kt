@@ -23,6 +23,7 @@ import org.ghrobotics.lib.mathematics.units.seconds
 import org.ghrobotics.lib.types.Interpolatable
 import org.ghrobotics.lib.vision.ChameleonCamera
 import org.ghrobotics.lib.vision.TargetTracker
+import org.ghrobotics.lib.vision.ToastyTargetTracker
 
 object VisionSubsystem : FalconSubsystem() {
 
@@ -35,7 +36,7 @@ object VisionSubsystem : FalconSubsystem() {
         ps3eye.pipeline = 1.0
     }
 
-    object Tracker : TargetTracker(TargetTrackerConstants(3.0.seconds, 10.feet, 150)) {
+    object Tracker : ToastyTargetTracker(TargetTrackerConstants(1.0.seconds, 10.feet, 50, 10)) {
         /**
          * Find the target that's closest to the robot per it's averagedPose2dRelativeToBot
          */
@@ -61,11 +62,17 @@ object VisionSubsystem : FalconSubsystem() {
             0.0 to 0.interpolatable()
     )
 
+    private var previousSolvePnpPose: Pose2d = Pose2d()
+
     private fun updateTracker() {
         if (!ps3eye.isValid) return
 
         // check that the pose is valid -- if not, it defaults to 0.0 for x, y, and rotation
         val solvePnpPose = ps3eye.bestPose
+
+        if(previousSolvePnpPose epsilonEquals solvePnpPose) return
+        previousSolvePnpPose = solvePnpPose
+
         if (solvePnpPose.translation.x epsilonEquals 0.0 && solvePnpPose.translation.y epsilonEquals 0.0 &&
                 solvePnpPose.rotation.radians epsilonEquals 0.0) return
 
@@ -74,8 +81,6 @@ object VisionSubsystem : FalconSubsystem() {
         val fieldRelativePose = drivetrainPose
                 .transformBy(kCameraPos)// transform by camera position
                 .transformBy(solvePnpPose) // transform camera pos by measured pose
-
-        SmartDashboard.putString("field relative pose", fieldRelativePose.toString())
 
         Tracker.addSamples(Timer.getFPGATimestamp().seconds - ps3eye.latency,
                 listOf(fieldRelativePose))
@@ -113,6 +118,11 @@ object VisionSubsystem : FalconSubsystem() {
             targetHeight.inMeters().pow(2))) / (width.inMeters()) / 0.35
     private val kCameraPos = Pose2d(Translation2d((-0.5).inches, 3.inches), Rotation2d())
 }
+
+private infix fun Pose2d.epsilonEquals(other: Pose2d) =
+        this.translation.x epsilonEquals other.translation.x
+                && this.translation.y epsilonEquals other.translation.y
+                && this.rotation.radians epsilonEquals other.rotation.radians
 
 private operator fun Pose2d.plus(other: Pose2d) = this.transformBy(Transform2d(other.translation, other.rotation))
 

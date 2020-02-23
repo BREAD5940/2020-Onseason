@@ -59,7 +59,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
                         super.execute()
                         return
                     }
-                    val angle = innerOrOuterGoalPose.rotation
+                    val angle = innerOrOuterGoalPose.translation.toRotation2d()
 
                     SmartDashboard.putNumber("Distance to target", innerOrOuterGoalPose.translation.norm) // meters
 
@@ -108,6 +108,8 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
                 targetPose.transformBy(Pose2d(2.feet + 5.inches, 0.inches, 0.degrees.toRotation2d()))
             else
                 targetPose)
+
+            // TODO offset by Translation between center and shooter (it's (0, 8in))
 
             return innerOrOuterGoalPose
         }
