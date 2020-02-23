@@ -8,6 +8,7 @@ import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.SwerveDriveOutput
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.shooter.FlywheelSubsystem
+import frc.robot.subsystems.shooter.ShootCommand
 import lib.instantCommand
 import lib.runCommand
 import org.ghrobotics.lib.commands.sequential
@@ -26,7 +27,8 @@ class ThreePCRoutine : AutoRoutine() {
         get() = sequential {
             +runCommand(DriveSubsystem) {
                 DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(ChassisSpeeds(-.2, 0.0, 0.0), Translation2d())
-            }.withTimeout(1.0)
+            }.withTimeout(2.0)
+                    .deadlineWith(ShootCommand())
 
             +instantCommand(DriveSubsystem) { DriveSubsystem.setNeutral() }
 

@@ -62,7 +62,7 @@ object Controls {
         button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
         button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
         button(kX).changeOn(IntakeSubsystem.extendIntakeCommand())
-        button(kY).change(ShootCommand().alongWith(VisionDriveCommand()))
+        button(kY).change(IntakeSubsystem.retractIntakeCommand())
 
 //        button(kBumperLeft).change(ShootCommand().alongWith(VisionDriveCommand()))
 //        button(kBumperRight).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }

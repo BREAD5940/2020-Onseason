@@ -25,7 +25,7 @@ class SixPCFromTrenchRoutine : AutoRoutine() {
 
     override val routine
         get() = sequential {
-            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 0.degrees.toRotation2d()) }
+            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 180.degrees.toRotation2d()) }
 
             +DriveSubsystem.followTrajectory(path1) { 160.0.degrees.toRotation2d() }
 

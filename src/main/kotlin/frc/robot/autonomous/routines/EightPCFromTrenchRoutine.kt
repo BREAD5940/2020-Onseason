@@ -22,12 +22,13 @@ class EightPCFromTrenchRoutine : AutoRoutine() {
 
     override val duration: SIUnit<Second>
         get() = SIUnit<Second>(path1.totalTimeSeconds + path2.totalTimeSeconds + path3.totalTimeSeconds)
+
     override val routine
         get() = sequential {
 
-            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 0.degrees.toRotation2d()) }
+            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 180.degrees.toRotation2d()) }
 
-            +DriveSubsystem.followTrajectory(path1) { 180.0.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path1) { 160.0.degrees.toRotation2d() }
 
             +(FlywheelSubsystem.agitateAndShoot(4.seconds))
                     .deadlineWith(VisionDriveCommand())
