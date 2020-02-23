@@ -131,6 +131,29 @@ object TrajectoryFactory {
         )
     }
 
+    val sixPCGrab3FromTrench by lazy {
+        generateTrajectory(
+                false,
+                listOf(
+                        Pose2d(12.feet, 22.feet, 22.degrees).asWaypoint(),
+                        Pose2d(18.5.feet, 24.5.feet, 0.degrees).asWaypoint(),
+                        Pose2d(26.5.feet, 24.5.feet, 0.degrees).asWaypoint()
+                ),
+                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
+        )
+    }
+
+    val sixPCReturnFromTrench by lazy {
+        generateTrajectory(
+                false,
+                listOf(
+                        Pose2d(26.5.feet, 24.5.feet, 180.degrees).asWaypoint(),
+                        Pose2d(12.feet, 22.feet, (-170).degrees).asWaypoint()
+                ),
+                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
+        )
+    }
+
     val eightPCAutoStartToOpposingTrench by lazy {
         generateTrajectory(
                 false,
@@ -209,8 +232,8 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(19.134.feet, 12.347.feet, 24.degrees).asWaypoint(),
-                        Pose2d(16.557.feet, 14.551.feet, 160.degrees).asWaypoint()
+                        Pose2d(12.feet, 25.5.feet, 270.degrees).asWaypoint(),
+                        Pose2d(12.feet, 22.feet, 270.degrees).asWaypoint()
                 ),
                 getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
@@ -225,7 +248,7 @@ object TrajectoryFactory {
                         Pose2d(19.134.feet, 12.347.feet, 24.degrees).asWaypoint()
                 ),
                 listOf(
-                        SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value), 
+                        SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
                         VelocityLimitRegionConstraint(Rectangle2d(
                                 Translation2d(21.468, 11.5),
                                 Translation2d(19.02, 15.286)),

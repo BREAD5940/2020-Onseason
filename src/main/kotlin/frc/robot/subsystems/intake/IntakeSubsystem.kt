@@ -50,7 +50,7 @@ object IntakeSubsystem : FalconSubsystem() {
         chungusPistonSolenoid.state = if (nowWantsExtended) FalconSolenoid.State.Forward else FalconSolenoid.State.Reverse
     }
 
-    private fun setSmolPistonExtension(nowWantsExtended: Boolean) {
+    fun setSmolPistonExtension(nowWantsExtended: Boolean) {
         secondarySmolPistonSolenoid.state = if (nowWantsExtended) FalconSolenoid.State.Forward else FalconSolenoid.State.Reverse
     }
     fun toggleIntakeExtensionCommand() {
