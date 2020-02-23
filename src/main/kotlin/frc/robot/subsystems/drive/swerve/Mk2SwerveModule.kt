@@ -56,7 +56,7 @@ open class Mk2SwerveModule(
         driveMotor.canSparkMax.openLoopRampRate = 0.05
 
         azimuthMotor.canSparkMax.restoreFactoryDefaults()
-        azimuthMotor.canSparkMax.setSecondaryCurrentLimit(20.0)
+        azimuthMotor.canSparkMax.setSecondaryCurrentLimit(35.0)
         azimuthMotor.canSparkMax.setSmartCurrentLimit(30)
         azimuthMotor.canSparkMax.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, false)
         azimuthMotor.canSparkMax.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, false)
