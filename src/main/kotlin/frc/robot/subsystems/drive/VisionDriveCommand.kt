@@ -46,6 +46,8 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
         forward *= forward.absoluteValue
         strafe *= strafe.absoluteValue
 
+        VisionSubsystem.ledsEnabled = true
+
         val shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
 
         when {
@@ -86,6 +88,10 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
                 super.execute()
             }
         }
+    }
+
+    override fun end(interrupted: Boolean) {
+        VisionSubsystem.ledsEnabled = false
     }
 
     companion object {

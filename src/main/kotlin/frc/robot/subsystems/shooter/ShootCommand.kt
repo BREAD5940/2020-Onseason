@@ -43,13 +43,15 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
     }
 
     override fun execute() {
-        val wantedParameter = parameterSupplier()
-//        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
+//        val wantedParameter = parameterSupplier()
+        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
 
         HoodSubsystem.wantedAngle = wantedParameter.hoodAngle
 
         // call periodically to recalculate feedback
         FlywheelSubsystem.shootAtSpeed(wantedParameter.speed)
+
+        VisionSubsystem.ledsEnabled = true
     }
 
     private fun isOnTarget(): Boolean {
@@ -64,5 +66,6 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
 
     override fun end(interrupted: Boolean) {
         FlywheelSubsystem.setNeutral()
+        VisionSubsystem.ledsEnabled = false
     }
 }

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.vision
 
+import edu.wpi.first.wpilibj.DigitalOutput
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
@@ -24,6 +25,7 @@ import org.ghrobotics.lib.types.Interpolatable
 import org.ghrobotics.lib.vision.ChameleonCamera
 import org.ghrobotics.lib.vision.TargetTracker
 import org.ghrobotics.lib.vision.ToastyTargetTracker
+import kotlin.properties.Delegates
 
 object VisionSubsystem : FalconSubsystem() {
 
@@ -31,12 +33,21 @@ object VisionSubsystem : FalconSubsystem() {
 
     val ps3eye = ChameleonCamera("ps3eye")
 
+    val piCam = ChameleonCamera("picam")
+
+    private val ledFet = DigitalOutput(9)
+
+    var ledsEnabled by Delegates.observable(false) {
+        _, _, newValue -> ledFet.set(!newValue)
+    }
+
     override fun lateInit() {
         ps3eye.driverMode = false
         ps3eye.pipeline = 1.0
+        ledsEnabled = false
     }
 
-    object Tracker : ToastyTargetTracker(TargetTrackerConstants(1.0.seconds, 10.feet, 50, 10)) {
+    object Tracker : ToastyTargetTracker(TargetTrackerConstants(2.0.seconds, 10.feet, 100, 10)) {
         /**
          * Find the target that's closest to the robot per it's averagedPose2dRelativeToBot
          */

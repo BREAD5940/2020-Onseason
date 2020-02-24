@@ -1,0 +1,10 @@
+{
+  "teamNumber" : 5940,
+  "connectionType" : "DHCP",
+  "ip" : "",
+  "gateway" : "",
+  "netmask" : "",
+  "hostname" : "raspberrypi",
+  "currentCamera" : "USB Camera-B4.09.24.1",
+  "currentPipeline" : -1
+}

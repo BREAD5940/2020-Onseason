@@ -1,0 +1,34 @@
+[ {
+  "eventType" : "kProgramInit",
+  "command" : ""
+}, {
+  "eventType" : "kProgramExit",
+  "command" : ""
+}, {
+  "eventType" : "kNTConnected",
+  "command" : ""
+}, {
+  "eventType" : "kLEDOn",
+  "command" : ""
+}, {
+  "eventType" : "kLEDOff",
+  "command" : ""
+}, {
+  "eventType" : "kEnterDriverMode",
+  "command" : ""
+}, {
+  "eventType" : "kExitDriverMode",
+  "command" : ""
+}, {
+  "eventType" : "kFoundTarget",
+  "command" : ""
+}, {
+  "eventType" : "kFoundMultipleTarget",
+  "command" : ""
+}, {
+  "eventType" : "kLostTarget",
+  "command" : ""
+}, {
+  "eventType" : "kPipelineLag",
+  "command" : ""
+} ]
