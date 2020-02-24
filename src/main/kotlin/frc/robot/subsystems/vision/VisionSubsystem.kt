@@ -29,12 +29,8 @@ import kotlin.properties.Delegates
 
 object VisionSubsystem : FalconSubsystem() {
 
-//    val lifecam = ChameleonCamera("lifecam") // TODO find actual name
-
     val ps3eye = ChameleonCamera("ps3eye")
-
     val piCam = ChameleonCamera("picam")
-
     private val ledFet = DigitalOutput(9)
 
     var ledsEnabled by Delegates.observable(false) {
