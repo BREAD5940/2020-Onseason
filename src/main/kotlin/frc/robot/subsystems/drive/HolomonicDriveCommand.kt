@@ -21,9 +21,10 @@ open class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
     private var counterClockwiseCenter = Translation2d()
 
     override fun execute() {
-        var forward = -xSource() / 1.0
-        var strafe = -zSource() / 1.0
-        var rotation = -rotSource() * 1.0 / 1.0
+        //Making the throttle curve to y=0.1x^2
+        var forward = (-xSource() / 1.0) * (-xSource() / 1.0) * (-xSource() / 1.0) * (-xSource() / 1.0)
+        var strafe = (-zSource() / 1.0) * (-zSource() / 1.0) * (-zSource() / 1.0) * (-zSource() / 1.0)
+        var rotation = (-rotSource() * 1.0 / 1.0) * (-rotSource() * 1.0 / 1.0) * (-rotSource() * 1.0 / 1.0) * (-rotSource() * 1.0 / 1.0)
         // var isRobotRelative = false
         forward *= forward.absoluteValue
         strafe *= strafe.absoluteValue
@@ -61,8 +62,10 @@ open class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
     }
 
     companion object {
+
         private val kTranslationHand = GenericHID.Hand.kRight
         private val kRotHand = GenericHID.Hand.kLeft
+
         val xSource by lazy { Controls.driverFalconXbox.getY(kTranslationHand).withDeadband(0.1) }
         val zSource by lazy { Controls.driverFalconXbox.getX(kTranslationHand).withDeadband(0.1) }
         val rotSource by lazy { Controls.driverFalconXbox.getX(kRotHand).withDeadband(0.06) }
