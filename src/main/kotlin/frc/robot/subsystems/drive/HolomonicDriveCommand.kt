@@ -21,7 +21,7 @@ open class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
     private var counterClockwiseCenter = Translation2d()
 
     override fun execute() {
-        //Making the throttle curve to y=0.1x^2
+        //Making the throttle curve to y=x^4
         var forward = (-xSource() / 1.0) * (-xSource() / 1.0) * (-xSource() / 1.0) * (-xSource() / 1.0)
         var strafe = (-zSource() / 1.0) * (-zSource() / 1.0) * (-zSource() / 1.0) * (-zSource() / 1.0)
         var rotation = (-rotSource() * 1.0 / 1.0) * (-rotSource() * 1.0 / 1.0) * (-rotSource() * 1.0 / 1.0) * (-rotSource() * 1.0 / 1.0)
