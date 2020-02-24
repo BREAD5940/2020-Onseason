@@ -29,13 +29,13 @@ class SixPCFromTrenchRoutine : AutoRoutine() {
         get() = sequential {
             +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 180.degrees.toRotation2d()) }
 
-            +DriveSubsystem.followTrajectory(path1) { 250.0.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path1) { -170.0.degrees.toRotation2d() }
                     .alongWith(IntakeSubsystem.extendIntakeCommand())
 
-            +(FlywheelSubsystem.agitateAndShoot(4.seconds))
+            +(FlywheelSubsystem.agitateAndShoot(3.seconds))
                     .deadlineWith(VisionDriveCommand())
 
-            +PointTurnCommand(0.degrees.toRotation2d())
+            +PointTurnCommand(22.degrees.toRotation2d())
 
             +DriveSubsystem.followTrajectory2(path2) { (0.0).degrees }
                     .deadlineWith(
@@ -43,12 +43,12 @@ class SixPCFromTrenchRoutine : AutoRoutine() {
                                     .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) }))
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
+            +PointTurnCommand(180.degrees.toRotation2d())
+
             +DriveSubsystem.followTrajectory(path3) { -160.0.degrees.toRotation2d() }
                     .deadlineWith(ShootCommand())
 
-            +PointTurnCommand(-160.degrees.toRotation2d())
-
-            +(FlywheelSubsystem.agitateAndShoot(4.seconds))
+            +(FlywheelSubsystem.agitateAndShoot(3.seconds))
                     .deadlineWith(
                             VisionDriveCommand(),
                             runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0); IntakeSubsystem.setSmolPistonExtension(true) })

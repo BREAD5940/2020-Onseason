@@ -3,6 +3,7 @@ package frc.robot.autonomous.routines
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.subsystems.drive.DriveSubsystem
+import frc.robot.subsystems.drive.PointTurnCommand
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
@@ -19,7 +20,7 @@ class TenPCAutoRoutine : AutoRoutine() {
     private val path1 = TrajectoryFactory.tenPCAutoToShieldGenerator
     private val path2 = TrajectoryFactory.tenPCAutoShieldGeneratorToShoot
     private val path3 = TrajectoryFactory.getPCFromTrench
-    private val path4 = TrajectoryFactory.trenchToShoot
+    private val path4 = TrajectoryFactory.shootFromTrench
 
     override val duration: SIUnit<Second>
         get() = path1.duration +
@@ -34,24 +35,34 @@ class TenPCAutoRoutine : AutoRoutine() {
             +DriveSubsystem.followTrajectory2(path1) { (-68).degrees }
                     .alongWith(
                             IntakeSubsystem.extendIntakeCommand()
-                                    .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(0.5) }))
+                                    .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) }))
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
-            +DriveSubsystem.followTrajectory(path2) { (180.0).degrees.toRotation2d() }
+            +PointTurnCommand(-68.degrees.toRotation2d())
 
-            +(FlywheelSubsystem.agitateAndShoot((4.seconds)))
+            +DriveSubsystem.followTrajectory(path2) { -166.degrees.toRotation2d() }
+
+            +PointTurnCommand(-166.degrees.toRotation2d())
+
+            +(FlywheelSubsystem.agitateAndShoot((3.seconds)))
                     .deadlineWith(VisionDriveCommand())
+
+            +PointTurnCommand(0.degrees.toRotation2d())
 
             +DriveSubsystem.followTrajectory(path3) { 0.0.degrees.toRotation2d() }
                     .alongWith(
                             IntakeSubsystem.extendIntakeCommand()
-                                    .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(0.5) }))
+                                    .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) }))
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
+
+            +PointTurnCommand(180.degrees.toRotation2d())
 
             +DriveSubsystem.followTrajectory(path4) { 180.0.degrees.toRotation2d() }
 
-            +(FlywheelSubsystem.agitateAndShoot((4.seconds)))
-                    .deadlineWith(VisionDriveCommand())
+            +(FlywheelSubsystem.agitateAndShoot((3.seconds)))
+                    .deadlineWith(VisionDriveCommand(),
+                            runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0); IntakeSubsystem.setSmolPistonExtension(true) })
+                    .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 //            }
         }
 }
