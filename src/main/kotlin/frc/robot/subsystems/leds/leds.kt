@@ -9,12 +9,31 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.mathematics.units.millisecond
 
-fun ledsRun(var system) {
+fun ledsRun(val system) {
 
     object led : AddressableLed(9)
     object buffer : AddressableLedBuffer(100)
 
     led.setLength(buffer.getLength())
+
+    switch(system) {
+        case "intake":
+        while(true) {
+            //turn on orange
+            for(var i = 0. i <= buffer.getLength. i++) {
+                buffer.setHSV(i, 30, 100, 100)
+            }
+            led.setData(buffer)
+
+            //turn off for half a sec
+            Timer().schedule(500) {
+                for(var i = 0. i <= buffer.getLength. i++) {
+                buffer.setHSV(i, 30, 100, 0)
+            }
+                led.setData(buffer)
+            }
+        }
+    }
 
     if(system == "intake") {
         while(true) {
@@ -36,7 +55,7 @@ fun ledsRun(var system) {
         while(true) {
             //turn on green
             for (var i = 0.i <= buffer.getLength.i++) {
-                buffer.setHSV(i, 110, 100, 100)
+                    buffer.setHSV(i, 110, 100, 100)
             }
             led.setData(buffer)
 
