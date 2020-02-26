@@ -1,11 +1,13 @@
 package frc.robot.subsystems.vision
 
 import edu.wpi.first.wpilibj.DigitalOutput
+import edu.wpi.first.wpilibj.Relay
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Transform2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import frc.robot.Robot
 import frc.robot.autonomous.paths.transformBy
 import frc.robot.subsystems.drive.DriveSubsystem
 import kotlin.math.pow
@@ -22,6 +24,7 @@ import org.ghrobotics.lib.mathematics.units.inches
 import org.ghrobotics.lib.mathematics.units.meters
 import org.ghrobotics.lib.mathematics.units.seconds
 import org.ghrobotics.lib.types.Interpolatable
+import org.ghrobotics.lib.utils.monitor
 import org.ghrobotics.lib.vision.ChameleonCamera
 import org.ghrobotics.lib.vision.TargetTracker
 import org.ghrobotics.lib.vision.ToastyTargetTracker
@@ -31,16 +34,18 @@ object VisionSubsystem : FalconSubsystem() {
 
     val ps3eye = ChameleonCamera("ps3eye")
     val piCam = ChameleonCamera("picam")
-    private val ledFet = DigitalOutput(9)
+    private val ledFet = Relay(0) //DigitalOutput(9).apply {
+            .apply {
+                setDirection(Relay.Direction.kForward)
+            }
 
     var ledsEnabled by Delegates.observable(false) {
-        _, _, newValue -> ledFet.set(!newValue)
+        _, _, newValue -> ledFet.set(if(newValue) Relay.Value.kForward else Relay.Value.kOff)
     }
 
     override fun lateInit() {
         ps3eye.driverMode = false
         ps3eye.pipeline = 1.0
-        ledsEnabled = false
     }
 
     object Tracker : ToastyTargetTracker(TargetTrackerConstants(2.0.seconds, 10.feet, 100, 10)) {
@@ -59,6 +64,8 @@ object VisionSubsystem : FalconSubsystem() {
 
     override fun periodic() {
         updateTracker()
+        ledFet.set(Relay.Value.kForward)
+//        ledsEnabled = Robot.isEnabled
     }
 
     /**

@@ -1,6 +1,7 @@
 package frc.robot
 
 import edu.wpi.first.wpilibj.XboxController
+import frc.robot.subsystems.climb.GrabBumperCommand
 import frc.robot.subsystems.climb.OpenLoopClimbCommand
 import frc.robot.subsystems.climb.openLoopClimbCommandGroup
 import frc.robot.subsystems.drive.DriveSubsystem
@@ -36,7 +37,7 @@ object Controls {
         button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
         button(kX).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kY).change(IntakeSubsystem.retractIntakeCommand())
-        pov(0).changeOn(openLoopClimbCommandGroup)
+        pov(0).changeOn(openLoopClimbCommandGroup.alongWith(GrabBumperCommand()))
         pov(180).changeOn(OpenLoopClimbCommand().perpetually())
         button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))
     }

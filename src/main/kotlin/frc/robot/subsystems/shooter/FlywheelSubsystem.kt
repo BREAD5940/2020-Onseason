@@ -152,6 +152,7 @@ object FlywheelSubsystem : FalconSubsystem() {
         engagePawl()
         enableMotors()
         wantsShootMode = true
+        setClimberArmExtension(false)
     }
 
     fun disableMotors() {
