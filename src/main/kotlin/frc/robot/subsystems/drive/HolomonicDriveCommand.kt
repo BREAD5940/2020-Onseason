@@ -22,9 +22,9 @@ open class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
 
     override fun execute() {
         //Making the throttle curve to y=x^4
-        var forward = (-xSource() / 1.0) * (-xSource() / 1.0) * (-xSource() / 1.0) * (-xSource() / 1.0)
-        var strafe = (-zSource() / 1.0) * (-zSource() / 1.0) * (-zSource() / 1.0) * (-zSource() / 1.0)
-        var rotation = (-rotSource() * 1.0 / 1.0) * (-rotSource() * 1.0 / 1.0) * (-rotSource() * 1.0 / 1.0) * (-rotSource() * 1.0 / 1.0)
+        var forward = (-xSource() / 1.0)
+        var strafe = (-zSource() / 1.0)
+        var rotation = (-rotSource() * 1.0 / 1.0)
         // var isRobotRelative = false
         forward *= forward.absoluteValue
         strafe *= strafe.absoluteValue

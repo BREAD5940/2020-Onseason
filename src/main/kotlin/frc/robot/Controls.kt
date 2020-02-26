@@ -9,6 +9,7 @@ import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.ShootCommand
+import lib.instantCommand
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.wrappers.hid.*
@@ -24,8 +25,8 @@ object Controls {
         button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kX).changeOn { IntakeSubsystem.miniRetractIntakeCommand() }
         button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
-        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
-        button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))//.alongWith(VisionDriveCommand()))
+        button(kStickRight).change(ShootC        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
+                ommand({ Constants.rightBelowGoalParameter5v }))//.alongWith(VisionDriveCommand()))
         button(kY).change(ShootCommand().alongWith(VisionDriveCommand()))
     }
 
@@ -37,8 +38,9 @@ object Controls {
         button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
         button(kX).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kY).change(IntakeSubsystem.retractIntakeCommand())
-        pov(0).changeOn(openLoopClimbCommandGroup.alongWith(GrabBumperCommand()))
-        pov(180).changeOn(OpenLoopClimbCommand().perpetually())
+        pov(0).changeOn(openLoopClimbCommandGroup.alongWith(GrabBumperCommand(), instantCommand(IntakeSubsystem) {}))
+//        pov(180).changeOn(OpenLoopClimbCommand().perpetually())
+        pov(180).changeOn(GrabBumperCommand().alongWith(instantCommand(IntakeSubsystem) {}))
         button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))
     }
 

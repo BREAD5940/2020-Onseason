@@ -13,7 +13,7 @@ object Ports {
 
     val shooterGearboxIds = listOf(9, 10)
     const val shooterHoodId = 14
-    const val bumperGrabberId = 12
+    const val bumperGrabberId = 11
 
     // SOLENOIDS
 

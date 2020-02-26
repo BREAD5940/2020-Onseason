@@ -56,7 +56,7 @@ class OpenLoopClimbCommand : FalconCommand(FlywheelSubsystem) {
 
 val openLoopClimbCommandGroup
     get() = sequential {
-        +instantCommand(BumperGrabberSubsystem) {
+        +instantCommand {
             BumperGrabberSubsystem.wantsExtended = true
         }
         +WaitCommand(1.0)

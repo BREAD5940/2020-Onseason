@@ -22,11 +22,12 @@ object BumperGrabberSubsystem : FalconSubsystem() {
             CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         canSparkMax.apply {
             restoreFactoryDefaults()
-            setSecondaryCurrentLimit(20.0)
+            setSecondaryCurrentLimit(35.0)
         }
-        smartCurrentLimit = 15.amps
+        smartCurrentLimit = 25.amps
+        brakeMode = true
 
-        controller.setOutputRange(0.0, 1.0)
+        controller.setOutputRange(-1.0, 0.0)
     }
 
     override fun lateInit() {
@@ -42,13 +43,16 @@ object BumperGrabberSubsystem : FalconSubsystem() {
 class GrabBumperCommand : FalconCommand(BumperGrabberSubsystem) {
 
     override fun execute() {
-        // ensure we should be climbing
-        if (!Controls.isClimbing) {
-            cancel()
-            return
-        }
+//        // ensure we should be climbing
+//        if (!Controls.isClimbing) {
+//            cancel()
+//            return
+//        }
+
+        val speed = -speedSource()
+
         BumperGrabberSubsystem.wantsExtended = true
-        BumperGrabberSubsystem.bumperGrabMotor.setDutyCycle(speedSource().coerceIn(0.0, 1.0))
+        BumperGrabberSubsystem.bumperGrabMotor.setDutyCycle(speed)
 
     }
 
