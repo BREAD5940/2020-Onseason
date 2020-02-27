@@ -31,6 +31,11 @@ class OpenLoopClimbCommand : FalconCommand(FlywheelSubsystem) {
     }
 
     override fun execute() {
+        if(FlywheelSubsystem.armLimitTriggered) {
+            FlywheelSubsystem.climbAtPower(0.0)
+            return
+        }
+
         if(FlywheelSubsystem.shooterMaster.encoder.position < 4000.degrees) { // this prevents us from climbing too far maybe
 //            cancel() // I don't like hard coded constants but ok
 //            FlywheelSubsystem.climbAtPower(0.0)

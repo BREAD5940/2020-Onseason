@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState
 import frc.robot.Controls
+import frc.robot.subsystems.shooter.FlywheelSubsystem
 import kotlin.math.absoluteValue
 import lib.* // ktlint-disable no-wildcard-imports
 import org.ghrobotics.lib.commands.FalconCommand
@@ -29,6 +30,12 @@ open class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
         forward *= forward.absoluteValue
         strafe *= strafe.absoluteValue
         rotation *= rotation.absoluteValue
+
+        // decrease sensitivity if the arm is up
+        if(FlywheelSubsystem.armExtended) {
+            forward *= .3
+            strafe *= .3
+        }
 
         // calculate translation vector (with magnitude of the max speed
         // volts divided by volts per meter per second is meters per second

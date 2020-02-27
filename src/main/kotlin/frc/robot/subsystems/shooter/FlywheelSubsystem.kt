@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter
 
 import com.revrobotics.CANSparkMaxLowLevel
+import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.Encoder
 import edu.wpi.first.wpilibj.Servo
 import edu.wpi.first.wpilibj.controller.PIDController
@@ -69,6 +70,9 @@ object FlywheelSubsystem : FalconSubsystem() {
             armSolenoid[0], armSolenoid[1], kPcmId
     )
 
+    private val armLimitSwitchDIO = DigitalInput(8)
+    val armLimitTriggered get() = !armLimitSwitchDIO.get()
+
     val kickWheelMotor = falconMAX(collectorAgitatorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         with(canSparkMax) {
             restoreFactoryDefaults()
@@ -99,6 +103,7 @@ object FlywheelSubsystem : FalconSubsystem() {
                 // todo switch native unit model?
             })
 
+    val armExtended get() = armExtensionSolenoid.state == FalconSolenoid.State.Forward
     fun setClimberArmExtension(wantsUp: Boolean) {
         armExtensionSolenoid.state = if (wantsUp) FalconSolenoid.State.Forward else FalconSolenoid.State.Reverse
     }
