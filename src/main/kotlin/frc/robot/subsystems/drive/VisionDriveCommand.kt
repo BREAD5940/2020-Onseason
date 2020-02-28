@@ -29,7 +29,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
         SmartDashboard.putData("vision PID", controller)
     }
 
-    private val useTracker = false
+    private val useTracker = true
 
     private val angleEntry: NetworkTableEntry = SmartDashboard.getEntry("offset")
 
@@ -49,7 +49,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
         val shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
 
         when {
-            VisionSubsystem.ps3eye.isValid -> {
+            VisionSubsystem.lifecam.isValid -> {
 
                 val speeds: ChassisSpeeds
                 @Suppress("ConstantConditionIf", "LiftReturnOrAssignment")
@@ -70,9 +70,9 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
                             DriveSubsystem.robotPosition.rotation)
                 } else {
 
-                    val shotParameter = Constants.pitchLookupTable5v.get(VisionSubsystem.ps3eye.pitch.degrees) ?: Constants.rightBelowGoalParameter5v
+                    val shotParameter = Constants.pitchLookupTable5v.get(VisionSubsystem.lifecam.pitch.degrees) ?: Constants.rightBelowGoalParameter5v
 
-                    val avHeading = headingAveragingBuffer.calculate(VisionSubsystem.ps3eye.yaw.radians + DriveSubsystem.robotPosition.rotation.radians)
+                    val avHeading = headingAveragingBuffer.calculate(VisionSubsystem.lifecam.yaw.radians + DriveSubsystem.robotPosition.rotation.radians)
 
                     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                             forward, strafe, controller.calculate(DriveSubsystem.robotPosition.rotation.radians,

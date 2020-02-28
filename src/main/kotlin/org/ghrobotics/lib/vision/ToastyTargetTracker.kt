@@ -49,6 +49,15 @@ open class ToastyTargetTracker(private val constants: TargetTrackerConstants) {
      * @param captureTime The time of capture.
      * @param poses The field-relative poses of the targets.
      */
+    fun addSamples(captureTime: SIUnit<Second>, vararg poses: Pose2d) =
+            addSamples(captureTime, listOf(*poses))
+
+    /**
+     * Adds (a) new sample(s) to the Target Tracker.
+     *
+     * @param captureTime The time of capture.
+     * @param poses The field-relative poses of the targets.
+     */
     fun addSamples(captureTime: SIUnit<Second>, poses: Iterable<Pose2d>) {
         // Remove samples from the "future".
         if (captureTime > Timer.getFPGATimestamp().seconds) {

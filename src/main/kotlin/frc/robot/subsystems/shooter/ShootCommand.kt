@@ -29,7 +29,7 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
 
     constructor(endAfterSpinup: Boolean = false) : this(
             { Constants.pitchLookupTable5v.get((
-                    if(VisionSubsystem.ps3eye.isValid) VisionSubsystem.ps3eye.pitch.degrees else 0.0))
+                    if(VisionSubsystem.lifecam.isValid) VisionSubsystem.lifecam.pitch.degrees else 0.0))
                     ?: ShotParameter.DefaultParameter }, endAfterSpinup)
 
     constructor(hoodAngle: SIUnit<Radian>, speed: SIUnit<Velocity<Radian>>, endAfterSpinup: Boolean = false) : this({ ShotParameter(hoodAngle, speed) }, endAfterSpinup)
