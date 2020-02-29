@@ -9,6 +9,7 @@ import frc.robot.autonomous.paths.Pose2d
 import frc.robot.autonomous.paths.plus
 import frc.robot.autonomous.paths.transformBy
 import frc.robot.subsystems.drive.DriveSubsystem
+import lib.FlippableDIOPin
 import kotlin.math.pow
 import kotlin.math.sqrt
 import lib.InterpolatingTable
@@ -34,13 +35,13 @@ object VisionSubsystem : FalconSubsystem() {
 
     val lifecam = ChameleonCamera("lifecam")
 
-    private val ledFet = Relay(0) //DigitalOutput(9).apply {
-            .apply {
-                setDirection(Relay.Direction.kForward)
-            }
+    private val ledFet = FlippableDIOPin(9) //DigitalOutput(9).apply {
+//            .apply {
+//                setDirection(Relay.Direction.kForward)
+//            }
 
     var ledsEnabled by Delegates.observable(false) {
-        _, _, newValue -> ledFet.set(if(newValue) Relay.Value.kForward else Relay.Value.kOff)
+        _, _, newValue -> ledFet.set(newValue)
     }
 
     override fun lateInit() {

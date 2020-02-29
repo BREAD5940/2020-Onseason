@@ -36,7 +36,7 @@ class FlippableDIOPin(private val port: Int): DigitalSource(), Sendable, AutoClo
                 DIOJNI.setDIO(handle, (0).toShort())
                 DIOJNI.freeDIOPort(handle)
                 DIOJNI.initializeDIOPort(HAL.getPort(channel.toByte()), true)
-                isInput = false
+                isInput = true
             }
         }
     }
