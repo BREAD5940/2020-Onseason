@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.Constants
 import frc.robot.autonomous.paths.plus
 import frc.robot.autonomous.paths.transformBy
-import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.ShotParameter
 import frc.robot.subsystems.vision.VisionSubsystem
 import kotlin.math.absoluteValue
@@ -43,8 +42,8 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
     private val headingAveragingBuffer = MedianFilter(5)
 
     override fun execute() {
-        var forward = -xSource() / 1.0
-        var strafe = -zSource() / 1.0
+        var forward = xSource() / 1.0
+        var strafe = zSource() / 1.0
         forward *= forward.absoluteValue
         strafe *= strafe.absoluteValue
 
@@ -65,7 +64,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
 
                     SmartDashboard.putNumber("Distance to target", innerOrOuterGoalPose.translation.norm) // meters
 
-                    val shotParameter = Constants.distanceLookupTable5v.get(innerOrOuterGoalPose.translation.norm) ?: ShotParameter.DefaultParameter
+//                    val shotParameter = Constants.distanceLookupTable5v.get(innerOrOuterGoalPose.translation.norm) ?: ShotParameter.DefaultParameter
 
                     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                             forward, strafe, -controller.calculate(angle.radians, shotParameter.offset.inRadians()),
@@ -104,19 +103,18 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
             }
 
             val targetPose = bestPose.relativeTo(DriveSubsystem.robotPosition.plus(Pose2d(centerOfRotation, Rotation2d())))
-            val shouldAimAtInnerGoal = targetPose.rotation.degrees.absoluteValue < 35
+            val shouldAimAtInnerGoal = targetPose.rotation.degrees.absoluteValue < 10
 
             SmartDashboard.putBoolean("shouldAimAtInnerGoal?", shouldAimAtInnerGoal)
 
             // decide between outer and inner goal poses to aim at
-            val innerOrOuterGoalPose = (if(shouldAimAtInnerGoal)
-                targetPose.transformBy(Pose2d(2.feet + 5.inches, 0.inches, 0.degrees.toRotation2d()))
-            else
-                targetPose)
 
             // TODO offset by Translation between center and shooter (it's (0, 8in))
 
-            return innerOrOuterGoalPose
+            return (if(shouldAimAtInnerGoal)
+                targetPose.transformBy(Pose2d(2.feet + 5.inches, 0.inches, 0.degrees.toRotation2d()))
+            else
+                targetPose)
         }
 
     }

@@ -17,6 +17,8 @@ import org.ghrobotics.lib.wrappers.hid.*
 
 object Controls {
 
+    val kGutSpeed = 0.65
+
     var isClimbing = false
     val driverWpiXbox = XboxController(0)
     val driverFalconXbox = driverWpiXbox.mapControls {
@@ -26,7 +28,7 @@ object Controls {
         button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kX).changeOn { IntakeSubsystem.miniRetractIntakeCommand() }
         button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
-        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
+        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(kGutSpeed) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
         button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))
         button(kY).change(ShootCommand().alongWith(VisionDriveCommand()))
 
@@ -37,7 +39,7 @@ object Controls {
     val operatorFalconXbox = operatorXbox.mapControls {
 
         button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
-        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(.8) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
+        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(kGutSpeed) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
         button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
         button(kX).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kY).change(IntakeSubsystem.retractIntakeCommand())

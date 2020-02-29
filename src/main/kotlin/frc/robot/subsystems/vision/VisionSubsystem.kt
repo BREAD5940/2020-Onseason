@@ -134,7 +134,7 @@ object VisionSubsystem : FalconSubsystem() {
         val cameraToTarget = Translation2d(distance, correctedYaw)
         val fieldToRobot = DriveSubsystem.poseBuffer[timestamp] ?: DriveSubsystem.robotPosition
 
-        println("DISTANCE TO TARGET ${cameraToTarget.norm.meters.inFeet()} AT ANGLE ${correctedYaw.degrees}")
+//        println("DISTANCE TO TARGET ${cameraToTarget.norm.meters.inFeet()} AT ANGLE ${correctedYaw.degrees}")
 
         val goalRotation = (if(fieldToRobot.rotation.degrees + correctedYaw.degrees in -90.0..90.0)
             0.degrees else 180.degrees)

@@ -54,7 +54,7 @@ object DriveSubsystem : FalconSubsystem() {
 
     private val kAzimuthMotorOutputRange = -0.5..0.5
 
-    private val logger = Logger("DriveSubsystem")
+//    private val logger = Logger("DriveSubsystem")
 
     val brModule = Mk2SwerveModule(4, 3, 254.degrees - 254.degrees, FalconMAX(
             CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
@@ -86,7 +86,7 @@ object DriveSubsystem : FalconSubsystem() {
 
     internal val odometry = SwerveDriveOdometry(kinematics, gyro()).apply {
 //        resetPosition(Pose2d(11.75.feet, 25.689.feet, 180.0.degrees), gyro())
-        resetPosition(Pose2d(11.feet, 11.feet, 0.degrees), gyro())
+        resetPosition(Pose2d(11.feet, 11.feet, -2.8731609294119105.radians), gyro()) // curst so i can be lazy
     }
 
     private val stateLock = Object()

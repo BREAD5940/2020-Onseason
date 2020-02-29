@@ -43,4 +43,8 @@ class Logger(name: String) {
         writer?.write(string + "\n")
         writer?.flush()
     }
+
+    fun clearLog() {
+
+    }
 }

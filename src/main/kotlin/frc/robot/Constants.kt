@@ -68,13 +68,8 @@ object Constants {
      * Lookup table to correlate distance in meters to shot parameters
      */
     val distanceLookupTable5v = InterpolatingTable(
-            3.9 to ShotParameter(55.degrees, 4000.revolutionsPerMinute),
-            5.0 to ShotParameter(51.5.degrees, 3500.revolutionsPerMinute, (0).degrees),
-            6.0 to ShotParameter(52.degrees, 2600.revolutionsPerMinute, (0).degrees),
-            7.0 to ShotParameter(50.3.degrees, 2400.revolutionsPerMinute, (0).degrees),
-            8.0 to ShotParameter(48.3.degrees, 2400.revolutionsPerMinute, (0).degrees),
-            9.0 to ShotParameter(46.8.degrees, 2100.revolutionsPerMinute, 0.5.degrees),
-            9.9 to ShotParameter(45.3.degrees, 1900.revolutionsPerMinute, 0.5.degrees)
+            7.370694995884582 to ShotParameter(57.degrees, 3000.revolutionsPerMinute, (-2).degrees),
+            4.343437573111581 to ShotParameter(55.degrees, 2400.revolutionsPerMinute, (-2).degrees)
     )
 
     val rightBelowGoalParameter3v3 = ShotParameter(44.degrees, 1600.revolutionsPerMinute)

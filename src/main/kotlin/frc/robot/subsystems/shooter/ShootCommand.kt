@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.Constants
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.vision.VisionSubsystem
+import lib.Logger
 import kotlin.math.abs
 import lib.inRpm
 import lib.revolutionsPerMinute
@@ -34,12 +35,17 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
     private val angleEntry: NetworkTableEntry = SmartDashboard.getEntry("hoodAngle")
     private val rpmEntry: NetworkTableEntry = SmartDashboard.getEntry("rpm")
 
+    val logger = Logger("Shooter")
+
     override fun initialize() {
         angleEntry.setDefaultDouble(45.0)
         rpmEntry.setDefaultDouble(0.0)
 
         ShooterController.reset()
         ShooterController.enable()
+
+        logger.clearLog()
+        logger.log("setpoint, measurement, xhat, voltage")
     }
 
     override fun execute() {
@@ -58,6 +64,9 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
         FlywheelSubsystem.shootAtVoltage(volts)
 
         SmartDashboard.putNumber("kalman speed", ShooterController.xHat.inRpm())
+
+//        setpoint, measurement, xhat, voltage
+        logger.log(wantedParameter.speed.inRpm(), FlywheelSubsystem.flywheelSpeed.inRpm(), ShooterController.xHat.inRpm(), volts.value)
     }
 
     private fun isOnTarget(): Boolean {
