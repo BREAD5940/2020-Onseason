@@ -11,10 +11,7 @@ import lib.inRpm
 import lib.revolutionsPerMinute
 import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.mathematics.units.SIUnit
-import org.ghrobotics.lib.mathematics.units.derived.Radian
-import org.ghrobotics.lib.mathematics.units.derived.Velocity
-import org.ghrobotics.lib.mathematics.units.derived.degrees
-import org.ghrobotics.lib.mathematics.units.derived.inDegrees
+import org.ghrobotics.lib.mathematics.units.derived.*
 
 /**
  * Set the flywheel to shoot at a speed specified by a supplier. This command will run
@@ -40,17 +37,27 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
     override fun initialize() {
         angleEntry.setDefaultDouble(45.0)
         rpmEntry.setDefaultDouble(0.0)
+
+        ShooterController.reset()
+        ShooterController.enable()
     }
 
     override fun execute() {
-        val wantedParameter = parameterSupplier()
-//        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
+//        val wantedParameter = parameterSupplier()
+        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
 
         HoodSubsystem.wantedAngle = wantedParameter.hoodAngle
 
         // call periodically to recalculate feedback
-        FlywheelSubsystem.shootAtSpeed(wantedParameter.speed)
+//        FlywheelSubsystem.shootAtSpeed(wantedParameter.speed)
 
+        ShooterController.setSpeed(wantedParameter.speed)
+        ShooterController.update(FlywheelSubsystem.flywheelSpeed)
+        val volts = ShooterController.nextU
+
+        FlywheelSubsystem.shootAtVoltage(volts)
+
+        SmartDashboard.putNumber("kalman speed", ShooterController.xHat.inRpm())
     }
 
     private fun isOnTarget(): Boolean {
@@ -65,5 +72,7 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
 
     override fun end(interrupted: Boolean) {
         FlywheelSubsystem.setNeutral()
+
+        ShooterController.disable()
     }
 }

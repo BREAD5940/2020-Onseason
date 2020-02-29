@@ -9,6 +9,7 @@ import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.HoodSubsystem
+import frc.robot.subsystems.shooter.ShooterCharacterizationCommand
 import frc.robot.subsystems.vision.VisionSubsystem
 import org.ghrobotics.lib.mathematics.units.derived.inDegrees
 import org.ghrobotics.lib.wrappers.FalconTimedRobot
@@ -37,7 +38,7 @@ object Robot : FalconTimedRobot() {
     }
 
     override fun robotPeriodic() {
-        Autonomous.update()
+//        Autonomous.update()
         Controls.update()
         Network.update()
 //        println(FlywheelSubsystem.shooterMaster.encoder.position.inDegrees())
@@ -52,6 +53,8 @@ object Robot : FalconTimedRobot() {
 
     override fun autonomousInit() {
         HoodSubsystem.enabledReset()
+
+        ShooterCharacterizationCommand().schedule()
     }
 }
 

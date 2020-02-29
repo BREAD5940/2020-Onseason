@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter
 import com.revrobotics.CANSparkMaxLowLevel
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.Encoder
+import edu.wpi.first.wpilibj.LinearFilter
 import edu.wpi.first.wpilibj.Servo
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
@@ -14,6 +15,7 @@ import frc.robot.Ports.collectorAgitatorId
 import frc.robot.Ports.kPcmId
 import frc.robot.Ports.shooterGearboxIds
 import frc.robot.Ports.shooterShifterSolenoid
+import kotlinx.coroutines.GlobalScope
 import lib.inRpm
 import lib.instantCommand
 import lib.revolutionsPerMinute
@@ -28,6 +30,7 @@ import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnitRotationModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.rev.falconMAX
 import org.ghrobotics.lib.types.Interpolatable
+import org.ghrobotics.lib.utils.launchFrequency
 import org.ghrobotics.lib.wrappers.FalconDoubleSolenoid
 import org.ghrobotics.lib.wrappers.FalconSolenoid
 import kotlin.math.PI
@@ -117,13 +120,26 @@ object FlywheelSubsystem : FalconSubsystem() {
 //        get() = shooterMaster.encoder.velocity
         get() = -throughBoreEncoder.rate.radians.velocity
 
+    val filter = LinearFilter.movingAverage(8)
+    var smoothedFlywheelSpeed = 0.radians.velocity
+        @Synchronized get
+        @Synchronized set
+
+    val updateJob = GlobalScope.launchFrequency(400) {
+        smoothedFlywheelSpeed = filter.calculate(-throughBoreEncoder.rate).radians.velocity
+    }
+
+    override fun periodic() {
+        if(!updateJob.isActive) updateJob.start()
+    }
+
     /**
      * Shoot at a speed. Must be called periodically!
      */
     fun shootAtSpeed(speed: SIUnit<Velocity<Radian>>) {
         wantsShootMode = true
         val ff = feedForward.calculate(speed.value).volts
-        val fb = feedBack.calculate(flywheelSpeed.value, speed.value).volts
+        val fb = feedBack.calculate(smoothedFlywheelSpeed.value, speed.value).volts
         shooterMaster.setVoltage(fb, ff)
 //        shooterMaster.setVelocity(speed, ff)
     }
@@ -131,6 +147,11 @@ object FlywheelSubsystem : FalconSubsystem() {
     fun shootAtPower(power: Double) {
         wantsShootMode = true
         shooterMaster.setDutyCycle(power)
+    }
+
+    fun shootAtVoltage(volts: SIUnit<Volt>) {
+        wantsShootMode = true
+        shooterMaster.setVoltage(volts)
     }
 
     fun runKickWheel(speed: Double) {

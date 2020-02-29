@@ -1,6 +1,5 @@
 package frc.robot.subsystems.vision
 
-import edu.wpi.first.wpilibj.Relay
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Transform2d
@@ -26,6 +25,7 @@ import org.ghrobotics.lib.mathematics.units.seconds
 import org.ghrobotics.lib.types.Interpolatable
 import org.ghrobotics.lib.vision.ChameleonCamera
 import org.ghrobotics.lib.vision.ToastyTargetTracker
+import kotlin.math.absoluteValue
 import kotlin.math.tan
 import kotlin.properties.Delegates
 
@@ -42,6 +42,7 @@ object VisionSubsystem : FalconSubsystem() {
 
     var ledsEnabled by Delegates.observable(false) {
         _, _, newValue -> ledFet.set(newValue)
+
     }
 
     override fun lateInit() {
@@ -49,7 +50,7 @@ object VisionSubsystem : FalconSubsystem() {
         lifecam.pipeline = 1.0
     }
 
-    object Tracker : ToastyTargetTracker(TargetTrackerConstants(2.0.seconds, 10.feet, 100, 10)) {
+    object Tracker : ToastyTargetTracker(TargetTrackerConstants(0.8.seconds, 10.feet, 100, 4)) {
         /**
          * Find the target that's closest to the robot per it's averagedPose2dRelativeToBot
          */
@@ -65,7 +66,8 @@ object VisionSubsystem : FalconSubsystem() {
 
     override fun periodic() {
         updateTracker()
-        ledFet.set(Relay.Value.kForward)
+
+//        ledFet.set(true)
 //        ledsEnabled = Robot.isEnabled
     }
 
@@ -83,6 +85,8 @@ object VisionSubsystem : FalconSubsystem() {
 
         if(lifecam.isValid) updateTangentEstimation(lifecam.pitch + camAngle.toRotation2d(), lifecam.yaw,
                 Timer.getFPGATimestamp().seconds - lifecam.latency)
+
+//        DriveSubsystem.odometry.resetPosition(Pose2d(3.0, 3.0, 180.degrees.toRotation2d()), DriveSubsystem.gyro())
 
 //        updateSolvePNP()
 
@@ -111,21 +115,32 @@ object VisionSubsystem : FalconSubsystem() {
 //        ))
     }
 
+    private var lastPitch = 0.0
+    private var lastYaw = 0.0
+    private var yawDistanceCorrectKp = 0.006
+    private var yawMultiplier = 1.06
+
     private fun updateTangentEstimation(pitchToHorizontal: Rotation2d, yaw: Rotation2d, timestamp: SIUnit<Second>) {
         // from limelight
         // d = (h2-h1) / tan(a1+a2)
+        val correctedYaw = yaw * yawMultiplier
+
+        if(lastPitch epsilonEquals pitchToHorizontal.radians && correctedYaw.radians epsilonEquals lastYaw) return
+        lastPitch = pitchToHorizontal.radians; lastYaw = correctedYaw.radians
 
         val heightDifferential = targetHeight - camHeight
-        val distance = heightDifferential / tan(pitchToHorizontal.radians)
+        val distance = heightDifferential / tan(pitchToHorizontal.radians) * (1.0 + yaw.degrees.absoluteValue * yawDistanceCorrectKp)
 
-        val cameraToTarget = Translation2d(distance, yaw)
+        val cameraToTarget = Translation2d(distance, correctedYaw)
         val fieldToRobot = DriveSubsystem.poseBuffer[timestamp] ?: DriveSubsystem.robotPosition
 
-        val goalRotation = (if(fieldToRobot.rotation.degrees + yaw.degrees in -90.0..90.0)
+        println("DISTANCE TO TARGET ${cameraToTarget.norm.meters.inFeet()} AT ANGLE ${correctedYaw.degrees}")
+
+        val goalRotation = (if(fieldToRobot.rotation.degrees + correctedYaw.degrees in -90.0..90.0)
             0.degrees else 180.degrees)
                 .toRotation2d()
 
-        Tracker.addSamples(timestamp,
+         Tracker.addSamples(timestamp,
                 Pose2d(
                         fieldToRobot
                                 .plus(robotToCamera)
@@ -156,12 +171,12 @@ object VisionSubsystem : FalconSubsystem() {
     }
 
     private val targetHeight = 8.feet + 2.25.inches
-    private val camHeight = 13.inches // todo check
-    private val camAngle = 24.74.degrees
+    private val camHeight = 17.inches // todo check
+    private var camAngle = 20.degrees // 24.74.degrees + 15.degrees
     private val width = 19.625.inches * 2
     private val focalLen = (44 /* px */ * sqrt(10.feet.inMeters().pow(2) +
             targetHeight.inMeters().pow(2))) / (width.inMeters()) / 0.35
-    private val robotToCamera = Pose2d(Translation2d((-0.5).inches, 3.inches), 0.degrees) // TODO adjust to cad
+    private val robotToCamera = Pose2d(Translation2d((9.5).inches, 1.25.inches), 0.degrees) // TODO adjust to cad
 }
 
 private infix fun Pose2d.epsilonEquals(other: Pose2d) =

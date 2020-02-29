@@ -96,7 +96,7 @@ object IntakeSubsystem : FalconSubsystem() {
             + Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kRight) -
                     Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kLeft)
 
-            println(speed)
+//            println(speed)
             setSpeed(speed)
             if (speed.absoluteValue > 0.1 && !holdIntake) {
                 miniExtendIntakeCommand()

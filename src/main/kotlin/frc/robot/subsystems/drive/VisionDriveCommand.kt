@@ -4,9 +4,11 @@ import edu.wpi.first.networktables.NetworkTableEntry
 import edu.wpi.first.wpilibj.MedianFilter
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.geometry.Pose2d
+import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.Constants
+import frc.robot.autonomous.paths.plus
 import frc.robot.autonomous.paths.transformBy
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.ShotParameter
@@ -101,7 +103,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
                 return null // todo do smth else?
             }
 
-            val targetPose = bestPose.relativeTo(DriveSubsystem.robotPosition)
+            val targetPose = bestPose.relativeTo(DriveSubsystem.robotPosition.plus(Pose2d(centerOfRotation, Rotation2d())))
             val shouldAimAtInnerGoal = targetPose.rotation.degrees.absoluteValue < 35
 
             SmartDashboard.putBoolean("shouldAimAtInnerGoal?", shouldAimAtInnerGoal)
