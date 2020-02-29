@@ -50,7 +50,7 @@ object VisionSubsystem : FalconSubsystem() {
         lifecam.pipeline = 1.0
     }
 
-    object Tracker : ToastyTargetTracker(TargetTrackerConstants(0.8.seconds, 10.feet, 100, 4)) {
+    object Tracker : ToastyTargetTracker(TargetTrackerConstants(1.5.seconds, 10.feet, 100, 3)) {
         /**
          * Find the target that's closest to the robot per it's averagedPose2dRelativeToBot
          */

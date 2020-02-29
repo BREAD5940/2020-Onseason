@@ -21,14 +21,31 @@ import org.ghrobotics.lib.mathematics.units.derived.*
  */
 class ShootCommand(private val parameterSupplier: () -> ShotParameter, private val endAfterSpinup: Boolean = false) : FalconCommand(FlywheelSubsystem, HoodSubsystem) {
 
-//    constructor(endAfterSpinup: Boolean = false) : this(
-//            { FlywheelSubsystem.defaultShotLookupTable.get((VisionDriveCommand.getTargetPose() ?: Pose2d()).translation.norm) ?: ShotParameter.DefaultParameter }
-//            , endAfterSpinup)
-
     constructor(endAfterSpinup: Boolean = false) : this(
-            { Constants.pitchLookupTable5v.get((
-                    if(VisionSubsystem.lifecam.isValid) VisionSubsystem.lifecam.pitch.degrees else 0.0))
-                    ?: ShotParameter.DefaultParameter }, endAfterSpinup)
+            fun(): ShotParameter {
+                var pose = VisionDriveCommand.getTargetPose()
+                if(pose == null) pose = lastPose
+                lastPose = pose
+
+                val distance = pose.translation.norm
+                val table = Constants.distanceLookupTable5v
+                var param = table.get(distance)
+                if(param == null) {
+                    param = lastParam
+                }
+                lastParam = param
+
+                return param
+
+//                distance = (Constants.distanceLookupTable5v.get((VisionDriveCommand.getTargetPose() ?: lastPose)
+//                        .apply { lastPose = this }.translation.norm) ?: Constants.rightBelowGoalParameter5v)
+            },
+            endAfterSpinup)
+
+//    constructor(endAfterSpinup: Boolean = false) : this(
+//            { Constants.pitchLookupTable5v.get((
+//                    if(VisionSubsystem.lifecam.isValid) VisionSubsystem.lifecam.pitch.degrees else 0.0))
+//                    ?: ShotParameter.DefaultParameter }, endAfterSpinup)
 
     constructor(hoodAngle: SIUnit<Radian>, speed: SIUnit<Velocity<Radian>>, endAfterSpinup: Boolean = false) : this({ ShotParameter(hoodAngle, speed) }, endAfterSpinup)
 
@@ -49,8 +66,12 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
     }
 
     override fun execute() {
-//        val wantedParameter = parameterSupplier()
-        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
+        val wantedParameter = parameterSupplier()
+//        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
+
+        if(wantedParameter.hoodAngle < 50.degrees) {
+            val uwu = 42
+        }
 
         HoodSubsystem.wantedAngle = wantedParameter.hoodAngle
 
@@ -63,7 +84,10 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
 
         FlywheelSubsystem.shootAtVoltage(volts)
 
-        SmartDashboard.putNumber("kalman speed", ShooterController.xHat.inRpm())
+        SmartDashboard.putNumber("distanceToGoal", (VisionDriveCommand.getTargetPose() ?: Pose2d()).translation.norm)
+        SmartDashboard.putString("better parameter", (Constants.distanceLookupTable5v.get((VisionDriveCommand.getTargetPose() ?: Pose2d()).translation.norm) ?: Constants.rightBelowGoalParameter5v).toString())
+
+//        Constants.distanceLookupTable5v.get((VisionDriveCommand.getTargetPose() ?: Pose2d()).translation.norm) ?: Constants.rightBelowGoalParameter5v
 
 //        setpoint, measurement, xhat, voltage
         logger.log(wantedParameter.speed.inRpm(), FlywheelSubsystem.flywheelSpeed.inRpm(), ShooterController.xHat.inRpm(), volts.value)
@@ -71,8 +95,10 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
 
     private fun isOnTarget(): Boolean {
         val wantedParameter = parameterSupplier()
-        return abs(wantedParameter.speed.inRpm() - FlywheelSubsystem.flywheelSpeed.inRpm()) < 200 &&
-                abs(HoodSubsystem.wantedAngle.inDegrees() - wantedParameter.hoodAngle.inDegrees()) < 1.5
+//        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
+
+        return abs(wantedParameter.speed.inRpm() - FlywheelSubsystem.flywheelSpeed.inRpm()) < 100 &&
+                abs(HoodSubsystem.wantedAngle.inDegrees() - wantedParameter.hoodAngle.inDegrees()) < 1.0
     }
 
     override fun isFinished(): Boolean {
@@ -84,4 +110,10 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
 
         ShooterController.disable()
     }
+
+    companion object {
+        var lastPose = Pose2d()
+        var lastParam = ShotParameter.defaultParameter
+    }
+
 }

@@ -29,7 +29,7 @@ object HoodSubsystem : FalconSubsystem() {
     val hoodAngle
         get() = ((hoodAngleEncoder.voltage / RobotController.getVoltage5V() * 2.0 * PI).radians + 3.degrees)
 
-    var wantedAngle = 35.degrees
+    var wantedAngle = 55.degrees
 
     val hoodPidController = PIDController(2.0, 0.0, 0.0).apply {
         //        enableContinuousInput(-PI, PI)
@@ -39,7 +39,7 @@ object HoodSubsystem : FalconSubsystem() {
     var safeHoodAngles = 17.degrees..78.degrees
 
     var lastProfiledReference = TrapezoidProfile.State(hoodAngle.value, 0.0)
-    private val constraints = TrapezoidProfile.Constraints(40.degrees.inRadians(), 80.degrees.inRadians())
+    private val constraints = TrapezoidProfile.Constraints(60.degrees.inRadians(), 100.degrees.inRadians())
 
     fun enabledReset() {
         lastProfiledReference = TrapezoidProfile.State(hoodAngle.value, 0.0)

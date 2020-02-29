@@ -47,7 +47,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
         forward *= forward.absoluteValue
         strafe *= strafe.absoluteValue
 
-        val shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
+//        val shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
 
         when {
             VisionSubsystem.lifecam.isValid -> {
@@ -64,7 +64,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
 
                     SmartDashboard.putNumber("Distance to target", innerOrOuterGoalPose.translation.norm) // meters
 
-//                    val shotParameter = Constants.distanceLookupTable5v.get(innerOrOuterGoalPose.translation.norm) ?: ShotParameter.DefaultParameter
+                    val shotParameter = Constants.distanceLookupTable5v.get(innerOrOuterGoalPose.translation.norm) ?: ShotParameter.defaultParameter
 
                     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                             forward, strafe, -controller.calculate(angle.radians, shotParameter.offset.inRadians()),
@@ -103,7 +103,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
             }
 
             val targetPose = bestPose.relativeTo(DriveSubsystem.robotPosition.plus(Pose2d(centerOfRotation, Rotation2d())))
-            val shouldAimAtInnerGoal = targetPose.rotation.degrees.absoluteValue < 10
+            val shouldAimAtInnerGoal = targetPose.rotation.degrees.absoluteValue < 18
 
             SmartDashboard.putBoolean("shouldAimAtInnerGoal?", shouldAimAtInnerGoal)
 

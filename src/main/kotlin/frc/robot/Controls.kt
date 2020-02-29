@@ -17,7 +17,7 @@ import org.ghrobotics.lib.wrappers.hid.*
 
 object Controls {
 
-    val kGutSpeed = 0.65
+    val kGutSpeed = 0.70 // 0.65 works well
 
     var isClimbing = false
     val driverWpiXbox = XboxController(0)
@@ -38,15 +38,31 @@ object Controls {
     val operatorXbox = XboxController(1)
     val operatorFalconXbox = operatorXbox.mapControls {
 
-        button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
-        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(kGutSpeed) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
+//        button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
+
+        button(kBumperRight).change(
+                ShootCommand(true).andThen(
+                        ShootCommand(false)
+                                .beforeStarting(Runnable{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)})
+                                .andThen(Runnable{FlywheelSubsystem.kickWheelMotor.setNeutral()})
+                ).alongWith(VisionDriveCommand())
+        )
+
+//        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(kGutSpeed) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
         button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
         button(kX).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kY).change(IntakeSubsystem.retractIntakeCommand())
         pov(0).changeOn(openLoopClimbCommandGroup.alongWith(GrabBumperCommand(), instantCommand(IntakeSubsystem) {}))
 //        pov(180).changeOn(OpenLoopClimbCommand().perpetually())
         pov(180).changeOn(GrabBumperCommand().alongWith(instantCommand(IntakeSubsystem) {}))
-        button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))
+
+        button(kStickRight).change(
+                ShootCommand({ Constants.rightBelowGoalParameter5v }, true).andThen(
+                        ShootCommand({ Constants.rightBelowGoalParameter5v }, false)
+                                .beforeStarting(Runnable{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)})
+                                .andThen(Runnable{FlywheelSubsystem.kickWheelMotor.setNeutral()})
+                )
+        )
     }
 
     fun update() {

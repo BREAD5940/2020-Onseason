@@ -209,7 +209,7 @@ data class ShotParameter(
                     SIUnit(offset.value.lerp(endValue.offset.value, t)))
 
     companion object {
-        val DefaultParameter = ShotParameter(45.degrees, 5000.revolutionsPerMinute)
+        val defaultParameter = ShotParameter(45.degrees, 5000.revolutionsPerMinute)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -220,7 +220,7 @@ data class ShotParameter(
                 (other.offset - offset).absoluteValue.inDegrees() < 0.1
     }
 
-    override fun toString() = "ShotParameter: angle ${hoodAngle.inDegrees()}, speed ${speed.inRpm()}, offset ${offset.inDegrees()}"
+    override fun toString() = "Angle ${hoodAngle.inDegrees()} Speed ${speed.inRpm()} Offset ${offset.inDegrees()}"
 
     override fun hashCode(): Int {
         var result = hoodAngle.hashCode()
