@@ -48,8 +48,8 @@ object Autonomous {
             Mode.EIGHT_PC_TRENCH to EightPCFromTrenchRoutine()(),
             Mode.THREE_PC to ThreePCRoutine()(),
             Mode.SIX_PC_TRENCH to SixPCFromTrenchRoutine()(),
-            Mode.EIGHT_PC_OPPOSING_TRENCH to EightPCAutoRoutineOpposingSide()(),
-            Mode.TEN_PC to TenPCAutoRoutine()(),
+            Mode.OPPOSING_TRENCH to OpposingTrenchRoutine()(),
+            Mode.TEN_PC_RIGHT to RightSideTenPCRoutine()(),
             Mode.DO_NOTHING to InstantCommand()
     )
     private var selectedAutonomous: CommandBase = InstantCommand()
@@ -67,7 +67,7 @@ object Autonomous {
     private val isReadyMonitor = isReady.monitor
     private val robotModeMonitor = { Robot.currentMode }.monitor
 
-    enum class Mode { THREE_PC, SIX_PC_TRENCH, EIGHT_PC_TRENCH, EIGHT_PC_OPPOSING_TRENCH, TEN_PC, DO_NOTHING }
+    enum class Mode { THREE_PC, SIX_PC_TRENCH, EIGHT_PC_TRENCH, OPPOSING_TRENCH, TEN_PC_RIGHT, DO_NOTHING }
 }
 
 @Suppress("FunctionName")

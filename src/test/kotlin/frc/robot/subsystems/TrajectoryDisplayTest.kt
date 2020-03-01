@@ -1,7 +1,7 @@
 package frc.robot.subsystems
 
 import frc.robot.auto.paths.TrajectoryFactory
-import frc.robot.autonomous.routines.TenPCAutoRoutine
+import frc.robot.autonomous.routines.RightSideTenPCRoutine
 import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.JFrame
@@ -16,7 +16,7 @@ import org.junit.Test
 class TrajectoryDisplayTest {
 
     @Test fun testDuration() {
-        println(TenPCAutoRoutine().duration)
+        println(RightSideTenPCRoutine().duration)
     }
 
     @Test

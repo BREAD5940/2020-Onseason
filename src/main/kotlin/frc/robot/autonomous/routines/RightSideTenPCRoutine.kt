@@ -16,7 +16,7 @@ import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.seconds
 
-class TenPCAutoRoutine : AutoRoutine() {
+class RightSideTenPCRoutine : AutoRoutine() {
     private val path1 = TrajectoryFactory.tenPCAutoToShieldGenerator
     private val path2 = TrajectoryFactory.tenPCAutoShieldGeneratorToShoot
     private val path3 = TrajectoryFactory.getPCFromTrench
