@@ -1,6 +1,8 @@
 package frc.robot
 
 import edu.wpi.first.wpilibj.XboxController
+import edu.wpi.first.wpilibj.geometry.Pose2d
+import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.subsystems.climb.GrabBumperCommand
 import frc.robot.subsystems.climb.OpenLoopClimbCommand
 import frc.robot.subsystems.climb.openLoopClimbCommandGroup
@@ -10,6 +12,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.ShootCommand
 import frc.robot.subsystems.shooter.ShooterCharacterizationCommand
+import lib.beforeStarting
 import lib.instantCommand
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
@@ -17,7 +20,7 @@ import org.ghrobotics.lib.wrappers.hid.*
 
 object Controls {
 
-    val kGutSpeed = 0.70 // 0.65 works well
+    val kGutSpeed = 0.65 // 0.65 works well
 
     var isClimbing = false
     val driverWpiXbox = XboxController(0)
@@ -32,7 +35,14 @@ object Controls {
         button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))
         button(kY).change(ShootCommand().alongWith(VisionDriveCommand()))
 
-        pov(180).changeOn(ShooterCharacterizationCommand())
+        pov(180).changeOn(
+                DriveSubsystem.followTrajectory(
+                        TrajectoryFactory.testTrajectory2
+                ) { 0.degrees.toRotation2d() }
+                        .beforeStarting {
+                            DriveSubsystem.odometry.resetPosition(
+                                    Pose2d(TrajectoryFactory.testTrajectory2.initialPose.translation, 180.degrees.toRotation2d()), DriveSubsystem.gyro()) }
+        )
     }
 
     val operatorXbox = XboxController(1)
@@ -41,9 +51,11 @@ object Controls {
 //        button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
 
         button(kBumperRight).change(
-                ShootCommand(true).andThen(
+                ShootCommand(true)
+                        .andThen(ShootCommand(false).withTimeout(0.5))
+                        .andThen(
                         ShootCommand(false)
-                                .beforeStarting(Runnable{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)})
+                                .beforeStarting(Runnable{FlywheelSubsystem.kickWheelMotor.setDutyCycle(kGutSpeed)})
                                 .andThen(Runnable{FlywheelSubsystem.kickWheelMotor.setNeutral()})
                 ).alongWith(VisionDriveCommand())
         )
@@ -57,7 +69,9 @@ object Controls {
         pov(180).changeOn(GrabBumperCommand().alongWith(instantCommand(IntakeSubsystem) {}))
 
         button(kStickRight).change(
-                ShootCommand({ Constants.rightBelowGoalParameter5v }, true).andThen(
+                ShootCommand({ Constants.rightBelowGoalParameter5v }, true)
+                        .andThen(ShootCommand(false).withTimeout(0.5))
+                        .andThen(
                         ShootCommand({ Constants.rightBelowGoalParameter5v }, false)
                                 .beforeStarting(Runnable{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)})
                                 .andThen(Runnable{FlywheelSubsystem.kickWheelMotor.setNeutral()})

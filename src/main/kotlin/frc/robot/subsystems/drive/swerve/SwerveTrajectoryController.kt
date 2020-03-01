@@ -17,6 +17,7 @@ import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.inRadians
 import org.ghrobotics.lib.mathematics.units.derived.volts
 import org.ghrobotics.lib.utils.safeRangeTo
+import kotlin.math.PI
 
 class SwerveTrajectoryController(
     private val kinematics: SwerveDriveKinematics,
@@ -29,7 +30,11 @@ class SwerveTrajectoryController(
 
     private val forwardController = PIDController(6.0, 0.0, 0.0) // x meters per second per meter of error
     private val strafeController = PIDController(6.0, 0.0, 0.0)
-    private val rotationController = PIDController(2.5, 0.0, 0.0) // rad per sec per radian of error
+
+    private val rotationController = PIDController(10.0, 0.0, 0.0) // rad per sec per radian of error
+            .apply {
+                enableContinuousInput(-PI, PI)
+            }
 
     fun calculate(
         time: Double,
@@ -53,7 +58,7 @@ class SwerveTrajectoryController(
                 forwardController.calculate(currentPose.translation.x, state.poseMeters.translation.x) + velocity.x,
                 strafeController.calculate(currentPose.translation.y, state.poseMeters.translation.y) + velocity.y,
                 rotationController.calculate(currentPose.rotation.radians, targetHeading.radians)
-                        .coerceIn(-90.degrees.inRadians(), 90.degrees.inRadians()),
+                        .coerceIn(-4.0, 4.0),
                 currentPose.rotation
         )
 

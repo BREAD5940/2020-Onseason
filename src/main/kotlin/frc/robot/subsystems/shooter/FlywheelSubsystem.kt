@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.CommandBase
 import frc.robot.Constants
+import frc.robot.Controls
 import frc.robot.Ports.armSolenoid
 import frc.robot.Ports.collectorAgitatorId
 import frc.robot.Ports.kPcmId
@@ -19,6 +20,7 @@ import kotlinx.coroutines.GlobalScope
 import lib.inRpm
 import lib.instantCommand
 import lib.revolutionsPerMinute
+import lib.runCommand
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.commands.parallel
 import org.ghrobotics.lib.commands.sequential
@@ -164,9 +166,9 @@ object FlywheelSubsystem : FalconSubsystem() {
     }
 
     fun agitateAndShoot(shootTime: SIUnit<Second> = 5.seconds): CommandBase = sequential {
-        +ShootCommand(true).withTimeout(3.0) // TODO make less bad
+        +ShootCommand(true).withTimeout(3.0)
         +parallel {
-            +instantCommand { runKickWheel(0.8) }.perpetually().withTimeout(shootTime.inSeconds())
+            +runCommand { runKickWheel(Controls.kGutSpeed) }.perpetually().withTimeout(shootTime.inSeconds())
             +ShootCommand().withTimeout(shootTime.inSeconds())
         }
         +instantCommand(this@FlywheelSubsystem) { setNeutral() }

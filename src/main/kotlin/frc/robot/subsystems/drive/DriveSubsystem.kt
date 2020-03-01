@@ -86,7 +86,7 @@ object DriveSubsystem : FalconSubsystem() {
 
     internal val odometry = SwerveDriveOdometry(kinematics, gyro()).apply {
 //        resetPosition(Pose2d(11.75.feet, 25.689.feet, 180.0.degrees), gyro())
-        resetPosition(Pose2d(11.feet, 11.feet, 180.degrees), gyro()) // curst so i can be lazy
+        resetPosition(Pose2d(30.feet, 11.feet, 180.degrees), gyro()) // curst so i can be lazy
     }
 
     private val stateLock = Object()

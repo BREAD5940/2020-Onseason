@@ -38,7 +38,7 @@ object Robot : FalconTimedRobot() {
     }
 
     override fun robotPeriodic() {
-//        Autonomous.update()
+        Autonomous.update()
         Controls.update()
         Network.update()
 //        println(FlywheelSubsystem.shooterMaster.encoder.position.inDegrees())

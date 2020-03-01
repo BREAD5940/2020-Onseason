@@ -92,6 +92,8 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
     override fun end(interrupted: Boolean) {
     }
 
+    val lastError get() = controller.positionError
+
     companion object {
         val centerOfRotation = Translation2d(0.meters, 8.inches)
         val controller = PIDController(1.7, 0.0, 0.0)

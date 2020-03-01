@@ -69,10 +69,6 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
         val wantedParameter = parameterSupplier()
 //        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
 
-        if(wantedParameter.hoodAngle < 50.degrees) {
-            val uwu = 42
-        }
-
         HoodSubsystem.wantedAngle = wantedParameter.hoodAngle
 
         // call periodically to recalculate feedback
