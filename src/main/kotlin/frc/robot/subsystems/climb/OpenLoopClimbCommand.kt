@@ -64,7 +64,7 @@ val openLoopClimbCommandGroup
         +instantCommand {
             BumperGrabberSubsystem.wantsExtended = true
         }
-        +WaitCommand(1.0)
+        +WaitCommand(1.3)
         +instantCommand(FlywheelSubsystem) {
             FlywheelSubsystem.shooterMaster.encoder.resetPosition(0.radians) // zero the encoder
             FlywheelSubsystem.wantsShootMode = false

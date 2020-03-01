@@ -66,11 +66,11 @@ object Controls {
         button(kY).change(IntakeSubsystem.retractIntakeCommand())
         pov(0).changeOn(openLoopClimbCommandGroup.alongWith(GrabBumperCommand(), instantCommand(IntakeSubsystem) {}))
 //        pov(180).changeOn(OpenLoopClimbCommand().perpetually())
-        pov(180).changeOn(GrabBumperCommand().alongWith(instantCommand(IntakeSubsystem) {}))
+//        pov(180).changeOn(GrabBumperCommand().alongWith(instantCommand(IntakeSubsystem) {}))
 
         button(kStickRight).change(
                 ShootCommand({ Constants.rightBelowGoalParameter5v }, true)
-                        .andThen(ShootCommand(false).withTimeout(0.5))
+                        .andThen(ShootCommand({ Constants.rightBelowGoalParameter5v }, false).withTimeout(1.0))
                         .andThen(
                         ShootCommand({ Constants.rightBelowGoalParameter5v }, false)
                                 .beforeStarting(Runnable{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)})

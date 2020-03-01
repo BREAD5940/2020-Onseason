@@ -27,7 +27,7 @@ object HoodSubsystem : FalconSubsystem() {
 
     private val hoodAngleEncoder = AnalogInput(Ports.hoodEncoderPort)
     val hoodAngle
-        get() = ((hoodAngleEncoder.voltage / RobotController.getVoltage5V() * 2.0 * PI).radians + 1.degrees)
+        get() = ((hoodAngleEncoder.voltage / RobotController.getVoltage5V() * 2.0 * PI).radians + 3.degrees) // more offset = lower hood = more curve shot
 
     var wantedAngle = 55.degrees
 
