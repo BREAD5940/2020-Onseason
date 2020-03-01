@@ -6,6 +6,7 @@ import frc.robot.subsystems.shooter.ShotParameter
 import lib.InterpolatingTable
 import lib.revolutionsPerMinute
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
+import org.ghrobotics.lib.mathematics.units.derived.degree
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.feet
 import org.ghrobotics.lib.mathematics.units.inMeters
@@ -59,7 +60,9 @@ object Constants {
             5.15 to ShotParameter(58.degrees, 2400.revolutionsPerMinute, (-2).degrees),
             6.15 to ShotParameter(59.degrees, 2600.revolutionsPerMinute, (-2).degrees),
             6.7 to ShotParameter(59.degrees, 2800.revolutionsPerMinute, (-2).degrees),
-            7.7 to ShotParameter(60.degrees, 2800.revolutionsPerMinute, (-2).degrees)
+            7.7 to ShotParameter(60.degrees, 2800.revolutionsPerMinute, (-2).degrees),
+            9.13 to ShotParameter(58.degrees, 3100.revolutionsPerMinute, (-2).degrees),
+            10.45 to ShotParameter(54.degree, 2900.revolutionsPerMinute, (-1).degrees)
     )
 
     val rightBelowGoalParameter5v = ShotParameter(27.5.degrees, 2400.revolutionsPerMinute)
