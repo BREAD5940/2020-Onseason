@@ -44,8 +44,8 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
     override fun execute() {
         var forward = xSource() / 1.0
         var strafe = zSource() / 1.0
-        forward *= forward.absoluteValue
-        strafe *= strafe.absoluteValue
+//        forward *= forward.absoluteValue
+//        strafe *= strafe.absoluteValue
 
 //        val shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
 

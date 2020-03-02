@@ -27,9 +27,9 @@ open class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
         var rotation = (-rotSource() * 1.0 / 1.0)
 
         // var isRobotRelative = false
-        forward *= forward.absoluteValue
-        strafe *= strafe.absoluteValue
-        rotation *= rotation.absoluteValue * rotation.absoluteValue * rotation.absoluteValue
+     //   forward *= forward.absoluteValue
+     //   strafe *= strafe.absoluteValue
+//        rotation *= rotation.absoluteValue * rotation.absoluteValue * rotation.absoluteValue
 
         // decrease sensitivity if the arm is up
         if(FlywheelSubsystem.armExtended) {
