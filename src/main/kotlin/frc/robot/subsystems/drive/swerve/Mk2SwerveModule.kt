@@ -112,6 +112,8 @@ open class Mk2SwerveModule(
             is Output.Velocity -> {
 //                driveMotor.setVelocity(customizedOutput.velocity, customizedOutput.arbitraryFeedForward)
                 driveMotor.setVoltage(customizedOutput.arbitraryFeedForward)
+
+                // TODO velocity closed loop on swerve modules
             }
         }
     }
