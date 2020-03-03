@@ -3,10 +3,13 @@ package frc.robot.subsystems.drive
 import com.kauailabs.navx.frc.AHRS
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel
+import edu.wpi.first.wpilibj.Compressor
 import edu.wpi.first.wpilibj.SPI
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
+import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry
@@ -17,30 +20,33 @@ import frc.robot.subsystems.drive.DriveSubsystem.feedForward
 import frc.robot.subsystems.drive.swerve.Mk2SwerveModule
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
-import lib.asSparkMax
 import lib.Logger
+import lib.asSparkMax
 import lib.mirror
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.debug.FalconDashboard
+import org.ghrobotics.lib.localization.TimePoseInterpolatableBuffer
+import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
 import org.ghrobotics.lib.mathematics.twodim.geometry.x_u
 import org.ghrobotics.lib.mathematics.twodim.geometry.y_u
 import org.ghrobotics.lib.mathematics.twodim.trajectory.mirror
 import org.ghrobotics.lib.mathematics.units.*
-import org.ghrobotics.lib.mathematics.units.derived.degrees
-import org.ghrobotics.lib.mathematics.units.derived.velocity
-import org.ghrobotics.lib.mathematics.units.derived.volts
+import org.ghrobotics.lib.mathematics.units.derived.*
 import org.ghrobotics.lib.mathematics.units.nativeunit.SlopeNativeUnitModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.rev.FalconMAX
 import org.ghrobotics.lib.utils.BooleanSource
 import org.ghrobotics.lib.utils.Source
-import org.ghrobotics.lib.utils.asSource
 import org.ghrobotics.lib.utils.launchFrequency
+import org.ghrobotics.lib.utils.map
 
 object DriveSubsystem : FalconSubsystem() {
 
-    val navX = AHRS(SPI.Port.kMXP)
-    val gyro = { Rotation2d.fromDegrees(navX.fusedHeading.toDouble()) }
+    val navX = AHRS(SPI.Port.kMXP).apply {
+    }
+    val gyro = { -Rotation2d.fromDegrees(navX.fusedHeading.toDouble()) }
+
+    val compressor = Compressor(8).apply { clearAllPCMStickyFaults() }
 
     private val driveNativeUnitModel = SlopeNativeUnitModel(
             1.inches,
@@ -48,8 +54,8 @@ object DriveSubsystem : FalconSubsystem() {
 
     private val kAzimuthMotorOutputRange = -0.5..0.5
 
-    private val logger = Logger("DriveSubsystem")
-  
+//    private val logger = Logger("DriveSubsystem")
+
     val brModule = Mk2SwerveModule(4, 3, 254.degrees - 254.degrees, FalconMAX(
             CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
             0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
@@ -58,31 +64,38 @@ object DriveSubsystem : FalconSubsystem() {
             CANSparkMax(5, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
             0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
 
-    val frModule = Mk2SwerveModule(2, 1, -18.degrees , FalconMAX(
+    val frModule = Mk2SwerveModule(2, 1, -18.degrees, FalconMAX(
             CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
             0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
 
-    val flModule = Mk2SwerveModule(8, 0, -24.degrees, FalconMAX(
+    val flModule = Mk2SwerveModule(8, 0, -24.degrees + 72.degrees - 180.degrees, FalconMAX(
             CANSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
             0.5, 0.0, 0.0001, kAzimuthMotorOutputRange)
 
     val modules = listOf(flModule, frModule, blModule, brModule)
 
     val feedForward = SimpleMotorFeedforward(
-            (0.15),
-            (2.5),
-            (0.0)
-    ).apply {
-//        TODO("idk -- need to tune dis. Should be per module!")
-    }
+            (0.15), // ks
+            (2.5), // kv
+            (0.0) // ka
+    )
 
     val kinematics = Constants.kinematics
 
-    internal val odometry = SwerveDriveOdometry(kinematics, gyro())
+    internal val odometry = SwerveDriveOdometry(kinematics, gyro()).apply {
+//        resetPosition(Pose2d(11.75.feet, 25.689.feet, 180.0.degrees), gyro())
+        resetPosition(Pose2d(30.feet, 11.feet, 180.degrees), gyro()) // curst so i can be lazy
+    }
 
     private val stateLock = Object()
     val periodicIO = PeriodicIO()
         get() = synchronized(stateLock) { field }
+
+    /**
+     * Buffer for storing the pose over a span of time. This is useful for
+     * Vision and latency compensation.
+     */
+    val poseBuffer = TimePoseInterpolatableBuffer()
 
     override fun lateInit() {
 
@@ -106,12 +119,12 @@ object DriveSubsystem : FalconSubsystem() {
         }
 
         // write CSV header
-        //logger.log("flAngle, flAzimuthVolt, flDriveAngle, flDriveVolt, " +
+        // logger.log("flAngle, flAzimuthVolt, flDriveAngle, flDriveVolt, " +
         //        "frAngle, frAzimuthVolt, frDriveAngle, frDriveVolt, " +
         //        "blAngle, blAzimuthVolt, blDriveAngle, blDriveVolt, " +
         //        "brAngle, brAzimuthVolt, brDriveAngle, brDriveVolt,")
 
-
+        compressor.start()
     }
 
     fun setGyroAngle(angle: Rotation2d) {
@@ -120,7 +133,11 @@ object DriveSubsystem : FalconSubsystem() {
 
     val currentSwerveModuleStates get() = listOf(flModule.state, frModule.state, blModule.state, brModule.state)
 
-    val robotPosition get() = periodicIO.pose
+    var robotPosition
+        get() = periodicIO.pose
+        set(value) {
+            odometry.resetPosition(value, gyro())
+        }
 
     override fun periodic() {
 
@@ -134,6 +151,8 @@ object DriveSubsystem : FalconSubsystem() {
         FalconDashboard.robotHeading = robotPosition.rotation.radians
         FalconDashboard.robotX = robotPosition.translation.x_u.inFeet()
         FalconDashboard.robotY = robotPosition.translation.y_u.inFeet()
+
+        poseBuffer[Timer.getFPGATimestamp().seconds] = robotPosition
     }
 
     fun followTrajectory(trajectory: Trajectory, endHeading: Rotation2d, mirrored: Boolean = false) =
@@ -142,6 +161,13 @@ object DriveSubsystem : FalconSubsystem() {
 
     fun followTrajectory(trajectory: Trajectory, endHeading: Source<Rotation2d>) =
             SwerveTrajectoryFollowerCommand({ trajectory }, endHeading)
+
+    fun followTrajectory2(trajectory: Trajectory, endHeading: Source<SIUnit<Radian>>) =
+            SwerveTrajectoryFollowerCommand({ trajectory }, endHeading.map { it.toRotation2d() })
+
+    fun followTrajectory(trajectory: Trajectory, endHeading: Source<Rotation2d>, mirrored: BooleanSource = { false }) =
+            SwerveTrajectoryFollowerCommand(mirrored.map(trajectory.mirror(), trajectory),
+                    mirrored.map { if (mirrored()) endHeading().mirror() else endHeading() })
 
     fun followTrajectory(trajectory: Trajectory, endHeading: Rotation2d, mirrored: BooleanSource) =
             SwerveTrajectoryFollowerCommand(trajectory, endHeading, mirrored)
@@ -181,10 +207,11 @@ object DriveSubsystem : FalconSubsystem() {
             }
             is SwerveDriveOutput.Percent -> {
                 // normalize wheel speeds
-                val states = kinematics.toSwerveModuleStates(output.chassisSpeed)
+                val states = kinematics.toSwerveModuleStates(output.chassisSpeed, output.centerOfRotation)
                 SwerveDriveKinematics.normalizeWheelSpeeds(states, 1.0)
 
-                println("chassis speeds: ${output.chassisSpeed.omegaRadiansPerSecond} states:\n" + states.map { it.angle.degrees })
+//                println("chassis speeds: ${output.chassisSpeed} \ncor ${output.centerOfRotation}\nangles:\n" + states.map { it.angle.degrees }
+//                + "\n wheel speeds:\n"+states.map { it.speedMetersPerSecond })
 
                 flModule.output = Mk2SwerveModule.Output.Percent(
                         states[0].speedMetersPerSecond,
@@ -267,7 +294,8 @@ sealed class SwerveDriveOutput {
     object Nothing : SwerveDriveOutput()
 
     class Percent(
-        val chassisSpeed: ChassisSpeeds
+        val chassisSpeed: ChassisSpeeds,
+        val centerOfRotation: Translation2d = Translation2d()
     ) : SwerveDriveOutput()
 
     class Velocity(

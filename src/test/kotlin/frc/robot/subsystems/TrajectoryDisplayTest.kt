@@ -1,6 +1,7 @@
 package frc.robot.subsystems
 
 import frc.robot.auto.paths.TrajectoryFactory
+import frc.robot.autonomous.routines.RightSideTenPCRoutine
 import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.JFrame
@@ -9,18 +10,22 @@ import org.jfree.chart.ChartFactory
 import org.jfree.chart.ChartPanel
 import org.jfree.chart.plot.PlotOrientation
 import org.jfree.data.xy.XYDataItem
-import org.jfree.data.xy.XYSeries
 import org.jfree.data.xy.XYSeriesCollection
 import org.junit.Test
 
 class TrajectoryDisplayTest {
-    @Test
-    fun main() {
-        var seriesX = XYSeries("x")
 
-        TrajectoryFactory.grabThreeFromTrench.states.forEach {
+    @Test fun testDuration() {
+        println(RightSideTenPCRoutine().duration)
+    }
+
+    @Test
+    fun displayTrajectory() {
+        var seriesX = org.jfree.data.xy.XYSeries("x")
+        TrajectoryFactory.eightPCAutoShootToShieldGenerator.states.forEach {
             seriesX.add(XYDataItem(it.poseMeters.translation.x / kFeetToMeter, it.poseMeters.translation.y / kFeetToMeter))
         }
+
         // Now X and Y arrays are built! Yay!
         val collection = XYSeriesCollection()
         collection.addSeries(seriesX)
@@ -39,7 +44,7 @@ class TrajectoryDisplayTest {
         frame.add(panel)
         frame.setSize(2598 / 3, 1299 / 3)
         frame.setVisible(true)
-        Thread.sleep(100000)
-        // return
+//        Thread.sleep(100000)
+        return
     }
 }

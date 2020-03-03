@@ -45,7 +45,7 @@ object TrajectoryWaypoints {
 }
 
 fun Pose2d(translation: Translation2d, rotation: SIUnit<Radian>) = Pose2d(translation, rotation.toRotation2d())
-fun Pose2d.transformBy(other: Pose2d) = this.transformBy(edu.wpi.first.wpilibj.geometry.Transform2d(
+fun Pose2d.transformBy(other: Pose2d): Pose2d = this.transformBy(edu.wpi.first.wpilibj.geometry.Transform2d(
         other.translation, other.rotation
 ))
 
