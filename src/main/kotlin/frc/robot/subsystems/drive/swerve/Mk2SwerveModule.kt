@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState
+import lib.Logger
 import kotlin.math.PI
 import org.ghrobotics.lib.mathematics.units.* // ktlint-disable no-wildcard-imports
 import org.ghrobotics.lib.mathematics.units.derived.* // ktlint-disable no-wildcard-imports
@@ -21,7 +22,8 @@ open class Mk2SwerveModule(
     angleKp: Double,
     angleKi: Double,
     angleKd: Double,
-    private val angleMotorOutputRange: ClosedFloatingPointRange<Double>
+    private val angleMotorOutputRange: ClosedFloatingPointRange<Double>,
+    private val name: String
 ) {
 
     private val stateMutex = Object()
@@ -46,6 +48,10 @@ open class Mk2SwerveModule(
     private val analogInput = AnalogInput(azimuthAnalogPort)
     val azimuthAngle =
             { ((1.0 - analogInput.voltage / RobotController.getVoltage5V() * 2.0 * PI).radians + offset).toRotation2d() }
+
+    private val logger = Logger("Swerve_$name").apply {
+        log("velocity, reference, applied voltage, angle")
+    }
 
     init {
         driveMotor.canSparkMax.restoreFactoryDefaults()
@@ -114,6 +120,8 @@ open class Mk2SwerveModule(
                 driveMotor.setVoltage(customizedOutput.arbitraryFeedForward)
 
                 // TODO velocity closed loop on swerve modules
+
+                logger.log(driveMotor.encoder.velocity.inFeetPerSecond(), customizedOutput.velocity.inFeetPerSecond(), driveMotor.voltageOutput, azimuthAngle().degrees)
             }
         }
     }

@@ -18,7 +18,7 @@ class Logger(name: String) {
             val logFileName = "log-$name-" +
                     "${DateTimeFormatter.ofPattern("yyyy-MM-dd_HH;mm;ss").format(LocalDateTime.now())}.txt"
 
-            val logRoot = if (RobotBase.isReal()) "/home/lvuser/"
+            val logRoot = if (RobotBase.isReal()) "/home/lvuser/log"
             else File(System.getProperty("user.dir"), "log").absolutePath
 
             val file = File(Paths.get(logRoot, logFileName).toUri())
