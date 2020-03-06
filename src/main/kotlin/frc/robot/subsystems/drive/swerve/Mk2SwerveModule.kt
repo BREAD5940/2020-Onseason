@@ -60,6 +60,7 @@ open class Mk2SwerveModule(
         driveMotor.canSparkMax.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, false)
         driveMotor.canSparkMax.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, false)
         driveMotor.canSparkMax.openLoopRampRate = 0.05
+        driveMotor.controller.p = 3e-5
 
         azimuthMotor.canSparkMax.restoreFactoryDefaults()
         azimuthMotor.canSparkMax.setSecondaryCurrentLimit(35.0)
@@ -116,8 +117,8 @@ open class Mk2SwerveModule(
                 driveMotor.setVoltage(customizedOutput.voltage)
             }
             is Output.Velocity -> {
-//                driveMotor.setVelocity(customizedOutput.velocity, customizedOutput.arbitraryFeedForward)
-                driveMotor.setVoltage(customizedOutput.arbitraryFeedForward)
+                driveMotor.setVelocity(customizedOutput.velocity, customizedOutput.arbitraryFeedForward)
+//                driveMotor.setVoltage(customizedOutput.arbitraryFeedForward)
 
                 // TODO velocity closed loop on swerve modules
 
