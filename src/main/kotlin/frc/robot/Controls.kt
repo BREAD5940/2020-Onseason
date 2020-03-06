@@ -48,34 +48,28 @@ object Controls {
     val operatorXbox = XboxController(1)
     val operatorFalconXbox = operatorXbox.mapControls {
 
-//        button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
-
         button(kBumperRight).change(
                 ShootCommand(true)
                         .andThen(ShootCommand(false).withTimeout(0.5))
                         .andThen(
-                        ShootCommand(false)
-                                .beforeStarting(Runnable{FlywheelSubsystem.kickWheelMotor.setDutyCycle(kGutSpeed)})
-                                .andThen(Runnable{FlywheelSubsystem.kickWheelMotor.setNeutral()})
-                ).alongWith(VisionDriveCommand())
+                                ShootCommand(false)
+                                        .beforeStarting(Runnable{FlywheelSubsystem.kickWheelMotor.setDutyCycle(kGutSpeed)})
+                                        .andThen(Runnable{FlywheelSubsystem.kickWheelMotor.setNeutral()})
+                        ).alongWith(VisionDriveCommand())
         )
 
-//        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(kGutSpeed) }.changeOff { FlywheelSubsystem.kickWheelMotor.setDutyCycle(0.0) }
         button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
         button(kX).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kY).change(IntakeSubsystem.retractIntakeCommand())
         pov(0).changeOn(openLoopClimbCommandGroup.alongWith(GrabBumperCommand(), instantCommand(IntakeSubsystem) {}))
-//        pov(180).changeOn(OpenLoopClimbCommand().perpetually())
-//        pov(180).changeOn(GrabBumperCommand().alongWith(instantCommand(IntakeSubsystem) {}))
-
         button(kStickRight).change(
                 ShootCommand({ Constants.rightBelowGoalParameter5v }, true)
                         .andThen(ShootCommand({ Constants.rightBelowGoalParameter5v }, false).withTimeout(1.0))
                         .andThen(
-                        ShootCommand({ Constants.rightBelowGoalParameter5v }, false)
-                                .beforeStarting(Runnable{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)})
-                                .andThen(Runnable{FlywheelSubsystem.kickWheelMotor.setNeutral()})
-                )
+                                ShootCommand({ Constants.rightBelowGoalParameter5v }, false)
+                                        .beforeStarting(Runnable{FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0)})
+                                        .andThen(Runnable{FlywheelSubsystem.kickWheelMotor.setNeutral()})
+                        )
         )
     }
 

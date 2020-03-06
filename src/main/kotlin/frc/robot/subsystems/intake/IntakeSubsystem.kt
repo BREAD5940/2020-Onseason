@@ -53,25 +53,9 @@ object IntakeSubsystem : FalconSubsystem() {
     fun setSmolPistonExtension(nowWantsExtended: Boolean) {
         secondarySmolPistonSolenoid.state = if (nowWantsExtended) FalconSolenoid.State.Forward else FalconSolenoid.State.Reverse
     }
-    fun toggleIntakeExtensionCommand() {
-        if (open) {
-            retractIntakeCommand()
-        } else {
-            extendIntakeCommand()
-        }
-    }
-    fun toggleMiniIntakeExtensionCommand() {
-        if (miniOpen) {
-            miniRetractIntakeCommand()
-        } else {
-            miniExtendIntakeCommand()
-        }
-    }
 
     fun miniRetractIntakeCommand() = setSmolPistonExtension(false)
-
     fun miniExtendIntakeCommand() = setSmolPistonExtension(true)
-
     fun extendIntakeCommand() = sequential {
         +instantCommand(IntakeSubsystem) { setSmolPistonExtension(true); }
         +instantCommand(IntakeSubsystem) { intakeMotor.setDutyCycle(0.5) }
