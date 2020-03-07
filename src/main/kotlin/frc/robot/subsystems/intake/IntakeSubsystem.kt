@@ -19,11 +19,9 @@ import org.ghrobotics.lib.wrappers.FalconSolenoid
 import kotlin.math.absoluteValue
 
 object IntakeSubsystem : FalconSubsystem() {
-    val open = false
-    val miniOpen = false
-    var holdIntake = false
-    val chungusPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[0], intakeSolenoid[1], 9)
-    val secondarySmolPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[2], intakeSolenoid[3], 8)
+    private const val holdIntake = false
+    private val chungusPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[0], intakeSolenoid[1], 9)
+    private val secondarySmolPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[2], intakeSolenoid[3], 8)
 
     override fun setNeutral() {
         intakeMotor.setNeutral()
@@ -32,9 +30,9 @@ object IntakeSubsystem : FalconSubsystem() {
     val intakeMotor = falconMAX(intakeMotorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         canSparkMax.apply {
             restoreFactoryDefaults()
-            setSecondaryCurrentLimit(30.0)
+            setSecondaryCurrentLimit(35.0)
         }
-        smartCurrentLimit = 25.amps
+        smartCurrentLimit = 20.amps
     }
 
     fun setSpeed(intakeSpeed: Double) {
@@ -79,7 +77,14 @@ object IntakeSubsystem : FalconSubsystem() {
                     Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft)
             + Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kRight) -
                     Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kLeft)
-            setSpeed(speed * 0.8)
+
+            setSpeed(speed)
+//            if (speed.absoluteValue > 0.1 && !holdIntake) {
+//                miniExtendIntakeCommand()
+//            } else if (!holdIntake) {
+//                miniRetractIntakeCommand()
+//            }
+
         }, this)
 
         SmartDashboard.putData("retract intake", retractIntakeCommand())
