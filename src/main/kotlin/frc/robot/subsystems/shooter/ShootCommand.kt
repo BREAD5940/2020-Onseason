@@ -7,6 +7,7 @@ import frc.robot.Constants
 import frc.robot.Robot
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.vision.VisionSubsystem
+import frc.team4069.keigen.*
 import lib.Logger
 import kotlin.math.abs
 import lib.inRpm
@@ -61,6 +62,7 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
 
         ShooterController.reset()
         ShooterController.enable()
+//        ShooterController.loop.xHat = vec(`1`).fill(FlywheelSubsystem.flywheelSpeed.value)
 
         logger.clearLog()
         logger.log("setpoint, measurement, xhat, voltage")
