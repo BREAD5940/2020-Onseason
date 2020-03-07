@@ -7,6 +7,7 @@ import frc.robot.subsystems.climb.GrabBumperCommand
 import frc.robot.subsystems.climb.OpenLoopClimbCommand
 import frc.robot.subsystems.climb.openLoopClimbCommandGroup
 import frc.robot.subsystems.drive.DriveSubsystem
+import frc.robot.subsystems.drive.SwerveCharacterizationCommand
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
@@ -35,14 +36,18 @@ object Controls {
         button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))
         button(kY).change(ShootCommand().alongWith(VisionDriveCommand()))
 
-        pov(180).changeOn(
-                DriveSubsystem.followTrajectory(
-                        TrajectoryFactory.testTrajectory2
-                ) { 0.degrees.toRotation2d() }
-                        .beforeStarting {
-                            DriveSubsystem.odometry.resetPosition(
-                                    Pose2d(TrajectoryFactory.testTrajectory2.initialPose.translation, 180.degrees.toRotation2d()), DriveSubsystem.gyro()) }
-        )
+//        pov(180).changeOn(
+//                DriveSubsystem.followTrajectory(
+//                        TrajectoryFactory.testTrajectory2
+//                ) { 0.degrees.toRotation2d() }
+//                        .beforeStarting {
+//                            DriveSubsystem.odometry.resetPosition(
+//                                    Pose2d(TrajectoryFactory.testTrajectory2.initialPose.translation, 180.degrees.toRotation2d()), DriveSubsystem.gyro()) }
+//        )
+
+        pov(0).changeOn(ShooterCharacterizationCommand())
+        pov(180).changeOn(SwerveCharacterizationCommand())
+
     }
 
     val operatorXbox = XboxController(1)

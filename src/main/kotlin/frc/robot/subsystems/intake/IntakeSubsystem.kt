@@ -79,7 +79,7 @@ object IntakeSubsystem : FalconSubsystem() {
                     Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft)
             + Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kRight) -
                     Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kLeft)
-            if(speed.absoluteValue > 0.1){miniExtendIntakeCommand()}
+            setSpeed(speed)
         }, this)
 
         SmartDashboard.putData("retract intake", retractIntakeCommand())
