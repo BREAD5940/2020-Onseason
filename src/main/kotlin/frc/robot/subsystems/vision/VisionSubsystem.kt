@@ -8,11 +8,15 @@ import frc.robot.autonomous.paths.Pose2d
 import frc.robot.autonomous.paths.plus
 import frc.robot.autonomous.paths.transformBy
 import frc.robot.subsystems.drive.DriveSubsystem
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import lib.FlippableDIOPin
 import kotlin.math.pow
 import kotlin.math.sqrt
 import lib.InterpolatingTable
 import lib.interpolate
+import lib.runCommand
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.mathematics.epsilonEquals
 import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
@@ -48,6 +52,16 @@ object VisionSubsystem : FalconSubsystem() {
     override fun lateInit() {
         lifecam.driverMode = false
         lifecam.pipeline = 1.0
+
+        GlobalScope.launch {
+            while(lifecam.latencyEntry.getDouble(-1.0) < 0.0) {
+                delay(10)
+            }
+
+            runCommand { lifecam.driverMode = true }.withTimeout(1.0)
+                    .andThen(Runnable { lifecam.driverMode = false })
+                    .schedule()
+        }
     }
 
     object Tracker : ToastyTargetTracker(TargetTrackerConstants(1.5.seconds, 10.feet, 100, 3)) {

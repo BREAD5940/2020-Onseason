@@ -32,7 +32,7 @@ class ChameleonCamera(cameraName: String) {
     private val pitchEntry = table["targetPitch"]
     private val yawEntry = table["targetYaw"]
     private val pipelineEntry = table["pipeline"]
-    private val latencyEntry = table["latency"]
+    val latencyEntry = table["latency"]
     private val driverModeEntry = table["driverMode"]
     private val isValidEntry = table["isValid"]
     private val areaEntry = table["area"]
