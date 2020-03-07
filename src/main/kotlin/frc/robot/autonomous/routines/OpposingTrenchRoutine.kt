@@ -37,7 +37,7 @@ class OpposingTrenchRoutine : AutoRoutine() {
         get() = sequential {
             +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 0.degrees.toRotation2d()) }
 
-            +DriveSubsystem.followTrajectory2(path1) { -30.0.degrees }
+            +DriveSubsystem.followTrajectory2(path1) { 0.0.degrees }
                     .deadlineWith(
                             IntakeSubsystem.extendIntakeCommand()
                                     .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) }))

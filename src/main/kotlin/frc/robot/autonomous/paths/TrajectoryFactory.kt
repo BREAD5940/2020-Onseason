@@ -162,9 +162,9 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(11.79.feet, 1.281.feet, 40.0.degrees),
-                        Pose2d(19.81.feet, 4.845.feet, 0.0.degrees),
-                        Pose2d(20.73.feet, 1.7.feet, -60.degrees)
+                        Pose2d(11.79.feet, 1.281.feet, 90.degrees),
+                        Pose2d(13.047.feet, 2.425.feet, 0.degrees),
+                        Pose2d(20.75.feet, 2.2.feet, 0.degrees)
                 ),
                 listOf(
                         SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
@@ -184,7 +184,7 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(20.73.feet, 1.7.feet, 112.degrees),
+                        Pose2d(20.75.feet, 2.2.feet, 112.degrees),
                         Pose2d(15.feet, 17.feet, 112.degrees)
                 ),
                 listOf(
@@ -202,7 +202,7 @@ object TrajectoryFactory {
                 listOf(
                         Pose2d(15.feet, 17.feet, -129.degrees),
                         Pose2d(19.45.feet, 11.75.feet, 113.degrees),
-                        Pose2d(18.feet, 14.26.feet, 113.degrees),
+                        Pose2d(18.feet, 14.26.feet, 131.233.degrees),
                         Pose2d(17.feet, 18.85.feet, 28.degrees),
                         Pose2d(20.25.feet, 18.4.feet, -68.degrees)
                 ),
