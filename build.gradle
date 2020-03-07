@@ -64,7 +64,7 @@ repositories {
     mavenLocal()
     maven { url "http://dl.bintray.com/kyonifer/maven" }
     maven { url "https://jitpack.io" }
-    maven { url "http://dev.imjac.in/maven" }
+//    maven { url "http://dev.imjac.in/maven" }
 }
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.

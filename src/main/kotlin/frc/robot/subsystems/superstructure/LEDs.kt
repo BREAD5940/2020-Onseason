@@ -11,7 +11,7 @@ import org.ghrobotics.lib.commands.FalconSubsystem
 import frc.robot.Controls
 import org.ghrobotics.lib.mathematics.units.millisecond
 
-class TheLEDs : FalconSubsystem() {
+object TheLEDs : FalconSubsystem() {
     object LEDs : AddressableLED(9) //
     object LEDBuffer : AddressableLEDBuffer(100)
     var allianceHue = 85 // GREEN (120/360 on color wheel)
@@ -30,14 +30,14 @@ class TheLEDs : FalconSubsystem() {
         updateThread.start()
     }
 
-    private val updateThread = thread {
+    private val updateThread = thread(start = false) {
         var firstPixelValue = 0
         var hue = allianceHue
 
 
         while (true) {
             // For every pixel
-            for (i in 0..LEDBuffer.length) {
+            for (i in 0 until LEDBuffer.length) {
                 val value = (firstPixelValue + (i * 255 / LEDBuffer.length)) % 255
                 // Set the value
                 LEDBuffer.setHSV(i, hue, 255, value)
@@ -53,6 +53,8 @@ class TheLEDs : FalconSubsystem() {
             } else {
                 hue = allianceHue
             }
+
+            println("hello")
 
         }
 
