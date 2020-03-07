@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.Constants
+import frc.robot.Robot
 import frc.robot.autonomous.paths.plus
 import frc.robot.autonomous.paths.transformBy
 import frc.robot.subsystems.shooter.ShotParameter
@@ -64,14 +65,22 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
 
                     SmartDashboard.putNumber("Distance to target", innerOrOuterGoalPose.translation.norm) // meters
 
-                    val shotParameter = Constants.distanceLookupTable5v.get(innerOrOuterGoalPose.translation.norm) ?: ShotParameter.defaultParameter
+                    var shotParameter = Constants.distanceLookupTable5v.get(innerOrOuterGoalPose.translation.norm) ?: ShotParameter.defaultParameter
+
+                    if(Robot.debugMode) {
+                        shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
+                    }
 
                     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                             forward, strafe, -controller.calculate(angle.radians, shotParameter.offset.inRadians()),
                             DriveSubsystem.robotPosition.rotation)
                 } else {
 
-                    val shotParameter = Constants.pitchLookupTable5v.get(VisionSubsystem.lifecam.pitch.degrees) ?: Constants.rightBelowGoalParameter5v
+                    var shotParameter = Constants.pitchLookupTable5v.get(VisionSubsystem.lifecam.pitch.degrees) ?: Constants.rightBelowGoalParameter5v
+
+                    if(Robot.debugMode) {
+                        shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
+                    }
 
                     val avHeading = headingAveragingBuffer.calculate(VisionSubsystem.lifecam.yaw.radians + DriveSubsystem.robotPosition.rotation.radians)
 
@@ -95,7 +104,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
     val lastError get() = controller.positionError
 
     companion object {
-        val centerOfRotation = Translation2d(0.meters, 8.inches)
+        val centerOfRotation = Translation2d((-4).inches, 8.inches)
         val controller = PIDController(1.7, 0.0, 0.0)
 
         fun getTargetPose(): Pose2d? {

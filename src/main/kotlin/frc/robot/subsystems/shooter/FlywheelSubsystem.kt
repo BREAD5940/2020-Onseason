@@ -1,10 +1,7 @@
 package frc.robot.subsystems.shooter
 
 import com.revrobotics.CANSparkMaxLowLevel
-import edu.wpi.first.wpilibj.DigitalInput
-import edu.wpi.first.wpilibj.Encoder
-import edu.wpi.first.wpilibj.LinearFilter
-import edu.wpi.first.wpilibj.Servo
+import edu.wpi.first.wpilibj.*
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -90,8 +87,10 @@ object FlywheelSubsystem : FalconSubsystem() {
         setBounds(2.1, 0.0, 0.0, 0.0, 0.9)
     }
 
-    val throughBoreEncoder = Encoder(0, 1).apply {
+    val throughBoreEncoder = Encoder(0, 1, false, CounterBase.EncodingType.k1X).apply {
         distancePerPulse = 2.0 * PI / 0.81 / 2048.0
+
+        samplesToAverage = 10
     }
 
     fun engagePawl() {

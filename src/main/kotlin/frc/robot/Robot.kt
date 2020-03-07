@@ -18,6 +18,8 @@ object Robot : FalconTimedRobot() {
 
     val isEnabled get() = wrappedValue.isEnabled
 
+    const val debugMode = false
+
     override fun robotInit() {
         Network // at the top because s3ndable choosers need to be instantiated
         Autonomous

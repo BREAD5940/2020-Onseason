@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTableEntry
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.Constants
+import frc.robot.Robot
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.vision.VisionSubsystem
 import lib.Logger
@@ -66,8 +67,12 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
     }
 
     override fun execute() {
-        val wantedParameter = parameterSupplier()
+        var wantedParameter = parameterSupplier()
 //        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
+
+        if(Robot.debugMode) {
+            wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
+        }
 
         HoodSubsystem.wantedAngle = wantedParameter.hoodAngle
 
