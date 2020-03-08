@@ -31,7 +31,7 @@ object TheLEDs : FalconSubsystem() {
     }
 
     private val updateThread = thread(start = false) {
-        var firstPixelValue = 0
+        var firstPixelValue = 255
         var hue = allianceHue
 
 
@@ -41,12 +41,17 @@ object TheLEDs : FalconSubsystem() {
                 val value = (firstPixelValue + (i * 255 / LEDBuffer.length)) % 255
                 // Set the value
                 LEDBuffer.setHSV(i, hue, 255, value)
+                LEDs.setData(LEDBuffer)
             }
 
+            Thread.sleep(50)
+
             // Increase by to make the rainbow "move"
-            firstPixelValue += 3
+            firstPixelValue -= 3
             // Check bounds
-            firstPixelValue %= 255
+            if (firstPixelValue < 0) {
+                firstPixelValue = 255
+            }
 
             if (Controls.isClimbing) {
                 hue = 277
