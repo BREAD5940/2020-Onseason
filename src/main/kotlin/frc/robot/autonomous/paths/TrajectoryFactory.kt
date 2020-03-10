@@ -251,6 +251,69 @@ object TrajectoryFactory {
         )
     }
 
+    val tenSGtoTrench by lazy {
+        generateTrajectory(
+                false,
+                listOf(
+                        Pose2d(11.7.feet, 24.67.feet, 0.0.degrees).asWaypoint(),
+                        Pose2d(23.0.feet, 24.67.feet, 0.0.degrees).asWaypoint()
+                ),
+                listOf(
+                        SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
+                        VelocityLimitRegionConstraint(Rectangle2d(
+                                Translation2d(18.5, 27.0),
+                                Translation2d(25.5, 22.0)),
+                                3.feet.velocity)
+                ), kMaxVelocity, kMaxAcceleration
+        )
+    }
+
+    val tenSGtrenchShoot by lazy {
+        generateTrajectory(
+                false,
+                listOf(
+                        Pose2d(23.0.feet, 24.67.feet, 0.0.degrees).asWaypoint(),
+                        Pose2d(18.095.feet, 22.454.feet, 22.0.degrees).asWaypoint()
+                ),
+                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
+        )
+    }
+
+    val tenSGtoSG by lazy {
+        generateTrajectory(
+                false,
+                listOf(
+                        Pose2d(18.095.feet, 22.454.feet, 22.0.degrees).asWaypoint(),
+                        Pose2d(20.338.feet, 18.643.feet, -67.5.degrees).asWaypoint(),
+                        Pose2d(12.599.feet, 18.138.feet, -100.degrees).asWaypoint(),
+                        Pose2d(18.403.feet, 14.189.feet, 22.5.degrees).asWaypoint(),
+                        Pose2d(19.063.feet, 12.398.feet, 22.5.degrees).asWaypoint(),
+                ),
+                listOf(
+                        SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
+                        VelocityLimitRegionConstraint(Rectangle2d(
+                                Translation2d(17.524, 19.607),
+                                Translation2d(24.296, 16.163)),
+                                3.feet.velocity),
+                        VelocityLimitRegionConstraint(Rectangle2d(
+                                Translation2d(16.6, 15.98),
+                                Translation2d(23.988, 10.791)),
+                                3.feet.velocity)
+                ), kMaxVelocity, kMaxAcceleration
+        )
+    }
+
+    val tenSGtoShoot by lazy {
+        generateTrajectory(
+                false,
+                listOf(
+                        Pose2d(19.063.feet, 12.398.feet, 22.5.degrees).asWaypoint(),
+                        Pose2d(14.226.feet, 14.143.feet, 9.0.degrees).asWaypoint(),
+                        Pose2d(12.818.feet, 18.689.feet, 0.0.degrees).asWaypoint()
+                )
+        )
+    }
+
 //    val sixPCGetPCFromShieldGenerator by lazy {
 //        generateTrajectory(
 //                false,
