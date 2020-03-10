@@ -24,7 +24,7 @@ import kotlin.math.absoluteValue
 class OpposingTrenchRoutine : AutoRoutine() {
     private val path1 = TrajectoryFactory.eightPCAutoStartToOpposingTrench // Grab 2
     private val path2 = TrajectoryFactory.eightPCAutoOpposingTrenchToShoot // Post up next to truss
-    private val path3 = TrajectoryFactory.eightPCAutoShootToShieldGenerator
+    private val path3 = TrajectoryFactory.retrieve5FromShieldGenerator
     private val path4 = TrajectoryFactory.eightPCShieldGeneratorToShoot
 
     override val duration: SIUnit<Second>

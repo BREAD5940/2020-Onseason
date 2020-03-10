@@ -1,6 +1,8 @@
 
 package frc.robot
 
+import edu.wpi.first.wpilibj.AddressableLED
+import edu.wpi.first.wpilibj.AddressableLEDBuffer
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import frc.robot.autonomous.Autonomous
@@ -20,6 +22,9 @@ object Robot : FalconTimedRobot() {
 
     const val debugMode = false
 
+    val led = AddressableLED(7)
+    val buffer = AddressableLEDBuffer(30)
+
     override fun robotInit() {
         Network // at the top because s3ndable choosers need to be instantiated
         Autonomous
@@ -34,6 +39,13 @@ object Robot : FalconTimedRobot() {
         SmartDashboard.putData(CommandScheduler.getInstance())
 
         super.robotInit()
+
+        for(i in 0 until buffer.length) {
+            buffer.setRGB(i, 128, 128, 128)
+        }
+        led.setLength(buffer.length)
+        led.setData(buffer)
+        led.start()
     }
 
     override fun teleopPeriodic() {
@@ -44,6 +56,12 @@ object Robot : FalconTimedRobot() {
         Controls.update()
         Network.update()
 //        println(FlywheelSubsystem.shooterMaster.encoder.position.inDegrees())
+
+        for(i in 0 until buffer.length) {
+            buffer.setRGB(i, 200, 0, 128)
+//            println(buffer.getLED(i).red)
+        }
+        led.setData(buffer)
     }
 
     override fun disabledInit() {

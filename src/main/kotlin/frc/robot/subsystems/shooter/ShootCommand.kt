@@ -54,8 +54,6 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
     private val angleEntry: NetworkTableEntry = SmartDashboard.getEntry("hoodAngle")
     private val rpmEntry: NetworkTableEntry = SmartDashboard.getEntry("rpm")
 
-    val logger = Logger("Shooter")
-
     override fun initialize() {
         angleEntry.setDefaultDouble(45.0)
         rpmEntry.setDefaultDouble(0.0)
@@ -117,6 +115,7 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
     companion object {
         var lastPose = Pose2d()
         var lastParam = ShotParameter.defaultParameter
+        val logger = Logger("Shooter")
     }
 
 }

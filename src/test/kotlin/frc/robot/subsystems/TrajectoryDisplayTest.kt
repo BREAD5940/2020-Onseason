@@ -44,7 +44,7 @@ class TrajectoryDisplayTest {
         frame.add(panel)
         frame.setSize(2598 / 3, 1299 / 3)
         frame.setVisible(true)
-//        Thread.sleep(100000)
+        Thread.sleep(100000)
         return
     }
 }

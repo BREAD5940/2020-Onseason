@@ -56,6 +56,8 @@ class SwerveTrajectoryFollowerCommand(
         timer.reset()
         timer.start()
         prevStates = listOf(SwerveModuleState(), SwerveModuleState(), SwerveModuleState(), SwerveModuleState())
+
+        controller.reset(DriveSubsystem.robotPosition.rotation)
     }
 
     override fun execute() {
