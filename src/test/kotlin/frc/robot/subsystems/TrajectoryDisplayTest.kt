@@ -22,7 +22,7 @@ class TrajectoryDisplayTest {
     @Test
     fun displayTrajectory() {
         var seriesX = org.jfree.data.xy.XYSeries("x")
-        TrajectoryFactory.eightPCAutoShootToShieldGenerator.states.forEach {
+        TrajectoryFactory.retrieve5FromShieldGenerator.states.forEach {
             seriesX.add(XYDataItem(it.poseMeters.translation.x / kFeetToMeter, it.poseMeters.translation.y / kFeetToMeter))
         }
 
