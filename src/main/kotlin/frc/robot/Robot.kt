@@ -28,8 +28,6 @@ object Robot : FalconTimedRobot() {
 
     val led = AddressableLED(7)
     val buffer = AddressableLEDBuffer(100) // irl 43
-    val cam1 = CameraServer.getInstance().startAutomaticCapture(0)
-    val cam2 = CameraServer.getInstance().startAutomaticCapture(1)
 
     override fun robotInit() {
         Network // at the top because s3ndable choosers need to be instantiated
