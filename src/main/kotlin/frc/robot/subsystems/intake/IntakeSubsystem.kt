@@ -56,18 +56,15 @@ object IntakeSubsystem : FalconSubsystem() {
     fun miniExtendIntakeCommand() = setSmolPistonExtension(true)
     fun extendIntakeCommand() = sequential {
         +instantCommand(IntakeSubsystem) { setSmolPistonExtension(true); }
-        +instantCommand(IntakeSubsystem) { intakeMotor.setDutyCycle(0.5) }
         +WaitCommand(0.2)
-        +instantCommand { IntakeSubsystem.intakeMotor.setNeutral() }
         +instantCommand(IntakeSubsystem) { setChungusPistonExtension(true) }
     }
 
     fun retractIntakeCommand() = sequential {
         +instantCommand(IntakeSubsystem) { setChungusPistonExtension(false); }
-        +instantCommand(IntakeSubsystem) { intakeMotor.setDutyCycle(-0.5) }
         +WaitCommand(0.2)
-        +instantCommand(IntakeSubsystem) { intakeMotor.setNeutral() }
         +instantCommand(IntakeSubsystem) { setSmolPistonExtension(false) }
+        +WaitCommand(0.1)
     }
 
     override fun lateInit() {
