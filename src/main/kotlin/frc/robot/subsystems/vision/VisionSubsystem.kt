@@ -1,9 +1,11 @@
 package frc.robot.subsystems.vision
 
+import edu.wpi.first.wpilibj.DigitalOutput
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Transform2d
 import edu.wpi.first.wpilibj.geometry.Pose2d
+import frc.robot.Robot
 import frc.robot.autonomous.paths.Pose2d
 import frc.robot.autonomous.paths.plus
 import frc.robot.autonomous.paths.transformBy
@@ -39,14 +41,13 @@ object VisionSubsystem : FalconSubsystem() {
 
     val lifecam = ChameleonCamera("lifecam")
 
-    private val ledFet = FlippableDIOPin(9) //DigitalOutput(9).apply {
+    private val ledFet = DigitalOutput(7) //DigitalOutput(9).apply {
 //            .apply {
 //                setDirection(Relay.Direction.kForward)
 //            }
 
     var ledsEnabled by Delegates.observable(false) {
-        _, _, newValue -> ledFet.set(newValue)
-
+        _, _, newValue -> ledFet.set(!newValue)
     }
 
     override fun lateInit() {
@@ -82,7 +83,7 @@ object VisionSubsystem : FalconSubsystem() {
         updateTracker()
 
 //        ledFet.set(true)
-//        ledsEnabled = Robot.isEnabled
+        ledsEnabled = Robot.isEnabled
     }
 
     /**

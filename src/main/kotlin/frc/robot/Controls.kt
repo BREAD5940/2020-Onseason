@@ -81,7 +81,7 @@ object Controls {
         button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
         button(kX).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kY).change(IntakeSubsystem.retractIntakeCommand())
-        pov(0).changeOn(openLoopClimbCommandGroup.alongWith(GrabBumperCommand(), IntakeSubsystem.retractIntakeCommand().perpetually()))
+        pov(0).changeOn {  openLoopClimbCommandGroup.alongWith(GrabBumperCommand(), instantCommand(IntakeSubsystem) {}).withInterrupt { operatorXbox.bButton }.schedule(false) }
         button(kStickRight).change(
                 ShootCommand({ Constants.rightBelowGoalParameter5v }, true)
                         .andThen(ShootCommand({ Constants.rightBelowGoalParameter5v }, false).withTimeout(1.0))

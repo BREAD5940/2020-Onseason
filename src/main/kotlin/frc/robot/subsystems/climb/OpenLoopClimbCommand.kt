@@ -28,6 +28,7 @@ class OpenLoopClimbCommand : FalconCommand(FlywheelSubsystem) {
         FlywheelSubsystem.engagePawl()
         FlywheelSubsystem.shooterMaster.controller.setOutputRange(-1.0, 0.0)
         SmartDashboard.putBoolean("CLIMB IN DANGER", false)
+        println("Starting climb command")
     }
 
     override fun execute() {
