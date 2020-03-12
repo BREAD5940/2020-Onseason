@@ -19,6 +19,7 @@ import org.ghrobotics.lib.mathematics.units.derived.radians
 import org.ghrobotics.lib.utils.safeRangeTo
 import org.ghrobotics.lib.utils.withDeadband
 import org.ghrobotics.lib.wrappers.hid.getY
+import kotlin.math.absoluteValue
 
 class OpenLoopClimbCommand : FalconCommand(FlywheelSubsystem) {
 
@@ -79,6 +80,7 @@ val openLoopClimbCommandGroup
         // NEGATIVE power climbs
         +runCommand(FlywheelSubsystem) { FlywheelSubsystem.climbAtPower(0.8) }
                 .withInterrupt { FlywheelSubsystem.shooterMaster.encoder.position > 77000.degrees }
+                .withInterrupt { Controls.operatorXbox.getY(GenericHID.Hand.kRight).absoluteValue > 0.5 }
                 .beforeStarting(Runnable { FlywheelSubsystem.shooterMaster.brakeMode = true })
                 .andThen { FlywheelSubsystem.shooterMaster.setNeutral() }
 

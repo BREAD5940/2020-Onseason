@@ -52,6 +52,10 @@ open class Mk2SwerveModule(
     val azimuthAngle =
             { ((1.0 - analogInput.voltage / RobotController.getVoltage5V() * 2.0 * PI).radians + offset).toRotation2d() }
 
+    private val logger = Logger("Swerve_$name").apply {
+        log("velocity, reference, applied voltage, angle")
+    }
+
     init {
         driveMotor.canSparkMax.restoreFactoryDefaults()
         driveMotor.canSparkMax.setSecondaryCurrentLimit(60.0)
@@ -121,10 +125,7 @@ open class Mk2SwerveModule(
             is Output.Velocity -> {
                 driveMotor.setVelocity(customizedOutput.velocity, customizedOutput.arbitraryFeedForward)
 //                driveMotor.setVoltage(customizedOutput.arbitraryFeedForward)
-
                 logger.log(Timer.getFPGATimestamp(), customizedOutput.velocity.inFeetPerSecond(), driveMotor.encoder.velocity.inFeetPerSecond(), driveMotor.voltageOutput.value, driveMotor.drawnCurrent.value, driveMotor.canSparkMax.busVoltage)
-
-                // TODO velocity closed loop on swerve modules
             }
         }
     }
