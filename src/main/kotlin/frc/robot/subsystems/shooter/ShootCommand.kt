@@ -26,13 +26,13 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
     constructor(endAfterSpinup: Boolean = false) : this(
             fun(): ShotParameter {
                 var pose = VisionDriveCommand.getTargetPose()
-                if(pose == null) pose = lastPose
+                if (pose == null) pose = lastPose
                 lastPose = pose
 
                 val distance = pose.translation.norm
                 val table = Constants.distanceLookupTable5v
                 var param = table.get(distance)
-                if(param == null) {
+                if (param == null) {
                     param = lastParam
                 }
                 lastParam = param
@@ -70,11 +70,11 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
         var wantedParameter = parameterSupplier()
 //        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
 
-        if(Robot.debugMode) {
+        if (Robot.debugMode) {
             wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
         }
 
-        HoodSubsystem.wantedAngle = wantedParameter.hoodAngle
+        HoodSubsystem.wantedAngle = wantedParameter.hoodAngle + hoodAngleOffset
 
         // call periodically to recalculate feedback
 //        FlywheelSubsystem.shootAtSpeed(wantedParameter.speed)
@@ -86,7 +86,8 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
         FlywheelSubsystem.shootAtVoltage(volts)
 
         SmartDashboard.putNumber("distanceToGoal", (VisionDriveCommand.getTargetPose() ?: Pose2d()).translation.norm)
-        SmartDashboard.putString("better parameter", (Constants.distanceLookupTable5v.get((VisionDriveCommand.getTargetPose() ?: Pose2d()).translation.norm) ?: Constants.rightBelowGoalParameter5v).toString())
+        SmartDashboard.putString("better parameter", (Constants.distanceLookupTable5v.get((VisionDriveCommand.getTargetPose()
+                ?: Pose2d()).translation.norm) ?: Constants.rightBelowGoalParameter5v).toString())
 
 //        Constants.distanceLookupTable5v.get((VisionDriveCommand.getTargetPose() ?: Pose2d()).translation.norm) ?: Constants.rightBelowGoalParameter5v
 
@@ -95,11 +96,13 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
     }
 
     private fun isOnTarget(): Boolean {
-        val wantedParameter = parameterSupplier()
-//        val wantedParameter = ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
+        val wantedParameter = if (Robot.debugMode)
+            ShotParameter(angleEntry.getDouble(45.0).degrees, rpmEntry.getDouble(0.0).revolutionsPerMinute)
+        else
+            parameterSupplier()
 
         return abs(wantedParameter.speed.inRpm() - FlywheelSubsystem.flywheelSpeed.inRpm()) < 100 &&
-                abs(HoodSubsystem.wantedAngle.inDegrees() - wantedParameter.hoodAngle.inDegrees()) < 1.0
+                abs(HoodSubsystem.wantedAngle.inDegrees() - (wantedParameter.hoodAngle + hoodAngleOffset).inDegrees()) < 1.0 // TODO hood angle comparison compares wantedangle to wantedangle, should compare wanted to current
     }
 
     override fun isFinished(): Boolean {
@@ -116,6 +119,8 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
         var lastPose = Pose2d()
         var lastParam = ShotParameter.defaultParameter
         val logger = Logger("Shooter")
+
+        var hoodAngleOffset = 0.degrees
     }
 
 }

@@ -67,7 +67,6 @@ object Controls {
 
     val operatorXbox = XboxController(1)
     val operatorFalconXbox = operatorXbox.mapControls {
-
         button(kBumperRight).change(
                 ShootCommand(true)
                         .andThen(ShootCommand(false).withTimeout(0.5))
@@ -91,6 +90,10 @@ object Controls {
                                         .andThen(Runnable { FlywheelSubsystem.kickWheelMotor.setNeutral() })
                         )
         )
+
+        // TODO decide on button bindings for offset of hood
+//        button(kStickLeft).changeOn { ShootCommand.hoodAngleOffset += 1.degrees }
+//        button(kStickLeft).changeOn { ShootCommand.hoodAngleOffset -= 1.degrees }
     }
 
     fun update() {
