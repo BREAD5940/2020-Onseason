@@ -59,7 +59,7 @@ open class Mk2SwerveModule(
         driveMotor.canSparkMax.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, false)
         driveMotor.canSparkMax.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, false)
         driveMotor.canSparkMax.openLoopRampRate = 0.05
-        driveMotor.controller.p = 0.001//' 6e-5
+        driveMotor.controller.p = 0.0001//' 6e-5 // About 1 order of magnitude below LQR because neo velocity phase lag
 
         azimuthMotor.canSparkMax.restoreFactoryDefaults()
         azimuthMotor.canSparkMax.setSecondaryCurrentLimit(35.0)
