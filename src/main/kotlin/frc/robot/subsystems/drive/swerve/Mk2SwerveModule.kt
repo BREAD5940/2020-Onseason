@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel
 import edu.wpi.first.wpilibj.AnalogInput
 import edu.wpi.first.wpilibj.RobotController
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState
@@ -23,8 +24,10 @@ open class Mk2SwerveModule(
     angleKi: Double,
     angleKd: Double,
     private val angleMotorOutputRange: ClosedFloatingPointRange<Double>,
-    private val name: String
+    val name: String
 ) {
+
+   val logger = Logger("${name}Module")
 
     private val stateMutex = Object()
     val periodicIO = PeriodicIO()
@@ -60,7 +63,7 @@ open class Mk2SwerveModule(
         driveMotor.canSparkMax.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, false)
         driveMotor.canSparkMax.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, false)
         driveMotor.canSparkMax.openLoopRampRate = 0.05
-        driveMotor.controller.p = 3e-5
+        driveMotor.controller.p = 0.0001//' 6e-5 // About 1 order of magnitude below LQR because neo velocity phase lag
 
         azimuthMotor.canSparkMax.restoreFactoryDefaults()
         azimuthMotor.canSparkMax.setSecondaryCurrentLimit(35.0)
@@ -73,6 +76,9 @@ open class Mk2SwerveModule(
 //            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 500)
 //            setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 3)
         }
+
+        logger.log("time, reference, measurement, voltage, current, bus voltage")
+
     }
 
     fun updateState() {
@@ -119,10 +125,7 @@ open class Mk2SwerveModule(
             is Output.Velocity -> {
                 driveMotor.setVelocity(customizedOutput.velocity, customizedOutput.arbitraryFeedForward)
 //                driveMotor.setVoltage(customizedOutput.arbitraryFeedForward)
-
-                // TODO velocity closed loop on swerve modules
-
-                logger.log(driveMotor.encoder.velocity.inFeetPerSecond(), customizedOutput.velocity.inFeetPerSecond(), driveMotor.voltageOutput, azimuthAngle().degrees)
+                logger.log(Timer.getFPGATimestamp(), customizedOutput.velocity.inFeetPerSecond(), driveMotor.encoder.velocity.inFeetPerSecond(), driveMotor.voltageOutput.value, driveMotor.drawnCurrent.value, driveMotor.canSparkMax.busVoltage)
             }
         }
     }

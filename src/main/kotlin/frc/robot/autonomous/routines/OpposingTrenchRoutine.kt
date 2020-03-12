@@ -24,7 +24,7 @@ import kotlin.math.absoluteValue
 class OpposingTrenchRoutine : AutoRoutine() {
     private val path1 = TrajectoryFactory.eightPCAutoStartToOpposingTrench // Grab 2
     private val path2 = TrajectoryFactory.eightPCAutoOpposingTrenchToShoot // Post up next to truss
-    private val path3 = TrajectoryFactory.eightPCAutoShootToShieldGenerator
+    private val path3 = TrajectoryFactory.retrieve5FromShieldGenerator
     private val path4 = TrajectoryFactory.eightPCShieldGeneratorToShoot
 
     override val duration: SIUnit<Second>
@@ -37,7 +37,7 @@ class OpposingTrenchRoutine : AutoRoutine() {
         get() = sequential {
             +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 0.degrees.toRotation2d()) }
 
-            +DriveSubsystem.followTrajectory2(path1) { -30.0.degrees }
+            +DriveSubsystem.followTrajectory2(path1) { 0.0.degrees }
                     .deadlineWith(
                             IntakeSubsystem.extendIntakeCommand()
                                     .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) }))

@@ -1,33 +1,42 @@
 package frc.robot.subsystems.vision
 
+import edu.wpi.first.cameraserver.CameraServer
+import edu.wpi.first.wpilibj.DigitalOutput
 import edu.wpi.first.wpilibj.Timer
+import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Transform2d
-import edu.wpi.first.wpilibj.geometry.Pose2d
+import frc.robot.Robot
 import frc.robot.autonomous.paths.Pose2d
 import frc.robot.autonomous.paths.plus
 import frc.robot.autonomous.paths.transformBy
 import frc.robot.subsystems.drive.DriveSubsystem
-import lib.FlippableDIOPin
-import kotlin.math.pow
-import kotlin.math.sqrt
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import lib.InterpolatingTable
 import lib.interpolate
+import lib.runCommand
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.mathematics.epsilonEquals
 import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
 import org.ghrobotics.lib.mathematics.units.*
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
-import org.ghrobotics.lib.mathematics.units.feet
-import org.ghrobotics.lib.mathematics.units.inches
-import org.ghrobotics.lib.mathematics.units.seconds
 import org.ghrobotics.lib.types.Interpolatable
+import org.ghrobotics.lib.utils.loopFrequency
 import org.ghrobotics.lib.vision.ChameleonCamera
 import org.ghrobotics.lib.vision.ToastyTargetTracker
+import org.opencv.core.Mat
+import org.opencv.imgproc.Imgproc
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.math.absoluteValue
+import kotlin.math.pow
+import kotlin.math.sqrt
 import kotlin.math.tan
 import kotlin.properties.Delegates
+
 
 object VisionSubsystem : FalconSubsystem() {
 
@@ -35,19 +44,28 @@ object VisionSubsystem : FalconSubsystem() {
 
     val lifecam = ChameleonCamera("lifecam")
 
-    private val ledFet = FlippableDIOPin(9) //DigitalOutput(9).apply {
+    private val ledFet = DigitalOutput(7) //DigitalOutput(9).apply {
 //            .apply {
 //                setDirection(Relay.Direction.kForward)
 //            }
 
-    var ledsEnabled by Delegates.observable(false) {
-        _, _, newValue -> ledFet.set(newValue)
-
+    var ledsEnabled by Delegates.observable(false) { _, _, newValue ->
+        ledFet.set(!newValue)
     }
 
     override fun lateInit() {
         lifecam.driverMode = false
         lifecam.pipeline = 1.0
+
+        GlobalScope.launch {
+            while (lifecam.latencyEntry.getDouble(-1.0) < 0.0) {
+                delay(10)
+            }
+
+            runCommand { lifecam.driverMode = true }.withTimeout(1.0)
+                    .andThen(Runnable { lifecam.driverMode = false })
+                    .schedule()
+        }
     }
 
     object Tracker : ToastyTargetTracker(TargetTrackerConstants(1.5.seconds, 10.feet, 100, 3)) {
@@ -68,7 +86,7 @@ object VisionSubsystem : FalconSubsystem() {
         updateTracker()
 
 //        ledFet.set(true)
-//        ledsEnabled = Robot.isEnabled
+        ledsEnabled = Robot.isEnabled
     }
 
     /**
@@ -83,7 +101,7 @@ object VisionSubsystem : FalconSubsystem() {
 
     private fun updateTracker() {
 
-        if(lifecam.isValid) updateTangentEstimation(lifecam.pitch + camAngle.toRotation2d(), lifecam.yaw,
+        if (lifecam.isValid) updateTangentEstimation(lifecam.pitch + camAngle.toRotation2d(), lifecam.yaw,
                 Timer.getFPGATimestamp().seconds - lifecam.latency)
 
 //        DriveSubsystem.odometry.resetPosition(Pose2d(3.0, 3.0, 180.degrees.toRotation2d()), DriveSubsystem.gyro())
@@ -125,7 +143,7 @@ object VisionSubsystem : FalconSubsystem() {
         // d = (h2-h1) / tan(a1+a2)
         val correctedYaw = yaw * yawMultiplier
 
-        if(lastPitch epsilonEquals pitchToHorizontal.radians && correctedYaw.radians epsilonEquals lastYaw) return
+        if (lastPitch epsilonEquals pitchToHorizontal.radians && correctedYaw.radians epsilonEquals lastYaw) return
         lastPitch = pitchToHorizontal.radians; lastYaw = correctedYaw.radians
 
         val heightDifferential = targetHeight - camHeight
@@ -136,11 +154,11 @@ object VisionSubsystem : FalconSubsystem() {
 
 //        println("DISTANCE TO TARGET ${cameraToTarget.norm.meters.inFeet()} AT ANGLE ${correctedYaw.degrees}")
 
-        val goalRotation = (if(fieldToRobot.rotation.degrees + correctedYaw.degrees in -90.0..90.0)
+        val goalRotation = (if (fieldToRobot.rotation.degrees + correctedYaw.degrees in -90.0..90.0)
             0.degrees else 180.degrees)
                 .toRotation2d()
 
-         Tracker.addSamples(timestamp,
+        Tracker.addSamples(timestamp,
                 Pose2d(
                         fieldToRobot
                                 .plus(robotToCamera)
@@ -154,13 +172,14 @@ object VisionSubsystem : FalconSubsystem() {
         // check that the pose is valid -- if not, it defaults to 0.0 for x, y, and rotation
         val solvePnpPose = lifecam.bestPose
 
-        if(previousSolvePnpPose epsilonEquals solvePnpPose) return
+        if (previousSolvePnpPose epsilonEquals solvePnpPose) return
         previousSolvePnpPose = solvePnpPose
 
         if (solvePnpPose.translation.x epsilonEquals 0.0 && solvePnpPose.translation.y epsilonEquals 0.0 &&
                 solvePnpPose.rotation.radians epsilonEquals 0.0) return
 
-        val drivetrainPose = DriveSubsystem.poseBuffer[Timer.getFPGATimestamp().seconds - lifecam.latency] ?: DriveSubsystem.robotPosition
+        val drivetrainPose = DriveSubsystem.poseBuffer[Timer.getFPGATimestamp().seconds - lifecam.latency]
+                ?: DriveSubsystem.robotPosition
 
         val fieldRelativePose = drivetrainPose
                 .transformBy(robotToCamera)// transform by camera position
@@ -177,6 +196,42 @@ object VisionSubsystem : FalconSubsystem() {
     private val focalLen = (44 /* px */ * sqrt(10.feet.inMeters().pow(2) +
             targetHeight.inMeters().pow(2))) / (width.inMeters()) / 0.35
     private val robotToCamera = Pose2d(Translation2d((9.5).inches, 1.25.inches), 0.degrees) // TODO adjust to cad
+
+    val bumperCamera = CameraServer.getInstance().startAutomaticCapture(0).apply {
+        setResolution(160, 120)
+        setFPS(10)
+        setName("Bumper Grabber")
+        setExposureAuto()
+    }
+
+    val intakeCamera = CameraServer.getInstance().startAutomaticCapture(1).apply {
+        setResolution(160, 120)
+        setFPS(25)
+        setName("Intake")
+        setExposureAuto()
+    }
+
+    //    val cam2 = CameraServer.getInstance().startAutomaticCapture(1)
+    // frame streaming thread
+//    val streamJob = GlobalScope.launch(EmptyCoroutineContext, CoroutineStart.DEFAULT) {
+//
+//        cam1.setResolution(320, 240)
+////        cam2.setResolution(320, 240)
+//
+//        val sink1 = CameraServer.getInstance().getVideo(cam1)
+//        val out1 = CameraServer.getInstance().putVideo("Driver Cam 1", 320, 240)
+//
+//        val source = Mat()
+//        val output = Mat()
+//
+//        loopFrequency(3) {
+//            if (sink1.grabFrame(source) != 0L) {
+//                out1.putFrame(output)
+//            }
+//        }
+//    }
+
+
 }
 
 private infix fun Pose2d.epsilonEquals(other: Pose2d) =

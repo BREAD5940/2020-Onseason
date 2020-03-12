@@ -1,6 +1,7 @@
 package frc.robot.subsystems.drive.swerve
 
 import edu.wpi.first.wpilibj.controller.PIDController
+import edu.wpi.first.wpilibj.controller.ProfiledPIDController
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
@@ -8,6 +9,7 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState
 import edu.wpi.first.wpilibj.trajectory.Trajectory
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
 import frc.robot.subsystems.drive.SwerveDriveOutput
 import frc.robot.subsystems.drive.toTranslation2d
 import lib.normalize
@@ -15,6 +17,7 @@ import org.ghrobotics.lib.mathematics.units.Meter
 import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.inRadians
+import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.derived.volts
 import org.ghrobotics.lib.utils.safeRangeTo
 import kotlin.math.PI
@@ -25,16 +28,22 @@ class SwerveTrajectoryController(
 ) {
 
     private var lastTime = -1.0
-    private var prevState = listOf(
+    private var prevState: Array<SwerveModuleState> = arrayOf(
             SwerveModuleState(), SwerveModuleState(), SwerveModuleState(), SwerveModuleState())
 
-    private val forwardController = PIDController(6.0, 0.0, 0.0) // x meters per second per meter of error
-    private val strafeController = PIDController(6.0, 0.0, 0.0)
+    private val forwardController = PIDController(10.0, 0.0, 0.0) // x meters per second per meter of error
+    private val strafeController = PIDController(10.0, 0.0, 0.0)
 
-    private val rotationController = PIDController(10.0, 0.0, 0.0) // rad per sec per radian of error
+    private val rotationController = ProfiledPIDController(10.0, 0.0, 0.0, TrapezoidProfile.Constraints(180.degrees.inRadians(), 120.degrees.inRadians())) // rad per sec per radian of error
             .apply {
                 enableContinuousInput(-PI, PI)
             }
+
+    fun reset(heading: Rotation2d) {
+        forwardController.reset()
+        strafeController.reset()
+        rotationController.reset(heading.radians)
+    }
 
     fun calculate(
         time: Double,
@@ -57,13 +66,12 @@ class SwerveTrajectoryController(
         val feedbackOutput = ChassisSpeeds.fromFieldRelativeSpeeds(
                 forwardController.calculate(currentPose.translation.x, state.poseMeters.translation.x) + velocity.x,
                 strafeController.calculate(currentPose.translation.y, state.poseMeters.translation.y) + velocity.y,
-                rotationController.calculate(currentPose.rotation.radians, targetHeading.radians)
-                        .coerceIn(-4.0, 4.0),
+                rotationController.calculate(currentPose.rotation.radians, targetHeading.radians),
                 currentPose.rotation
         )
 
         // convert from chassis speeds (PID plus trajectory speeds) to states
-        val states = kinematics.toSwerveModuleStates(feedbackOutput).toList()
+        val states = kinematics.toSwerveModuleStates(feedbackOutput)
 
         // Calculate feedforwards for each module based on it's acceleration
         val outputs = arrayListOf<Mk2SwerveModule.Output.Velocity>() // Temp array
@@ -80,6 +88,9 @@ class SwerveTrajectoryController(
                     ffVoltage.volts
             ))
         }
+
+        val maxVelocity = 11.0 /* max voltage */ / feedforward.kv
+        SwerveDriveKinematics.normalizeWheelSpeeds(states, maxVelocity)
 
         prevState = states
 

@@ -22,7 +22,7 @@ class TrajectoryDisplayTest {
     @Test
     fun displayTrajectory() {
         var seriesX = org.jfree.data.xy.XYSeries("x")
-        TrajectoryFactory.eightPCAutoShootToShieldGenerator.states.forEach {
+        TrajectoryFactory.retrieve5FromShieldGenerator.states.forEach {
             seriesX.add(XYDataItem(it.poseMeters.translation.x / kFeetToMeter, it.poseMeters.translation.y / kFeetToMeter))
         }
 
@@ -44,7 +44,7 @@ class TrajectoryDisplayTest {
         frame.add(panel)
         frame.setSize(2598 / 3, 1299 / 3)
         frame.setVisible(true)
-//        Thread.sleep(100000)
+        Thread.sleep(100000)
         return
     }
 }

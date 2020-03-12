@@ -76,8 +76,8 @@ object DriveSubsystem : FalconSubsystem() {
 
     val feedForward = SimpleMotorFeedforward(
             (0.15), // ks
-            (2.5), // kv
-            (0.0) // ka
+            (2.9), // kv, volts per meter per second
+            (0.3) // ka
     )
 
     val kinematics = Constants.kinematics

@@ -55,16 +55,29 @@ object Constants {
      * Lookup table to correlate distance in meters to shot parameters
      */
     val distanceLookupTable5v = InterpolatingTable(
-            3.65 to ShotParameter(53.degrees, 2150.revolutionsPerMinute, (-2).degrees),
-            4.3 to ShotParameter(55.degrees, 2300.revolutionsPerMinute, (-2).degrees),
-            5.15 to ShotParameter(58.degrees, 2400.revolutionsPerMinute, (-2).degrees),
-            6.15 to ShotParameter(59.degrees, 2600.revolutionsPerMinute, (-2).degrees),
-            6.7 to ShotParameter(59.degrees, 2800.revolutionsPerMinute, (-2).degrees),
-            7.7 to ShotParameter(60.degrees, 2800.revolutionsPerMinute, (-2).degrees),
-            9.13 to ShotParameter(58.degrees, 3100.revolutionsPerMinute, (-2).degrees),
-            10.45 to ShotParameter(54.degree, 2900.revolutionsPerMinute, (-1).degrees)
+            3.9 to ShotParameter(58.degrees, 2200.revolutionsPerMinute, 0.degrees),
+            5.1 to ShotParameter(61.degrees, 2350.revolutionsPerMinute),
+            6.0 to ShotParameter(64.degrees, 2500.revolutionsPerMinute, (-0.5).degrees),
+            7.0 to ShotParameter(67.degrees, 2800.revolutionsPerMinute, (-0.5).degrees),
+            8.0 to ShotParameter(67.degrees, 3100.revolutionsPerMinute, 1.degrees),
+            9.5 to ShotParameter(67.degrees, 3300.revolutionsPerMinute, 1.degrees),
+            11.4 to ShotParameter(67.5.degrees, 3600.revolutionsPerMinute, 1.degrees),
+            13.85 to ShotParameter(67.5.degrees, 4100.revolutionsPerMinute, 1.degrees)
     )
 
-    val rightBelowGoalParameter5v = ShotParameter(27.5.degrees, 2400.revolutionsPerMinute)
+    val rightBelowGoalParameter5v = ShotParameter(30.degrees, 3000.revolutionsPerMinute)
 
 }
+
+//val distanceLookupTable5v = InterpolatingTable(
+//        3.65 to ShotParameter(53.degrees, 2150.revolutionsPerMinute, (-2).degrees),
+//        4.3 to ShotParameter(55.degrees, 2300.revolutionsPerMinute, (-2).degrees),
+//        5.15 to ShotParameter(58.degrees, 2400.revolutionsPerMinute, (-2).degrees),
+//        6.15 to ShotParameter(59.degrees, 2600.revolutionsPerMinute, (-2).degrees),
+//        6.7 to ShotParameter(59.degrees, 2800.revolutionsPerMinute, (-2).degrees),
+//        7.7 to ShotParameter(60.degrees, 2800.revolutionsPerMinute, (-2).degrees),
+//        9.13 to ShotParameter(58.degrees, 3100.revolutionsPerMinute, (-2).degrees),
+//        10.45 to ShotParameter(54.degree, 2900.revolutionsPerMinute, (-1).degrees)
+//)
+//
+//val rightBelowGoalParameter5v = ShotParameter(27.5.degrees, 2400.revolutionsPerMinute)

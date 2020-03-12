@@ -11,6 +11,7 @@ import frc.robot.autonomous.Autonomous
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.HoodSubsystem
+import frc.robot.subsystems.shooter.ShootCommand
 import kotlin.math.roundToInt
 import lib.inRpm
 import lib.revolutionsPerMinute
@@ -56,6 +57,7 @@ object Network {
                 number("Last ref pos, deg") { HoodSubsystem.lastProfiledReference.position.radians.inDegrees().roundToInt().toDouble() }
 //                number("Shooter error, RPM") { (FlywheelSubsystem.shooterMaster.encoder.velocity - 3000.revolutionsPerMinute).inRpm() }
                 number("thru bore pos, deg") { FlywheelSubsystem.throughBoreEncoder.distance.radians.inDegrees()}
+                number("Hood offset") { ShootCommand.hoodAngleOffset.inDegrees() }
                 position(2, 0)
                 size(1, 4)
             }

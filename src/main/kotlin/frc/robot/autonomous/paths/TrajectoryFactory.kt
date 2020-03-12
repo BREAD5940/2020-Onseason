@@ -12,6 +12,7 @@ import frc.robot.autonomous.paths.TrajectoryWaypoints
 import lib.translation2d
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
 import org.ghrobotics.lib.mathematics.twodim.geometry.Rectangle2d
+import org.ghrobotics.lib.mathematics.twodim.trajectory.FalconTrajectoryConfig
 import org.ghrobotics.lib.mathematics.twodim.trajectory.constraints.VelocityLimitRadiusConstraint
 import org.ghrobotics.lib.mathematics.twodim.trajectory.constraints.VelocityLimitRegionConstraint
 import org.ghrobotics.lib.mathematics.units.*
@@ -37,7 +38,7 @@ object TrajectoryFactory {
                     Pose2d(10.5.feet, 20.5.feet, 0.degrees),
                     Pose2d(18.5.feet, 24.5.feet, 0.degrees)
             ),
-            getConstraints(kMaxVelocity), 5.feet.velocity, kMaxAcceleration
+            getConstraints(kMaxVelocity), 6.feet.velocity, 8.feet.acceleration
     )
 
     fun Pose2d.withRotation(rotation: SIUnit<Radian>) = Pose2d(this.translation, rotation.toRotation2d())
@@ -162,9 +163,9 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(11.79.feet, 1.281.feet, 40.0.degrees),
-                        Pose2d(19.81.feet, 4.845.feet, 0.0.degrees),
-                        Pose2d(20.73.feet, 1.7.feet, -60.degrees)
+                        Pose2d(11.79.feet, 1.281.feet, 90.degrees),
+                        Pose2d(13.047.feet, 2.425.feet, 0.degrees),
+                        Pose2d(20.75.feet, 2.2.feet, 0.degrees)
                 ),
                 listOf(
                         SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
@@ -184,7 +185,7 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(20.73.feet, 1.7.feet, 112.degrees),
+                        Pose2d(20.75.feet, 2.2.feet, 112.degrees),
                         Pose2d(15.feet, 17.feet, 112.degrees)
                 ),
                 listOf(
@@ -196,26 +197,28 @@ object TrajectoryFactory {
         )
     }
 
-    val eightPCAutoShootToShieldGenerator by lazy {
-        generateTrajectory(
-                false,
+    val retrieve5FromShieldGenerator: Trajectory by lazy {
+        TrajectoryGenerator.generateTrajectory(
                 listOf(
-                        Pose2d(15.feet, 17.feet, -129.degrees),
+                        Pose2d(15.feet, 17.feet, (-89.284).degrees),
                         Pose2d(19.45.feet, 11.75.feet, 113.degrees),
-                        Pose2d(18.feet, 14.26.feet, 113.degrees),
-                        Pose2d(17.feet, 18.85.feet, 28.degrees),
-                        Pose2d(20.25.feet, 18.4.feet, -68.degrees)
-                ),
-                listOf(
-                        SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
-                        VelocityLimitRadiusConstraint(Translation2d(18.624, 16.571),
-                                1.5.feet,
-                                3.feet.velocity),
-                        VelocityLimitRegionConstraint(Rectangle2d(
-                                Translation2d(21.468, 11.5),
-                                Translation2d(19.02, 15.286)),
-                                3.feet.velocity)
-                ), kMaxVelocity, kMaxAcceleration, clampedCubic = false // we care about interior headings
+                        Pose2d(18.619.feet, 13.746.feet, 112.586.degrees),
+                        Pose2d(17.535.feet, 14.504.feet, 171.653.degrees),
+                        Pose2d(16.393.feet, 16.819.feet, 88.135.degrees),
+                        Pose2d(17.463.feet, 19.139.feet, 28.degrees),
+                        Pose2d(20.25.feet, 18.4.feet, (-68).degrees)),
+                FalconTrajectoryConfig(kMaxVelocity / 1.0, kMaxAcceleration).apply {
+                    addConstraints(
+                            SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
+                            VelocityLimitRadiusConstraint(Translation2d(18.624, 16.571),
+                                    1.5.feet,
+                                    4.feet.velocity),
+                            VelocityLimitRegionConstraint(Rectangle2d(
+                                    Translation2d(21.468, 11.5),
+                                    Translation2d(19.02, 15.286)),
+                                    4.feet.velocity)
+                    )
+                }
         )
     }
 
@@ -310,10 +313,10 @@ object TrajectoryFactory {
         config.endVelocity = endVelocity.value
         config.isReversed = reversed
         config.addConstraints(allConstraints)
-        return if(clampedCubic) TrajectoryGenerator.generateTrajectory(
+        return if (clampedCubic) TrajectoryGenerator.generateTrajectory(points.first(), points.subList(1, points.size - 1).map { it.translation }, points.last(), config)
+        else TrajectoryGenerator.generateTrajectory(
                 points,
-                config
-        ) else TrajectoryGenerator.generateTrajectory(points.first(), points.subList(1, points.size - 1).map { it.translation }, points.last(), config)
+                config)
     }
 }
 

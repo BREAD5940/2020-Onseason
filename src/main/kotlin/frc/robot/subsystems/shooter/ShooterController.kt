@@ -12,7 +12,7 @@ object ShooterController {
 
     val dt = 0.020
 
-    val plant = LinearSystem.identifyVelocitySystem(0.023, 0.0002, 12.0)
+    val plant = LinearSystem.identifyVelocitySystem(0.023, 0.0005, 12.0)
     val filter = KalmanFilter(`1`, `1`, `1`, plant,
             vec(`1`).fill(3.0),
             vec(`1`).fill(0.004),
@@ -22,7 +22,7 @@ object ShooterController {
             vec(`1`).fill(0.05), // decrease to make more aggressive
             vec(`1`).fill(12.0),
             dt).apply {
-        this.m_K = vec(`1`).fill(0.08 * 1.3)
+        this.m_K = vec(`1`).fill(0.1 * 0.8)
     }
 
     val loop = FishyLinearSystemLoop(`1`, `1`, `1`, plant, controller, filter)

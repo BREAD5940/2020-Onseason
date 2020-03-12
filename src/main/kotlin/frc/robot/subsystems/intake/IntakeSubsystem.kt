@@ -19,11 +19,9 @@ import org.ghrobotics.lib.wrappers.FalconSolenoid
 import kotlin.math.absoluteValue
 
 object IntakeSubsystem : FalconSubsystem() {
-    val open = false
-    val miniOpen = false
-    var holdIntake = false
-    val chungusPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[0], intakeSolenoid[1], 9)
-    val secondarySmolPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[2], intakeSolenoid[3], 8)
+    private const val holdIntake = false
+    private val chungusPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[0], intakeSolenoid[1], 9)
+    private val secondarySmolPistonSolenoid = FalconDoubleSolenoid(intakeSolenoid[2], intakeSolenoid[3], 8)
 
     override fun setNeutral() {
         intakeMotor.setNeutral()
@@ -32,9 +30,9 @@ object IntakeSubsystem : FalconSubsystem() {
     val intakeMotor = falconMAX(intakeMotorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         canSparkMax.apply {
             restoreFactoryDefaults()
-            setSecondaryCurrentLimit(30.0)
+            setSecondaryCurrentLimit(35.0)
         }
-        smartCurrentLimit = 25.amps
+        smartCurrentLimit = 20.amps
     }
 
     fun setSpeed(intakeSpeed: Double) {
@@ -53,39 +51,20 @@ object IntakeSubsystem : FalconSubsystem() {
     fun setSmolPistonExtension(nowWantsExtended: Boolean) {
         secondarySmolPistonSolenoid.state = if (nowWantsExtended) FalconSolenoid.State.Forward else FalconSolenoid.State.Reverse
     }
-    fun toggleIntakeExtensionCommand() {
-        if (open) {
-            retractIntakeCommand()
-        } else {
-            extendIntakeCommand()
-        }
-    }
-    fun toggleMiniIntakeExtensionCommand() {
-        if (miniOpen) {
-            miniRetractIntakeCommand()
-        } else {
-            miniExtendIntakeCommand()
-        }
-    }
 
     fun miniRetractIntakeCommand() = setSmolPistonExtension(false)
-
     fun miniExtendIntakeCommand() = setSmolPistonExtension(true)
-
     fun extendIntakeCommand() = sequential {
         +instantCommand(IntakeSubsystem) { setSmolPistonExtension(true); }
-        +instantCommand(IntakeSubsystem) { intakeMotor.setDutyCycle(0.5) }
         +WaitCommand(0.2)
-        +instantCommand { IntakeSubsystem.intakeMotor.setNeutral() }
         +instantCommand(IntakeSubsystem) { setChungusPistonExtension(true) }
     }
 
     fun retractIntakeCommand() = sequential {
         +instantCommand(IntakeSubsystem) { setChungusPistonExtension(false); }
-        +instantCommand(IntakeSubsystem) { intakeMotor.setDutyCycle(-0.5) }
         +WaitCommand(0.2)
-        +instantCommand(IntakeSubsystem) { intakeMotor.setNeutral() }
         +instantCommand(IntakeSubsystem) { setSmolPistonExtension(false) }
+        +WaitCommand(0.1)
     }
 
     override fun lateInit() {
@@ -96,13 +75,13 @@ object IntakeSubsystem : FalconSubsystem() {
             + Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kRight) -
                     Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kLeft)
 
-//            println(speed)
             setSpeed(speed)
-            if (speed.absoluteValue > 0.1 && !holdIntake) {
-                miniExtendIntakeCommand()
-            } else if (!holdIntake) {
-                miniRetractIntakeCommand()
-            }
+//            if (speed.absoluteValue > 0.1 && !holdIntake) {
+//                miniExtendIntakeCommand()
+//            } else if (!holdIntake) {
+//                miniRetractIntakeCommand()
+//            }
+
         }, this)
 
         SmartDashboard.putData("retract intake", retractIntakeCommand())
