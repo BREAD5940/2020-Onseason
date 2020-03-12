@@ -31,10 +31,10 @@ class SwerveTrajectoryController(
     private var prevState: Array<SwerveModuleState> = arrayOf(
             SwerveModuleState(), SwerveModuleState(), SwerveModuleState(), SwerveModuleState())
 
-    private val forwardController = PIDController(1.0, 0.0, 0.0) // x meters per second per meter of error
-    private val strafeController = PIDController(1.0, 0.0, 0.0)
+    private val forwardController = PIDController(10.0, 0.0, 0.0) // x meters per second per meter of error
+    private val strafeController = PIDController(10.0, 0.0, 0.0)
 
-    private val rotationController = ProfiledPIDController(4.0, 0.0, 0.0, TrapezoidProfile.Constraints(120.degrees.inRadians(), 120.degrees.inRadians())) // rad per sec per radian of error
+    private val rotationController = ProfiledPIDController(10.0, 0.0, 0.0, TrapezoidProfile.Constraints(180.degrees.inRadians(), 120.degrees.inRadians())) // rad per sec per radian of error
             .apply {
                 enableContinuousInput(-PI, PI)
             }
