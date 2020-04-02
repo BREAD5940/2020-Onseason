@@ -14,7 +14,6 @@ import frc.robot.subsystems.shooter.HoodSubsystem
 import frc.robot.subsystems.shooter.ShootCommand
 import kotlin.math.roundToInt
 import lib.inRpm
-import lib.revolutionsPerMinute
 import org.ghrobotics.lib.mathematics.units.derived.inDegrees
 import org.ghrobotics.lib.mathematics.units.derived.radians
 import org.ghrobotics.lib.wrappers.networktables.enumSendableChooser
@@ -41,10 +40,10 @@ object Network {
             }
 
             list("Angles") {
-                number("fl") { DriveSubsystem.flModule.state.angle.degrees.roundToInt().toDouble() }
-                number("fr") { DriveSubsystem.frModule.state.angle.degrees.roundToInt().toDouble() }
-                number("bl") { DriveSubsystem.blModule.state.angle.degrees.roundToInt().toDouble() }
-                number("br") { DriveSubsystem.brModule.state.angle.degrees.roundToInt().toDouble() }
+                number("fl") { DriveSubsystem.flModule.currentState.angle.degrees.roundToInt().toDouble() }
+                number("fr") { DriveSubsystem.frModule.currentState.angle.degrees.roundToInt().toDouble() }
+                number("bl") { DriveSubsystem.blModule.currentState.angle.degrees.roundToInt().toDouble() }
+                number("br") { DriveSubsystem.brModule.currentState.angle.degrees.roundToInt().toDouble() }
                 position(3, 0)
                 size(1, 3)
             }

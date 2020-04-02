@@ -54,46 +54,30 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
             VisionSubsystem.lifecam.isValid -> {
 
                 val speeds: ChassisSpeeds
-                @Suppress("ConstantConditionIf", "LiftReturnOrAssignment")
-                if (useTracker) {
-                    val innerOrOuterGoalPose = getTargetPose()
-                    if(innerOrOuterGoalPose == null) {
-                        super.execute()
-                        return
-                    }
-                    val angle = innerOrOuterGoalPose.translation.toRotation2d()
-
-                    SmartDashboard.putNumber("Distance to target", innerOrOuterGoalPose.translation.norm) // meters
-
-                    var shotParameter = Constants.distanceLookupTable5v.get(innerOrOuterGoalPose.translation.norm) ?: ShotParameter.defaultParameter
-
-                    if(Robot.debugMode) {
-                        shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
-                    }
-
-                    speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                            forward, strafe, -controller.calculate(angle.radians, shotParameter.offset.inRadians()),
-                            DriveSubsystem.robotPosition.rotation)
-                } else {
-
-                    var shotParameter = Constants.pitchLookupTable5v.get(VisionSubsystem.lifecam.pitch.degrees) ?: Constants.rightBelowGoalParameter5v
-
-                    if(Robot.debugMode) {
-                        shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
-                    }
-
-                    val avHeading = headingAveragingBuffer.calculate(VisionSubsystem.lifecam.yaw.radians + DriveSubsystem.robotPosition.rotation.radians)
-
-                    speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                            forward, strafe, controller.calculate(DriveSubsystem.robotPosition.rotation.radians,
-                            avHeading + shotParameter.offset.inRadians()),
-                            DriveSubsystem.robotPosition.rotation)
+                @Suppress("LiftReturnOrAssignment")
+                val innerOrOuterGoalPose = getTargetPose()
+                if(innerOrOuterGoalPose == null) {
+                    super.execute()
+                    return
                 }
+                val angle = innerOrOuterGoalPose.translation.toRotation2d()
+
+                SmartDashboard.putNumber("Distance to target", innerOrOuterGoalPose.translation.norm) // meters
+
+                var shotParameter = Constants.distanceLookupTable5v.get(innerOrOuterGoalPose.translation.norm) ?: ShotParameter.defaultParameter
+
+                if(Robot.debugMode) { // override for if we're tuning
+                    shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
+                }
+
+                speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                        forward, strafe, -controller.calculate(angle.radians, shotParameter.offset.inRadians()),
+                        DriveSubsystem.robotPosition.rotation)
 
                 DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds, centerOfRotation)
             }
             else -> {
-                super.execute()
+                super.execute() // allow driver to rotate
             }
         }
     }
