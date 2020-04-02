@@ -20,7 +20,6 @@ import frc.robot.subsystems.drive.DriveSubsystem.feedForward
 import frc.robot.subsystems.drive.swerve.Mk2SwerveModule
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
-import lib.Logger
 import lib.asSparkMax
 import lib.mirror
 import org.ghrobotics.lib.commands.FalconSubsystem
@@ -42,38 +41,43 @@ import org.ghrobotics.lib.utils.map
 
 object DriveSubsystem : FalconSubsystem() {
 
-    val navX = AHRS(SPI.Port.kMXP).apply {
-    }
-    val gyro = { -Rotation2d.fromDegrees(navX.fusedHeading.toDouble()) }
+    private val navX = AHRS(SPI.Port.kMXP)
+    val robotHeadingSource = { -Rotation2d.fromDegrees(navX.fusedHeading.toDouble()) }
 
     val compressor = Compressor(8).apply { clearAllPCMStickyFaults() }
 
+    /**
+     * This native unit model converts sensor ticks (in this case, rotations of the NEO) to a SIUnit<Meter>.
+     * Basically we tell it how many rotations of the neo per inch of travel.
+     */
     private val driveNativeUnitModel = SlopeNativeUnitModel(
             1.inches,
             (1.0 / (4.0 * Math.PI / 60.0 * 15.0 / 20.0 * 24.0 / 38.0 * 18.0)).nativeUnits)
 
+    // max duty cycle to demand of swerve module motors
     private val kAzimuthMotorOutputRange = -0.5..0.5
 
-//    private val logger = Logger("DriveSubsystem")
+    val brModule = Mk2SwerveModule(4, 3, 254.degrees - 254.degrees, 0.5,
+            0.0, 0.0001, FalconMAX(
+                    CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel), kAzimuthMotorOutputRange, "br")
 
-    val brModule = Mk2SwerveModule(4, 3, 254.degrees - 254.degrees, FalconMAX(
-            CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange, "br")
+    val blModule = Mk2SwerveModule(6, 2, 273.degrees - 164.degrees, 0.5,
+            0.0, 0.0001, FalconMAX(
+                    CANSparkMax(5, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel), kAzimuthMotorOutputRange, "bl")
 
-    val blModule = Mk2SwerveModule(6, 2, 273.degrees - 164.degrees, FalconMAX(
-            CANSparkMax(5, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange, "bl")
+    val frModule = Mk2SwerveModule(2, 1, -18.degrees, 0.5,
+            0.0, 0.0001, FalconMAX(
+                    CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel), kAzimuthMotorOutputRange, "fr")
 
-    val frModule = Mk2SwerveModule(2, 1, -18.degrees, FalconMAX(
-            CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange, "fr")
+    val flModule = Mk2SwerveModule(8, 0, -24.degrees + 72.degrees - 180.degrees, 0.5,
+            0.0, 0.0001, FalconMAX(
+                    CANSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel), kAzimuthMotorOutputRange, "fl")
 
-    val flModule = Mk2SwerveModule(8, 0, -24.degrees + 72.degrees - 180.degrees, FalconMAX(
-            CANSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel),
-            0.5, 0.0, 0.0001, kAzimuthMotorOutputRange, "fl")
+    private val modules = listOf(flModule, frModule, blModule, brModule)
 
-    val modules = listOf(flModule, frModule, blModule, brModule)
-
+    /**
+     * Feedforward. Used for trajectory tracking
+     */
     val feedForward = SimpleMotorFeedforward(
             (0.15), // ks
             (2.9), // kv, volts per meter per second
@@ -82,9 +86,9 @@ object DriveSubsystem : FalconSubsystem() {
 
     val kinematics = Constants.kinematics
 
-    internal val odometry = SwerveDriveOdometry(kinematics, gyro()).apply {
+    internal val odometry = SwerveDriveOdometry(kinematics, robotHeadingSource()).apply {
 //        resetPosition(Pose2d(11.75.feet, 25.689.feet, 180.0.degrees), gyro())
-        resetPosition(Pose2d(30.feet, 11.feet, 180.degrees), gyro()) // curst so i can be lazy
+        resetPosition(Pose2d(30.feet, 11.feet, 180.degrees), robotHeadingSource()) // curst so i can be lazy
     }
 
     private val stateLock = Object()
@@ -128,15 +132,15 @@ object DriveSubsystem : FalconSubsystem() {
     }
 
     fun setGyroAngle(angle: Rotation2d) {
-        odometry.resetPosition(Pose2d(periodicIO.pose.translation, angle), gyro())
+        odometry.resetPosition(Pose2d(periodicIO.pose.translation, angle), robotHeadingSource())
     }
 
-    val currentSwerveModuleStates get() = listOf(flModule.state, frModule.state, blModule.state, brModule.state)
+    val currentSwerveModuleStates get() = listOf(flModule.currentState, frModule.currentState, blModule.currentState, brModule.currentState)
 
     var robotPosition
         get() = periodicIO.pose
         set(value) {
-            odometry.resetPosition(value, gyro())
+            odometry.resetPosition(value, robotHeadingSource())
         }
 
     override fun periodic() {
@@ -146,14 +150,15 @@ object DriveSubsystem : FalconSubsystem() {
             if (!job.isActive) job.start()
         }
 
-//        println("fl ${flModule.azimuthAngle().degrees.roundToInt()} bl ${blModule.azimuthAngle().degrees.roundToInt()} br ${brModule.azimuthAngle().degrees.roundToInt()}")
-
+        // update FalconDashboard
         FalconDashboard.robotHeading = robotPosition.rotation.radians
         FalconDashboard.robotX = robotPosition.translation.x_u.inFeet()
         FalconDashboard.robotY = robotPosition.translation.y_u.inFeet()
 
         poseBuffer[Timer.getFPGATimestamp().seconds] = robotPosition
     }
+
+    // Trajectory following and other utility methods
 
     fun followTrajectory(trajectory: Trajectory, endHeading: Rotation2d, mirrored: Boolean = false) =
             SwerveTrajectoryFollowerCommand(if (mirrored) trajectory.mirror() else trajectory,
@@ -179,23 +184,30 @@ object DriveSubsystem : FalconSubsystem() {
     }
 
     var kinematicsUpdateJob: Job? = null
+
+    /**
+     * updateState updates the robot's estimated state. Right now just updates odometry.
+     */
     private fun updateState() {
         modules.forEach { it.updateState() }
 
         // Update odometry
         val states = listOf(
-                flModule.state,
-                frModule.state,
-                brModule.state,
-                blModule.state)
+                flModule.currentState,
+                frModule.currentState,
+                brModule.currentState,
+                blModule.currentState)
 
-        periodicIO.pose = odometry.update(gyro(), states[0], states[1], states[2], states[3])
+        periodicIO.pose = odometry.update(robotHeadingSource(), states[0], states[1], states[2], states[3])
         periodicIO.speed = kinematics.toChassisSpeeds(states[0], states[1], states[2], states[3])
 
         val output = modules.map { "${it.azimuthAngle().degrees}, ${it.azimuthMotor.voltageOutput.value}, ${it.driveMotor.encoder.velocity.value}, ${it.driveMotor.voltageOutput.value}" }
         // logger.log("${output[0]}, ${output[1]}, ${output[2]}, ${output[3]}")
     }
 
+    /**
+     * useStates calculates demands for each of our modules and sends it to them, then calls [Mk2SwerveModule.useState] on them.
+     */
     fun useState() {
         // switch over our wanted state
         // and set module positions/outputs accordingly
@@ -203,7 +215,7 @@ object DriveSubsystem : FalconSubsystem() {
             is SwerveDriveOutput.Nothing -> {
 //                modules.forEach { it.output = Mk2SwerveModule.Output.Nothing }
                 val states = currentSwerveModuleStates
-                modules.forEachIndexed { i, module -> module.output = Mk2SwerveModule.Output.Percent(0.0, states[i].angle) }
+                modules.forEachIndexed { i, module -> module.currentOutput = Mk2SwerveModule.Output.DutyCycle(0.0, states[i].angle) }
             }
             is SwerveDriveOutput.Percent -> {
                 // normalize wheel speeds
@@ -213,19 +225,19 @@ object DriveSubsystem : FalconSubsystem() {
 //                println("chassis speeds: ${output.chassisSpeed} \ncor ${output.centerOfRotation}\nangles:\n" + states.map { it.angle.degrees }
 //                + "\n wheel speeds:\n"+states.map { it.speedMetersPerSecond })
 
-                flModule.output = Mk2SwerveModule.Output.Percent(
+                flModule.currentOutput = Mk2SwerveModule.Output.DutyCycle(
                         states[0].speedMetersPerSecond,
                         states[0].angle
                 )
-                frModule.output = Mk2SwerveModule.Output.Percent(
+                frModule.currentOutput = Mk2SwerveModule.Output.DutyCycle(
                         states[1].speedMetersPerSecond,
                         states[1].angle
                 )
-                brModule.output = Mk2SwerveModule.Output.Percent(
+                brModule.currentOutput = Mk2SwerveModule.Output.DutyCycle(
                         states[2].speedMetersPerSecond,
                         states[2].angle
                 )
-                blModule.output = Mk2SwerveModule.Output.Percent(
+                blModule.currentOutput = Mk2SwerveModule.Output.DutyCycle(
                         states[3].speedMetersPerSecond,
                         states[3].angle
                 )
@@ -233,50 +245,50 @@ object DriveSubsystem : FalconSubsystem() {
             is SwerveDriveOutput.Velocity -> {
                 val states = kinematics.toSwerveModuleStates(output.chassisSpeed)
                 modules.forEachIndexed { index, module ->
-                    module.output = Mk2SwerveModule.Output.Velocity(SIUnit(states[index].speedMetersPerSecond), states[index].angle)
+                    module.currentOutput = Mk2SwerveModule.Output.Velocity(SIUnit(states[index].speedMetersPerSecond), states[index].angle)
                 }
             }
             is SwerveDriveOutput.KinematicsVoltage -> {
-                flModule.output = Mk2SwerveModule.Output.Voltage(
+                flModule.currentOutput = Mk2SwerveModule.Output.Voltage(
                         SIUnit(output.speeds[0].speedMetersPerSecond),
                         output.speeds[0].angle
                 )
-                frModule.output = Mk2SwerveModule.Output.Voltage(
+                frModule.currentOutput = Mk2SwerveModule.Output.Voltage(
                         SIUnit(output.speeds[1].speedMetersPerSecond),
                         output.speeds[1].angle
                 )
-                brModule.output = Mk2SwerveModule.Output.Voltage(
+                brModule.currentOutput = Mk2SwerveModule.Output.Voltage(
                         SIUnit(output.speeds[2].speedMetersPerSecond),
                         output.speeds[2].angle
                 )
-                blModule.output = Mk2SwerveModule.Output.Voltage(
+                blModule.currentOutput = Mk2SwerveModule.Output.Voltage(
                         SIUnit(output.speeds[3].speedMetersPerSecond),
                         output.speeds[3].angle
                 )
             }
             is SwerveDriveOutput.KinematicsVelocity -> {
-                flModule.output = Mk2SwerveModule.Output.Velocity(
+                flModule.currentOutput = Mk2SwerveModule.Output.Velocity(
                         SIUnit(output.speeds[0].speedMetersPerSecond),
                         output.speeds[0].angle
                 )
-                frModule.output = Mk2SwerveModule.Output.Velocity(
+                frModule.currentOutput = Mk2SwerveModule.Output.Velocity(
                         SIUnit(output.speeds[1].speedMetersPerSecond),
                         output.speeds[1].angle
                 )
-                brModule.output = Mk2SwerveModule.Output.Velocity(
+                brModule.currentOutput = Mk2SwerveModule.Output.Velocity(
                         SIUnit(output.speeds[2].speedMetersPerSecond),
                         output.speeds[2].angle
                 )
-                blModule.output = Mk2SwerveModule.Output.Velocity(
+                blModule.currentOutput = Mk2SwerveModule.Output.Velocity(
                         SIUnit(output.speeds[3].speedMetersPerSecond),
                         output.speeds[3].angle
                 )
             }
             is SwerveDriveOutput.TrajectoryTrackerOutput -> {
-                flModule.output = output.flState
-                frModule.output = output.frState
-                brModule.output = output.brState
-                blModule.output = output.blState
+                flModule.currentOutput = output.flState
+                frModule.currentOutput = output.frState
+                brModule.currentOutput = output.brState
+                blModule.currentOutput = output.blState
             }
         }
 

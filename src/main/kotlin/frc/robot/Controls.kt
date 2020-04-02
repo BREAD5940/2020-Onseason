@@ -58,7 +58,7 @@ object Controls {
 //                .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
                 .beforeStarting {
             DriveSubsystem.odometry.resetPosition(
-                    Pose2d(TrajectoryFactory.retrieve5FromShieldGenerator.initialPose.translation, 180.degrees.toRotation2d()), DriveSubsystem.gyro()) })
+                    Pose2d(TrajectoryFactory.retrieve5FromShieldGenerator.initialPose.translation, 180.degrees.toRotation2d()), DriveSubsystem.robotHeadingSource()) })
 
 //        pov(0).changeOn(ShooterCharacterizationCommand())
 //        pov(0).changeOn(SwerveCharacterizationCommand())

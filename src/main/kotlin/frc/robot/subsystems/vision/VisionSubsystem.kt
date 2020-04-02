@@ -1,5 +1,6 @@
 package frc.robot.subsystems.vision
 
+import edu.wpi.cscore.UsbCamera
 import edu.wpi.first.cameraserver.CameraServer
 import edu.wpi.first.wpilibj.DigitalOutput
 import edu.wpi.first.wpilibj.Timer
@@ -104,33 +105,7 @@ object VisionSubsystem : FalconSubsystem() {
         if (lifecam.isValid) updateTangentEstimation(lifecam.pitch + camAngle.toRotation2d(), lifecam.yaw,
                 Timer.getFPGATimestamp().seconds - lifecam.latency)
 
-//        DriveSubsystem.odometry.resetPosition(Pose2d(3.0, 3.0, 180.degrees.toRotation2d()), DriveSubsystem.gyro())
-
-//        updateSolvePNP()
-
         Tracker.update()
-
-        //        val d = (targetHeight - camHeight) / tan(lifecam.pitch.radians + camAngle.inRadians())
-
-//        val w = lifecam.minRectWidth
-//        val h = lifecam.minRectHeight
-//        val width_ = if (w > h) w else h
-//
-//        val d = sqrt((width.inMeters() * focalLen / (width_)).pow(2) -
-//                (targetHeight - camHeight).inMeters().pow(2)).meters
-//
-//        val yaw = lifecam.yaw
-//
-//        var skew = if (lifecam.minRectHeight > lifecam.minRectWidth) lifecam.minRectSkew + 90.degrees else lifecam.minRectSkew
-//
-//        while (skew < (-180).degrees) skew += 180.degrees
-//        while (skew > 180.degrees) skew -= 180.degrees
-//
-//        val offset = skewLUT.get(skew.inDegrees())?.number ?: 0.0
-//
-//        val pose = DriveSubsystem.robotPosition.plus(Transform2d(
-//                Translation2d(d, yaw), Rotation2d.fromDegrees(offset)
-//        ))
     }
 
     private var lastPitch = 0.0
@@ -139,99 +114,62 @@ object VisionSubsystem : FalconSubsystem() {
     private var yawMultiplier = 1.06
 
     private fun updateTangentEstimation(pitchToHorizontal: Rotation2d, yaw: Rotation2d, timestamp: SIUnit<Second>) {
-        // from limelight
-        // d = (h2-h1) / tan(a1+a2)
+        // correct yaw in the case that Chameleon's yaw doesn't match our true yaw
         val correctedYaw = yaw * yawMultiplier
 
+        // If we don't have new data, don't do anything.
         if (lastPitch epsilonEquals pitchToHorizontal.radians && correctedYaw.radians epsilonEquals lastYaw) return
         lastPitch = pitchToHorizontal.radians; lastYaw = correctedYaw.radians
 
+        // from limelight we know that
+        // d = (h2-h1) / tan(a1+a2)
         val heightDifferential = targetHeight - camHeight
         val distance = heightDifferential / tan(pitchToHorizontal.radians) * (1.0 + yaw.degrees.absoluteValue * yawDistanceCorrectKp)
 
+        // A vector representing the vector between our camera and the target on the field
         val cameraToTarget = Translation2d(distance, correctedYaw)
+
+        // Pose2d representing a rigid transform from the field to us
         val fieldToRobot = DriveSubsystem.poseBuffer[timestamp] ?: DriveSubsystem.robotPosition
 
-//        println("DISTANCE TO TARGET ${cameraToTarget.norm.meters.inFeet()} AT ANGLE ${correctedYaw.degrees}")
-
+        // field-oriented rotation of the target. Must either be 0 or 180 degrees.
         val goalRotation = (if (fieldToRobot.rotation.degrees + correctedYaw.degrees in -90.0..90.0)
             0.degrees else 180.degrees)
                 .toRotation2d()
 
         Tracker.addSamples(timestamp,
                 Pose2d(
+                        // Transform chain (see wikipedia) that take us from the field to the target
+                        // for example fieldToRobot + robotToCamera = fieldToCamera
                         fieldToRobot
                                 .plus(robotToCamera)
                                 .plus(Pose2d(cameraToTarget, Rotation2d()))
-                                .translation,
+                                .translation, // just the translation component so that we keep our [goalRotation]
                         goalRotation
                 ))
-    }
-
-    private fun updateSolvePNP() {
-        // check that the pose is valid -- if not, it defaults to 0.0 for x, y, and rotation
-        val solvePnpPose = lifecam.bestPose
-
-        if (previousSolvePnpPose epsilonEquals solvePnpPose) return
-        previousSolvePnpPose = solvePnpPose
-
-        if (solvePnpPose.translation.x epsilonEquals 0.0 && solvePnpPose.translation.y epsilonEquals 0.0 &&
-                solvePnpPose.rotation.radians epsilonEquals 0.0) return
-
-        val drivetrainPose = DriveSubsystem.poseBuffer[Timer.getFPGATimestamp().seconds - lifecam.latency]
-                ?: DriveSubsystem.robotPosition
-
-        val fieldRelativePose = drivetrainPose
-                .transformBy(robotToCamera)// transform by camera position
-                .transformBy(solvePnpPose) // transform camera pos by measured pose
-
-        Tracker.addSamples(Timer.getFPGATimestamp().seconds - lifecam.latency,
-                listOf(fieldRelativePose))
     }
 
     private val targetHeight = 8.feet + 2.25.inches
     private val camHeight = 17.inches // todo check
     private var camAngle = 20.degrees // 24.74.degrees + 15.degrees
     private val width = 19.625.inches * 2
-    private val focalLen = (44 /* px */ * sqrt(10.feet.inMeters().pow(2) +
-            targetHeight.inMeters().pow(2))) / (width.inMeters()) / 0.35
     private val robotToCamera = Pose2d(Translation2d((9.5).inches, 1.25.inches), 0.degrees) // TODO adjust to cad
 
-    val bumperCamera = CameraServer.getInstance().startAutomaticCapture(0).apply {
+    @Suppress("unused")
+    val bumperCamera: UsbCamera = CameraServer.getInstance().startAutomaticCapture(0).apply {
         setResolution(160, 120)
         setFPS(10)
         setName("Bumper Grabber")
         setExposureAuto()
-    }
+    }!!
 
-    val intakeCamera = CameraServer.getInstance().startAutomaticCapture(1).apply {
+    @Suppress("unused")
+    val intakeCamera: UsbCamera = CameraServer.getInstance().startAutomaticCapture(1).apply {
         setResolution(160, 120)
         setFPS(25)
         setName("Intake")
         setExposureAuto()
     }
-
-    //    val cam2 = CameraServer.getInstance().startAutomaticCapture(1)
-    // frame streaming thread
-//    val streamJob = GlobalScope.launch(EmptyCoroutineContext, CoroutineStart.DEFAULT) {
-//
-//        cam1.setResolution(320, 240)
-////        cam2.setResolution(320, 240)
-//
-//        val sink1 = CameraServer.getInstance().getVideo(cam1)
-//        val out1 = CameraServer.getInstance().putVideo("Driver Cam 1", 320, 240)
-//
-//        val source = Mat()
-//        val output = Mat()
-//
-//        loopFrequency(3) {
-//            if (sink1.grabFrame(source) != 0L) {
-//                out1.putFrame(output)
-//            }
-//        }
-//    }
-
-
 }
 
 private infix fun Pose2d.epsilonEquals(other: Pose2d) =

@@ -16,39 +16,33 @@ import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
 import org.ghrobotics.lib.motors.rev.FalconMAX
 
 open class Mk2SwerveModule(
-    azimuthPWMPort: Int,
-    azimuthAnalogPort: Int,
-    private val offset: SIUnit<Radian>,
-    val driveMotor: FalconMAX<Meter>,
-    angleKp: Double,
-    angleKi: Double,
-    angleKd: Double,
-    private val angleMotorOutputRange: ClosedFloatingPointRange<Double>,
-    val name: String
+        azimuthMotorCANid: Int,
+        azimuthEncoderPort: Int,
+        private val offset: SIUnit<Radian>,
+        angleKp: Double,
+        angleKi: Double,
+        angleKd: Double,
+        val driveMotor: FalconMAX<Meter>,
+        private val angleMotorOutputRange: ClosedFloatingPointRange<Double>,
+        name: String
 ) {
 
-   val logger = Logger("${name}Module")
-
-    private val stateMutex = Object()
+    private val stateMutex = Object() // used to stop multiple threads from accessing the state simultaneously
     val periodicIO = PeriodicIO()
         get() = synchronized(stateMutex) { field }
 
-    val state get() = periodicIO.state
-    var output: Output
+    val currentState get() = periodicIO.state
+    var currentOutput: Output
         get() = periodicIO.desiredOutput
         set(value) { periodicIO.desiredOutput = value }
 
-//    private val azimuthMotor = Spark(azimuthPWMPort)
-    public val azimuthMotor = FalconMAX(azimuthPWMPort, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel)
+    val azimuthMotor = FalconMAX(azimuthMotorCANid, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel)
     private val azimuthController =
             PIDController(angleKp, angleKi, angleKd).apply {
-                //                setInputRange(0.0, 2.0 * PI)
-//                setContinuous(true)
-//                setOutputRange(-0.5, 0.5)
                 enableContinuousInput(-PI, PI)
             }
 
-    private val analogInput = AnalogInput(azimuthAnalogPort)
+    private val analogInput = AnalogInput(azimuthEncoderPort)
     val azimuthAngle =
             { ((1.0 - analogInput.voltage / RobotController.getVoltage5V() * 2.0 * PI).radians + offset).toRotation2d() }
 
@@ -90,34 +84,21 @@ open class Mk2SwerveModule(
 
     fun useState() {
 
-        val customizedOutput = customizeAngle(periodicIO.desiredOutput) // TODO reverse
-//        azimuthController.setSetpoint(customizedOutput.angle.radians)
-        val angleOutput = azimuthController.calculate(
-                periodicIO.state.angle.radians, customizedOutput.angle.radians)
-        val nextAzimuthOutput = angleOutput.coerceIn(angleMotorOutputRange)
+        val customizedOutput = customizeAngle(periodicIO.desiredOutput) // Reverse the output, if that's faster
 
-//        azimuthMotor.set(0.2)
-//        println("swerve next angle out $nextAzimuthOutput")
+        val angleDutyCycleDemand = azimuthController.calculate(
+                periodicIO.state.angle.radians, customizedOutput.moduleAngle.radians)
 
+        val nextAzimuthOutput = angleDutyCycleDemand.coerceIn(angleMotorOutputRange)
         azimuthMotor.setDutyCycle(nextAzimuthOutput)
-//        driveMotor.setDutyCycle(0.2)
-
-        periodicIO.lastError = azimuthController.positionError.radians.toRotation2d()
-        periodicIO.lastAzimuthOutput = nextAzimuthOutput
-
-//        driveMotor.setDutyCycle(0.0)
-
-//        driveMotor.setNeutral()
-
-//        return
 
         when (customizedOutput) {
             is Output.Nothing -> {
                 driveMotor.setNeutral()
             }
-            is Output.Percent -> {
+            is Output.DutyCycle -> {
 //                println("setting duty cycle ${customizedOutput.percent}")
-                driveMotor.setDutyCycle(customizedOutput.percent)
+                driveMotor.setDutyCycle(customizedOutput.dutyCycle)
             }
             is Output.Voltage -> {
                 driveMotor.setVoltage(customizedOutput.voltage)
@@ -135,7 +116,7 @@ open class Mk2SwerveModule(
      * if so, reverse it
      */
     private fun customizeAngle(output: Output): Output {
-        val targetAngle = output.angle
+        val targetAngle = output.moduleAngle
         val currentAngle = periodicIO.state.angle
 
         // Deltas that are greater than 90 deg or less than -90 deg can be
@@ -159,32 +140,25 @@ open class Mk2SwerveModule(
          * in the [useState] method.
          */
         var desiredOutput: Output = Output.Nothing
-
-        /**
-         * The last error of the azimuth
-         */
-        var lastError = Rotation2d()
-
-        /**
-         * The last output of the azimuth motor
-         */
-        var lastAzimuthOutput = 0.0
     }
 
-    sealed class Output(val angle: Rotation2d) {
+    sealed class Output(val moduleAngle: Rotation2d) {
 
+        // Reverse the Output. Used if it's faster to reverse the wheel direction then spin
         abstract fun reverse(): Output
 
+        // neutral
         object Nothing : Output(0.degrees.toRotation2d()) {
             override fun reverse() = this
         }
 
-        class Percent(
-            val percent: Double,
-            angle: Rotation2d
+        // duty cycle
+        class DutyCycle(
+                val dutyCycle: Double,
+                angle: Rotation2d
         ) : Output(angle) {
             override fun reverse(): Output {
-                return Percent(-percent, angle + 180.degrees.toRotation2d())
+                return DutyCycle(-dutyCycle, moduleAngle + 180.degrees.toRotation2d())
             }
         }
 
@@ -193,7 +167,7 @@ open class Mk2SwerveModule(
             angle: Rotation2d
         ) : Output(angle) {
             override fun reverse(): Output {
-                return Voltage(-voltage, angle + 180.degrees.toRotation2d())
+                return Voltage(-voltage, moduleAngle + 180.degrees.toRotation2d())
             }
         }
 
@@ -205,7 +179,7 @@ open class Mk2SwerveModule(
             constructor() : this(0.meters.velocity, 0.degrees.toRotation2d(), 0.volts)
 
             override fun reverse(): Output {
-                return Velocity(-velocity, angle + 180.degrees.toRotation2d(), -arbitraryFeedForward)
+                return Velocity(-velocity, moduleAngle + 180.degrees.toRotation2d(), -arbitraryFeedForward)
             }
         }
     }
