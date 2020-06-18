@@ -59,7 +59,6 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
         rpmEntry.setDefaultDouble(0.0)
 
         ShooterController.reset()
-        ShooterController.enable()
 //        ShooterController.loop.xHat = vec(`1`).fill(FlywheelSubsystem.flywheelSpeed.value)
 
         logger.clearLog()
@@ -111,8 +110,6 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
 
     override fun end(interrupted: Boolean) {
         FlywheelSubsystem.setNeutral()
-
-        ShooterController.disable()
     }
 
     companion object {

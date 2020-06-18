@@ -67,6 +67,9 @@ repositories {
     maven { url "http://dev.imjac.in/maven" }
 }
 
+wpi.maven.useFrcMavenLocalDevelopment = true
+wpi.wpilibVersion = '2020.424242.+'
+
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 4.
 dependencies {
