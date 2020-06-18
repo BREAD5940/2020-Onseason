@@ -16,6 +16,7 @@ import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
 import org.ghrobotics.lib.motors.rev.falconMAX
 import org.ghrobotics.lib.wrappers.FalconDoubleSolenoid
 import org.ghrobotics.lib.wrappers.FalconSolenoid
+import java.util.function.DoubleSupplier
 import kotlin.math.absoluteValue
 
 object IntakeSubsystem : FalconSubsystem() {

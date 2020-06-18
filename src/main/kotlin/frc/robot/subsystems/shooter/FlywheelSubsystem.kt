@@ -83,18 +83,23 @@ object FlywheelSubsystem : FalconSubsystem() {
         smartCurrentLimit = 25.amps
     }
 
-    val pawlServo = Servo(8).apply {
-        setBounds(2.1, 0.0, 0.0, 0.0, 0.9)
-    }
-
     val throughBoreEncoder = Encoder(0, 1, false, CounterBase.EncodingType.k1X).apply {
         distancePerPulse = 2.0 * PI / 0.81 / 2048.0
-
         samplesToAverage = 10
     }
 
+    val pawlServo = Servo(8).apply {
+//        * @param max         The max PWM pulse width in ms
+//        * @param deadbandMax The high end of the deadband range pulse width in ms
+//        * @param center      The center (off) pulse width in ms
+//        * @param deadbandMin The low end of the deadband pulse width in ms
+//        * @param min         The minimum pulse width in ms
+        setBounds(2.1, 0.0, 0.0, 0.0, 0.9)
+    }
+
     fun engagePawl() {
-        pawlServo.set(0.8) // random number because of unknown reason, but engagement is good. between 0 and 1
+        pawlServo.set(0.8) // random number because of unknown reason,
+        // but engagement is good. between 0 and 1
     }
 
     fun disengagePawl() {
@@ -118,7 +123,7 @@ object FlywheelSubsystem : FalconSubsystem() {
     }
 
     val flywheelSpeed
-//        get() = shooterMaster.encoder.velocity
+        //        get() = shooterMaster.encoder.velocity
         get() = -throughBoreEncoder.rate.radians.velocity
 
     val filter = LinearFilter.movingAverage(8)
@@ -131,7 +136,7 @@ object FlywheelSubsystem : FalconSubsystem() {
     }
 
     override fun periodic() {
-        if(!updateJob.isActive) updateJob.start()
+        if (!updateJob.isActive) updateJob.start()
     }
 
     /**
@@ -199,9 +204,9 @@ object FlywheelSubsystem : FalconSubsystem() {
 }
 
 data class ShotParameter(
-    val hoodAngle: SIUnit<Radian>,
-    val speed: SIUnit<Velocity<Radian>>,
-    val offset: SIUnit<Radian> = 0.degrees
+        val hoodAngle: SIUnit<Radian>,
+        val speed: SIUnit<Velocity<Radian>>,
+        val offset: SIUnit<Radian> = 0.degrees
 ) : Interpolatable<ShotParameter> {
 
     override fun interpolate(endValue: ShotParameter, t: Double) =

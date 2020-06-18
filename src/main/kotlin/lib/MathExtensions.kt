@@ -129,18 +129,18 @@ fun Translation2d.isWithinAngle(A: Translation2d, C: Translation2d): Boolean {
 
 fun Rotation2d.mirror() = Rotation2d(-radians)
 
-fun createElevatorVelocitySystem(motor: DCMotor, massKg: Double, radiusMeters: Double, G: Double, maxVoltage: Double): LinearSystem<N1, N1, N1> {
-    // vdot = ( -G^2 * Kt ) / ( R * r^2 * m * Kv ) v + (G * Kt)/(R*r*m) V
-
-    return LinearSystem(Nat.N1(), Nat.N1(), Nat.N1(),
-            MatBuilder(Nat.N1(), Nat.N1()).fill(
-                    -G * G * motor.KtNMPerAmp /
-                            (motor.Rohms * radiusMeters.pow(2) * massKg * motor.KvRadPerSecPerVolt)), // A
-            MatBuilder(Nat.N1(), Nat.N1()).fill(G * motor.KtNMPerAmp / (motor.Rohms * radiusMeters * massKg)), // B
-            MatrixUtils.eye(Nat.N1()), // C
-            MatrixUtils.zeros(Nat.N1()), // D
-            MatBuilder(Nat.N1(), Nat.N1()).fill(-maxVoltage),
-            MatBuilder(Nat.N1(), Nat.N1()).fill(maxVoltage))
-
-}
+//fun createElevatorVelocitySystem(motor: DCMotor, massKg: Double, radiusMeters: Double, G: Double, maxVoltage: Double): LinearSystem<N1, N1, N1> {
+//    // vdot = ( -G^2 * Kt ) / ( R * r^2 * m * Kv ) v + (G * Kt)/(R*r*m) V
+//
+//    return LinearSystem(Nat.N1(), Nat.N1(), Nat.N1(),
+//            MatBuilder(Nat.N1(), Nat.N1()).fill(
+//                    -G * G * motor.KtNMPerAmp /
+//                            (motor.Rohms * radiusMeters.pow(2) * massKg * motor.KvRadPerSecPerVolt)), // A
+//            MatBuilder(Nat.N1(), Nat.N1()).fill(G * motor.KtNMPerAmp / (motor.Rohms * radiusMeters * massKg)), // B
+//            MatrixUtils.eye(Nat.N1()), // C
+//            MatrixUtils.zeros(Nat.N1()), // D
+//            MatBuilder(Nat.N1(), Nat.N1()).fill(-maxVoltage),
+//            MatBuilder(Nat.N1(), Nat.N1()).fill(maxVoltage))
+//
+//}
 

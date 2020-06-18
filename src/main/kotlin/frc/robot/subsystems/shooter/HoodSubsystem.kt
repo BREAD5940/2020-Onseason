@@ -54,23 +54,27 @@ object HoodSubsystem : FalconSubsystem() {
 
     override fun periodic() {
 
-        val setpoint = TrapezoidProfile(constraints, TrapezoidProfile.State(wantedAngle.coerceIn(safeHoodAngles).value, 0.0), lastProfiledReference)
+        // Calculate the next state by TrapezoidalProfile
+        val setpoint = TrapezoidProfile(constraints,
+                TrapezoidProfile.State(wantedAngle.coerceIn(safeHoodAngles).value, 0.0),
+                lastProfiledReference)
                 .calculate(0.020)
 
         lastProfiledReference = setpoint
 
+        // if we are further than 4 degrees from the endpoint of the TrapezoidalProfile, use our TrapezoidalProfile
+        // to set the hood's voltage
         if ((hoodAngle - wantedAngle).absoluteValue > 4.degrees) {
             hoodMotor.setDutyCycle(hoodPidController.calculate(hoodAngle.inRadians(), setpoint.position))
             wasInOnSPARKClosedLoop = false
         } else {
-
+            // if we just entered this mode, set the integrated NEO encoder position to the MA3's position
             if (!wasInOnSPARKClosedLoop) {
                 wasInOnSPARKClosedLoop = true
                 hoodMotor.encoder.resetPosition(hoodAngle)
-//                lastBrushlessEncoderAngle = hoodMotor.encoder.position
             }
 
-            // hold the last encoder angle
+            // hold the target angle
             hoodMotor.setPosition(wantedAngle)
         }
     }
