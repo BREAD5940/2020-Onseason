@@ -25,6 +25,7 @@ import org.ghrobotics.lib.mathematics.lerp
 import org.ghrobotics.lib.mathematics.units.*
 import org.ghrobotics.lib.mathematics.units.derived.*
 import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
+import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnit
 import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnitRotationModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.rev.falconMAX
@@ -39,7 +40,7 @@ object FlywheelSubsystem : FalconSubsystem() {
 
     private val model = NativeUnitRotationModel(0.81.nativeUnits)
     val shooterMaster = falconMAX(shooterGearboxIds[0],
-            CANSparkMaxLowLevel.MotorType.kBrushless, model) {
+            CANSparkMaxLowLevel.MotorType.kBrushless, model, Radian) {
         with(canSparkMax) {
             restoreFactoryDefaults()
         }
@@ -55,7 +56,7 @@ object FlywheelSubsystem : FalconSubsystem() {
         controller.ff = 0.0
     }
 
-    private val shooterSlave = falconMAX(shooterGearboxIds[1], CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
+    private val shooterSlave = falconMAX(shooterGearboxIds[1], CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel, NativeUnit) {
         with(canSparkMax) {
             restoreFactoryDefaults()
         }
@@ -75,7 +76,7 @@ object FlywheelSubsystem : FalconSubsystem() {
     private val armLimitSwitchDIO = DigitalInput(8)
     val armLimitTriggered get() = !armLimitSwitchDIO.get()
 
-    val kickWheelMotor = falconMAX(collectorAgitatorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
+    val kickWheelMotor = falconMAX(collectorAgitatorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel, NativeUnit) {
         with(canSparkMax) {
             restoreFactoryDefaults()
             setSecondaryCurrentLimit(35.0)
@@ -122,9 +123,10 @@ object FlywheelSubsystem : FalconSubsystem() {
         kickWheelMotor.setNeutral()
     }
 
+    var simVelocity = 0.rpm
     val flywheelSpeed
         //        get() = shooterMaster.encoder.velocity
-        get() = -throughBoreEncoder.rate.radians.velocity
+        get() = if(RobotBase.isReal()) -throughBoreEncoder.rate.radians.velocity else simVelocity
 
     val filter = LinearFilter.movingAverage(8)
     var smoothedFlywheelSpeed = 0.radians.velocity
@@ -137,17 +139,6 @@ object FlywheelSubsystem : FalconSubsystem() {
 
     override fun periodic() {
         if (!updateJob.isActive) updateJob.start()
-    }
-
-    /**
-     * Shoot at a speed. Must be called periodically!
-     */
-    fun shootAtSpeed(speed: SIUnit<Velocity<Radian>>) {
-        wantsShootMode = true
-        val ff = feedForward.calculate(speed.value).volts
-        val fb = feedBack.calculate(smoothedFlywheelSpeed.value, speed.value).volts
-        shooterMaster.setVoltage(fb, ff)
-//        shooterMaster.setVelocity(speed, ff)
     }
 
     fun shootAtPower(power: Double) {
@@ -201,37 +192,4 @@ object FlywheelSubsystem : FalconSubsystem() {
     private val feedForward = SimpleMotorFeedforward(0.6, 12.0 / 5676.revolutionsPerMinute.value * 0.9)
     private val feedBack = PIDController(0.02, 0.0, 0.0)
 
-}
-
-data class ShotParameter(
-        val hoodAngle: SIUnit<Radian>,
-        val speed: SIUnit<Velocity<Radian>>,
-        val offset: SIUnit<Radian> = 0.degrees
-) : Interpolatable<ShotParameter> {
-
-    override fun interpolate(endValue: ShotParameter, t: Double) =
-            ShotParameter(SIUnit(hoodAngle.value.lerp(endValue.hoodAngle.value, t)),
-                    SIUnit(speed.value.lerp(endValue.speed.value, t)),
-                    SIUnit(offset.value.lerp(endValue.offset.value, t)))
-
-    companion object {
-        val defaultParameter = ShotParameter(45.degrees, 5000.revolutionsPerMinute)
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (other == null) return false
-        if (other !is ShotParameter) return false
-        return (other.hoodAngle - hoodAngle).absoluteValue.inDegrees() < 0.1 &&
-                (other.speed - speed).value < 0.1 &&
-                (other.offset - offset).absoluteValue.inDegrees() < 0.1
-    }
-
-    override fun toString() = "Angle ${hoodAngle.inDegrees()} Speed ${speed.inRpm()} Offset ${offset.inDegrees()}"
-
-    override fun hashCode(): Int {
-        var result = hoodAngle.hashCode()
-        result = 31 * result + speed.hashCode()
-        result = 31 * result + offset.hashCode()
-        return result
-    }
 }

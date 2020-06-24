@@ -14,7 +14,7 @@ object ShooterController {
 
     val dt = 0.020
 
-    val plant = LinearSystemId.identifyVelocitySystem(0.023, 0.0005)
+    val plant = LinearSystemId.identifyVelocitySystem(0.023, 0.0005 * 40)
     val filter = KalmanFilter(`1`, `1`, plant,
             vec(`1`).fill(3.0),
             vec(`1`).fill(0.004),

@@ -1,7 +1,5 @@
 package frc.robot.subsystems
 
-import edu.wpi.first.hal.HAL
-import edu.wpi.first.hal.sim.EncoderSim
 import edu.wpi.first.wpilibj.LinearFilter
 import edu.wpi.first.wpilibj.MedianFilter
 import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator
@@ -10,7 +8,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry
 import edu.wpi.first.wpilibj.system.LinearSystem
-import edu.wpi.first.wpilibj.system.RungeKutta
+import edu.wpi.first.wpilibj.system.plant.LinearSystemId
 import edu.wpi.first.wpiutil.math.Matrix
 import edu.wpi.first.wpiutil.math.MatrixUtils
 import edu.wpi.first.wpiutil.math.numbers.N1
@@ -25,26 +23,23 @@ import org.junit.Test
 import org.knowm.xchart.SwingWrapper
 import org.knowm.xchart.XYChartBuilder
 import org.knowm.xchart.XYSeries
-import org.knowm.xchart.internal.chartpart.Axis
 import org.knowm.xchart.style.Styler
 import java.awt.Color
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
-import java.nio.ByteBuffer
 import java.util.function.Function
 import kotlin.math.PI
-
 
 class StateSpaceMemes {
 
     @Test
     fun makeCharts() {
-        val flywheel1 = LinearSystem.identifyVelocitySystem(1.0, 0.5, 12.0)
+        val flywheel1 = LinearSystemId.identifyVelocitySystem(1.0, 0.5)
         val kf1 = KalmanFilter(`1`, `1`, flywheel1,
                 vec(`1`).fill(3.0), vec(`1`).fill(0.01), 0.020)
 
-        val flywheel2 = LinearSystem.identifyVelocitySystem(1.0, 0.5, 12.0)
+        val flywheel2 = LinearSystemId.identifyVelocitySystem(1.0, 0.5)
         val kf2 = KalmanFilter(`1`, `1`, flywheel2,
                 vec(`1`).fill(1.0), vec(`1`).fill(1.0), 0.020)
 
@@ -102,12 +97,12 @@ class StateSpaceMemes {
         val voltData = data.map { it[4].toDouble() }
 
 //        val flywheel1 = LinearSystem.identifyVelocitySystem(0.002, 0.007, 12.0)
-        val flywheel1 = LinearSystem.identifyVelocitySystem(0.0022, 0.005, 12.0)
+        val flywheel1 = LinearSystemId.identifyVelocitySystem(0.0022, 0.005)
 
         val kf1 = KalmanFilter(`1`, `1`, flywheel1,
                 vec(`1`).fill(3.0), vec(`1`).fill(0.2), 0.020)
 
-        val flywheel2 = LinearSystem.identifyVelocitySystem(0.0022, 0.005, 12.0)
+        val flywheel2 = LinearSystemId.identifyVelocitySystem(0.0022, 0.005)
 
         val kf2 = KalmanFilter(`1`, `1`, flywheel2,
                 vec(`1`).fill(2.0), vec(`1`).fill(1.0), 0.020)
@@ -191,8 +186,8 @@ class StateSpaceMemes {
         val measurementData = data.map { it[2].toDouble() }
         val voltData = data.map { it[4].toDouble() }
 
-        val flywheel1 = LinearSystem.identifyVelocitySystem(0.0022, 0.005, 12.0)
-        val flywheel2 = LinearSystem.identifyVelocitySystem(0.0022, 0.005, 12.0)
+        val flywheel1 = LinearSystemId.identifyVelocitySystem(0.0022, 0.005)
+        val flywheel2 = LinearSystemId.identifyVelocitySystem(0.0022, 0.005)
 
         val kf1 = KalmanFilter(`1`, `1`, flywheel1,
                 vec(`1`).fill(1.0), vec(`1`).fill(0.1), 0.020)
@@ -372,9 +367,7 @@ class StateSpaceMemes {
                 MatrixUtils.zeros(`3`, `3`),
                 MatrixUtils.eye(`3`),
                 MatrixUtils.eye(`3`),
-                MatrixUtils.zeros(`3`, `3`),
-                Function<Matrix<N3, N1>, Matrix<N3, N1>>
-                { u: Matrix<N3, N1> -> u })
+                MatrixUtils.zeros(`3`, `3`))
 
         val controller = LinearQuadraticRegulator(
                 model,
@@ -385,7 +378,7 @@ class StateSpaceMemes {
 
         println(controller.k.storage)
 
-        val wheelPlant = LinearSystem.identifyVelocitySystem(2.9, 0.3, 12.0)
+        val wheelPlant = LinearSystemId.identifyVelocitySystem(2.9, 0.3)
         val wheelController = LinearQuadraticRegulator(
                 wheelPlant,
                 vec(`1`).fill(3.inches.inMeters()),

@@ -3,6 +3,7 @@ package frc.robot.subsystems.vision
 import edu.wpi.cscore.UsbCamera
 import edu.wpi.first.cameraserver.CameraServer
 import edu.wpi.first.wpilibj.DigitalOutput
+import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
@@ -157,6 +158,7 @@ object VisionSubsystem : FalconSubsystem() {
 
     @Suppress("unused")
     val bumperCamera: UsbCamera = CameraServer.getInstance().startAutomaticCapture(0).apply {
+        if(RobotBase.isSimulation()) return@apply
         setResolution(160, 120)
         setFPS(10)
         setName("Bumper Grabber")
@@ -165,6 +167,7 @@ object VisionSubsystem : FalconSubsystem() {
 
     @Suppress("unused")
     val intakeCamera: UsbCamera = CameraServer.getInstance().startAutomaticCapture(1).apply {
+        if(RobotBase.isSimulation()) return@apply
         setResolution(160, 120)
         setFPS(25)
         setName("Intake")

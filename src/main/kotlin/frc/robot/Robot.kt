@@ -1,28 +1,28 @@
-
 package frc.robot
 
-import edu.wpi.first.cameraserver.CameraServer
 import edu.wpi.first.wpilibj.AddressableLED
 import edu.wpi.first.wpilibj.AddressableLEDBuffer
+import edu.wpi.first.wpilibj.sim.SimFlywheel
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import edu.wpi.first.wpilibj.system.plant.DCMotor
 import edu.wpi.first.wpilibj2.command.CommandScheduler
+import edu.wpi.first.wpiutil.math.Nat
+import edu.wpi.first.wpiutil.math.VecBuilder
 import frc.robot.autonomous.Autonomous
 import frc.robot.subsystems.climb.BumperGrabberSubsystem
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.HoodSubsystem
-import frc.robot.subsystems.shooter.ShooterCharacterizationCommand
+import frc.robot.subsystems.shooter.ShootCommand
+import frc.robot.subsystems.shooter.ShooterController
 import frc.robot.subsystems.vision.VisionSubsystem
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import org.ghrobotics.lib.mathematics.units.derived.inDegrees
+import frc.team4069.keigen.vec
+import org.ghrobotics.lib.mathematics.units.derived.radians
+import org.ghrobotics.lib.mathematics.units.derived.velocity
 import org.ghrobotics.lib.wrappers.FalconTimedRobot
 
 object Robot : FalconTimedRobot() {
-
-    val isEnabled get() = wrappedValue.isEnabled
 
     const val debugMode = false
 
@@ -44,7 +44,7 @@ object Robot : FalconTimedRobot() {
 
         super.robotInit()
 
-        for(i in 0 until buffer.length) {
+        for (i in 0 until buffer.length) {
             buffer.setRGB(i, 0, 0, 0)
         }
         led.setLength(buffer.length)
@@ -61,15 +61,14 @@ object Robot : FalconTimedRobot() {
         Autonomous.update()
         Controls.update()
         Network.update()
-//        println(FlywheelSubsystem.shooterMaster.encoder.position.inDegrees())
 
-        for(i in 0 until buffer.length) {
+        for (i in 0 until buffer.length) {
             buffer.setRGB(i, 0, 0, 0)
         }
         buffer.setRGB(last, 100, 0, 0)
         led.setData(buffer)
         last++
-        if(last >= buffer.length) last = 0
+        if (last >= buffer.length) last = 0
     }
 
     override fun disabledInit() {
@@ -77,12 +76,26 @@ object Robot : FalconTimedRobot() {
 
     override fun teleopInit() {
         HoodSubsystem.enabledReset()
+
+        ShootCommand({ Constants.rightBelowGoalParameter5v }).schedule()
     }
 
     override fun autonomousInit() {
         HoodSubsystem.enabledReset()
+    }
 
-        ShooterCharacterizationCommand().schedule()
+
+    override fun simulationInit() {
+        flywheelSim.setInput(vec(Nat.N1()).fill(0.0))
+    }
+
+    private val flywheelSim = SimFlywheel(ShooterController.plant, true, VecBuilder.fill(0.004),
+            DCMotor.getNEO(2), 0.81)
+
+    override fun simulationPeriodic() {
+        flywheelSim.setInput(FlywheelSubsystem.shooterMaster.voltageOutput.value)
+        flywheelSim.update(0.020)
+        FlywheelSubsystem.simVelocity = flywheelSim.getY(0).radians.velocity
     }
 }
 

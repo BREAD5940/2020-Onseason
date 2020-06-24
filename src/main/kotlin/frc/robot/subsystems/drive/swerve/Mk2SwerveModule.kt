@@ -13,6 +13,7 @@ import kotlin.math.PI
 import org.ghrobotics.lib.mathematics.units.* // ktlint-disable no-wildcard-imports
 import org.ghrobotics.lib.mathematics.units.derived.* // ktlint-disable no-wildcard-imports
 import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
+import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnit
 import org.ghrobotics.lib.motors.rev.FalconMAX
 
 open class Mk2SwerveModule(
@@ -36,7 +37,7 @@ open class Mk2SwerveModule(
         get() = periodicIO.desiredOutput
         set(value) { periodicIO.desiredOutput = value }
 
-    val azimuthMotor = FalconMAX(azimuthMotorCANid, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel)
+    val azimuthMotor = FalconMAX(azimuthMotorCANid, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel, NativeUnit)
     private val azimuthController =
             PIDController(angleKp, angleKi, angleKd).apply {
                 enableContinuousInput(-PI, PI)

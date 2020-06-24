@@ -11,6 +11,7 @@ import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.mathematics.units.amps
 import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
+import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnit
 import org.ghrobotics.lib.motors.rev.falconMAX
 import org.ghrobotics.lib.wrappers.FalconDoubleSolenoid
 import org.ghrobotics.lib.wrappers.FalconSolenoid
@@ -19,7 +20,7 @@ object BumperGrabberSubsystem : FalconSubsystem() {
 
     private val bumperPiston = FalconDoubleSolenoid(bumperGrabberSolenoid[0], bumperGrabberSolenoid[1], kPcmId)
     val bumperGrabMotor = falconMAX(bumperGrabberId,
-            CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
+            CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel, NativeUnit) {
         canSparkMax.apply {
             restoreFactoryDefaults()
             setSecondaryCurrentLimit(35.0)

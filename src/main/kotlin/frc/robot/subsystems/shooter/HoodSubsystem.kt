@@ -10,13 +10,15 @@ import kotlin.math.PI
 import kotlin.math.absoluteValue
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.mathematics.units.derived.*
+import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnit
 import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnitRotationModel
 import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
 import org.ghrobotics.lib.motors.rev.falconMAX
 
 object HoodSubsystem : FalconSubsystem() {
 
-    val hoodMotor = falconMAX(Ports.shooterHoodId, CANSparkMaxLowLevel.MotorType.kBrushless, NativeUnitRotationModel((1.0 * 5.0 / 12.0 * 385.0).nativeUnits)) {
+    val hoodMotor = falconMAX(Ports.shooterHoodId, CANSparkMaxLowLevel.MotorType.kBrushless,
+            NativeUnitRotationModel((1.0 * 5.0 / 12.0 * 385.0).nativeUnits), Radian) {
         with(canSparkMax) {
             restoreFactoryDefaults()
             setSecondaryCurrentLimit(35.0)
