@@ -1,9 +1,6 @@
 package frc.team4069.keigen
 
-import edu.wpi.first.wpiutil.math.MatBuilder
-import edu.wpi.first.wpiutil.math.Matrix
-import edu.wpi.first.wpiutil.math.Nat
-import edu.wpi.first.wpiutil.math.Num
+import edu.wpi.first.wpiutil.math.*
 import edu.wpi.first.wpiutil.math.numbers.N1
 import org.ejml.dense.row.CommonOps_DDRM
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM
@@ -27,7 +24,7 @@ fun <D : Num> ones(size: Nat<D>): Matrix<D, N1> {
 
 fun <R : Num, C : Num> mat(rows: Nat<R>, cols: Nat<C>) = MatBuilder(rows, cols)
 
-typealias Vector<D> = Matrix<D, N1>
+//typealias Vector<D> = Matrix<D, N1>
 
 operator fun <D : Num> Matrix<D, N1>.get(i: Int) = storage[i, 0]
 operator fun <D : Num> Matrix<D, N1>.set(i: Int, j: Double) {
@@ -42,7 +39,7 @@ class VecBuilder<D : Num>(val dim: Nat<D>) {
             throw IllegalArgumentException("Invalid number of elements for ${dim.num}-dimensional vector. got ${data.size} elements")
         }
 
-        return Matrix(SimpleMatrix(dim.num, 1, false, data))
+        return Vector(SimpleMatrix(dim.num, 1, false, data))
     }
 
     fun fill(vararg data: Int): Vector<D> {
@@ -50,7 +47,7 @@ class VecBuilder<D : Num>(val dim: Nat<D>) {
             throw IllegalArgumentException("Invalid number of elements for ${dim.num}-dimensional vector. got ${data.size} elements")
         }
 
-        return Matrix(SimpleMatrix(dim.num, 1, false, data.map { it.toDouble() }.toDoubleArray()))
+        return Vector(SimpleMatrix(dim.num, 1, false, data.map { it.toDouble() }.toDoubleArray()))
     }
 }
 

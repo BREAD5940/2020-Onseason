@@ -1,11 +1,13 @@
 
 package frc.robot
 
-import edu.wpi.first.cameraserver.CameraServer
+import edu.wpi.first.math.WPIMathJNI
 import edu.wpi.first.wpilibj.AddressableLED
 import edu.wpi.first.wpilibj.AddressableLEDBuffer
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import edu.wpi.first.wpilibj.util.WPILibVersion
 import edu.wpi.first.wpilibj2.command.CommandScheduler
+import edu.wpi.first.wpiutil.math.VecBuilder
 import frc.robot.autonomous.Autonomous
 import frc.robot.subsystems.climb.BumperGrabberSubsystem
 import frc.robot.subsystems.drive.DriveSubsystem
@@ -87,5 +89,9 @@ object Robot : FalconTimedRobot() {
 }
 
 fun main() {
+    edu.wpi.first.math.WPIMathJNI.forceLoad()
+    edu.wpi.first.wpiutil.math.WPIMathJNI.forceLoad()
+    VecBuilder.fill(0.0)
+    println("Starting on version ${WPILibVersion.Version}")
     Robot.start()
 }
