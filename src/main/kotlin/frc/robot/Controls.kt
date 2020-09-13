@@ -77,7 +77,7 @@ object Controls {
                         ).alongWith(VisionDriveCommand())
         )
 
-        button(kB).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
+        button(kA).change(ShootCommand().alongWith(VisionDriveCommand())).changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.shooterMaster.setNeutral() }
         button(kX).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kY).change(IntakeSubsystem.retractIntakeCommand())
         pov(0).changeOn {  openLoopClimbCommandGroup.alongWith(GrabBumperCommand(), instantCommand(IntakeSubsystem) {}).withInterrupt { operatorXbox.bButton }.schedule(false) }
