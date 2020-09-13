@@ -23,7 +23,6 @@ import org.ghrobotics.lib.mathematics.units.derived.inRadians
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.feet
 import org.ghrobotics.lib.mathematics.units.inches
-import org.ghrobotics.lib.mathematics.units.meters
 
 open class VisionDriveCommand : HolomonicDriveCommand() {
 
@@ -56,7 +55,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
                 val speeds: ChassisSpeeds
                 @Suppress("LiftReturnOrAssignment")
                 val innerOrOuterGoalPose = getTargetPose()
-                if(innerOrOuterGoalPose == null) {
+                if (innerOrOuterGoalPose == null) {
                     super.execute()
                     return
                 }
@@ -66,7 +65,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
 
                 var shotParameter = Constants.distanceLookupTable5v.get(innerOrOuterGoalPose.translation.norm) ?: ShotParameter.defaultParameter
 
-                if(Robot.debugMode) { // override for if we're tuning
+                if (Robot.debugMode) { // override for if we're tuning
                     shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
                 }
 
@@ -106,11 +105,10 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
 
             // TODO offset by Translation between center and shooter (it's (0, 8in))
 
-            return (if(shouldAimAtInnerGoal)
+            return (if (shouldAimAtInnerGoal)
                 targetPose.transformBy(Pose2d(2.feet + 5.inches, 0.inches, 0.degrees.toRotation2d()))
             else
                 targetPose)
         }
-
     }
 }

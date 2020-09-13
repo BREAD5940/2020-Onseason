@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry
 /**
  * A port that can be an input or an output. Defaults to input.
  */
-class FlippableDIOPin(private val port: Int): DigitalSource(), Sendable, AutoCloseable {
+class FlippableDIOPin(private val port: Int) : DigitalSource(), Sendable, AutoCloseable {
 
     private var isInput = true
     private var handle = DIOJNI.initializeDIOPort(HAL.getPort(channel.toByte()), isInput)
@@ -21,9 +21,9 @@ class FlippableDIOPin(private val port: Int): DigitalSource(), Sendable, AutoClo
      * @param value true is on, off is false
      */
     fun set(value: Boolean) {
-        if(value) {
+        if (value) {
             // if we want output check if we need to flip the port from out to in
-            if(isInput) {
+            if (isInput) {
                 // we need to re register as an output
                 DIOJNI.freeDIOPort(handle)
                 DIOJNI.initializeDIOPort(HAL.getPort(channel.toByte()), false)
@@ -31,7 +31,7 @@ class FlippableDIOPin(private val port: Int): DigitalSource(), Sendable, AutoClo
             }
             DIOJNI.setDIO(handle, (1).toShort())
         } else { // Otherwise we want to disable the port -- check if we need to flip to input mode
-            if(!isInput) {
+            if (!isInput) {
                 // we need to re register as an input
                 DIOJNI.setDIO(handle, (0).toShort())
                 DIOJNI.freeDIOPort(handle)
@@ -67,6 +67,6 @@ class FlippableDIOPin(private val port: Int): DigitalSource(), Sendable, AutoClo
     }
 
     override fun initSendable(builder: SendableBuilder?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 }

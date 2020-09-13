@@ -12,15 +12,12 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
 import frc.robot.subsystems.drive.SwerveDriveOutput
 import frc.robot.subsystems.drive.toTranslation2d
+import kotlin.math.PI
 import lib.normalize
-import org.ghrobotics.lib.mathematics.units.Meter
 import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.inRadians
-import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.derived.volts
-import org.ghrobotics.lib.utils.safeRangeTo
-import kotlin.math.PI
 
 class SwerveTrajectoryController(
     private val kinematics: SwerveDriveKinematics,

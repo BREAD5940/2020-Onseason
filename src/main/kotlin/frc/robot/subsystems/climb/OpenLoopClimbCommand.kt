@@ -8,18 +8,15 @@ import edu.wpi.first.wpilibj2.command.Subsystem
 import edu.wpi.first.wpilibj2.command.WaitCommand
 import frc.robot.Controls
 import frc.robot.subsystems.shooter.FlywheelSubsystem
+import kotlin.math.absoluteValue
 import lib.instantCommand
 import lib.runCommand
 import org.ghrobotics.lib.commands.FalconCommand
-import org.ghrobotics.lib.commands.parallel
 import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.units.derived.degrees
-import org.ghrobotics.lib.mathematics.units.derived.inDegrees
 import org.ghrobotics.lib.mathematics.units.derived.radians
-import org.ghrobotics.lib.utils.safeRangeTo
 import org.ghrobotics.lib.utils.withDeadband
 import org.ghrobotics.lib.wrappers.hid.getY
-import kotlin.math.absoluteValue
 
 class OpenLoopClimbCommand : FalconCommand(FlywheelSubsystem) {
 
@@ -33,16 +30,16 @@ class OpenLoopClimbCommand : FalconCommand(FlywheelSubsystem) {
     }
 
     override fun execute() {
-        if(FlywheelSubsystem.armLimitTriggered) {
+        if (FlywheelSubsystem.armLimitTriggered) {
             FlywheelSubsystem.climbAtPower(0.0)
             return
         }
 
-        if(FlywheelSubsystem.shooterMaster.encoder.position < 4000.degrees) { // this prevents us from climbing too far maybe
+        if (FlywheelSubsystem.shooterMaster.encoder.position < 4000.degrees) { // this prevents us from climbing too far maybe
 //            cancel() // I don't like hard coded constants but ok
 //            FlywheelSubsystem.climbAtPower(0.0)
 //            return
-            FlywheelSubsystem.climbAtPower((speedSource() / 5.0 ).coerceIn(-0.1, 0.0))
+            FlywheelSubsystem.climbAtPower((speedSource() / 5.0).coerceIn(-0.1, 0.0))
             SmartDashboard.putBoolean("CLIMB IN DANGER", true)
         }
         FlywheelSubsystem.climbAtPower(speedSource().coerceIn(-1.0, 0.0))

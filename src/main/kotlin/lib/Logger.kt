@@ -45,6 +45,5 @@ class Logger(name: String) {
     }
 
     fun clearLog() {
-
     }
 }

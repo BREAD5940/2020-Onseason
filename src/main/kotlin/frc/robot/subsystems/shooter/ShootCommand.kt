@@ -6,10 +6,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.Constants
 import frc.robot.Robot
 import frc.robot.subsystems.drive.VisionDriveCommand
-import frc.robot.subsystems.vision.VisionSubsystem
 import frc.team4069.keigen.*
-import lib.Logger
 import kotlin.math.abs
+import lib.Logger
 import lib.inRpm
 import lib.revolutionsPerMinute
 import org.ghrobotics.lib.commands.FalconCommand
@@ -122,5 +121,4 @@ class ShootCommand(private val parameterSupplier: () -> ShotParameter, private v
 
         var hoodAngleOffset = 0.degrees
     }
-
 }

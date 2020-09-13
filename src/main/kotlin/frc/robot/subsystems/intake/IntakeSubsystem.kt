@@ -16,7 +16,6 @@ import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
 import org.ghrobotics.lib.motors.rev.falconMAX
 import org.ghrobotics.lib.wrappers.FalconDoubleSolenoid
 import org.ghrobotics.lib.wrappers.FalconSolenoid
-import kotlin.math.absoluteValue
 
 object IntakeSubsystem : FalconSubsystem() {
     private const val holdIntake = false
@@ -81,7 +80,6 @@ object IntakeSubsystem : FalconSubsystem() {
 //            } else if (!holdIntake) {
 //                miniRetractIntakeCommand()
 //            }
-
         }, this)
 
         SmartDashboard.putData("retract intake", retractIntakeCommand())

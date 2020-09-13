@@ -1,26 +1,26 @@
-//package frc.robot.subsystems
+// package frc.robot.subsystems
 //
-//import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator
-//import edu.wpi.first.wpilibj.geometry.Pose2d
-//import edu.wpi.first.wpilibj.geometry.Rotation2d
-//import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry
-//import edu.wpi.first.wpilibj.system.LinearSystem
-//import edu.wpi.first.wpiutil.math.MatrixUtils
-//import frc.team4069.keigen.*
-//import org.ghrobotics.lib.mathematics.units.derived.degrees
-//import org.ghrobotics.lib.mathematics.units.derived.inRadians
-//import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
-//import org.ghrobotics.lib.mathematics.units.inMeters
-//import org.ghrobotics.lib.mathematics.units.inches
-//import org.junit.Test
-//import org.knowm.xchart.SwingWrapper
-//import org.knowm.xchart.XYChartBuilder
-//import java.io.BufferedReader
-//import java.io.File
-//import java.io.FileReader
-//import kotlin.math.PI
+// import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator
+// import edu.wpi.first.wpilibj.geometry.Pose2d
+// import edu.wpi.first.wpilibj.geometry.Rotation2d
+// import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry
+// import edu.wpi.first.wpilibj.system.LinearSystem
+// import edu.wpi.first.wpiutil.math.MatrixUtils
+// import frc.team4069.keigen.*
+// import org.ghrobotics.lib.mathematics.units.derived.degrees
+// import org.ghrobotics.lib.mathematics.units.derived.inRadians
+// import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
+// import org.ghrobotics.lib.mathematics.units.inMeters
+// import org.ghrobotics.lib.mathematics.units.inches
+// import org.junit.Test
+// import org.knowm.xchart.SwingWrapper
+// import org.knowm.xchart.XYChartBuilder
+// import java.io.BufferedReader
+// import java.io.File
+// import java.io.FileReader
+// import kotlin.math.PI
 //
-//class StateSpaceMemes {
+// class StateSpaceMemes {
 //
 //    @Test
 //    fun testCtt() {
@@ -43,7 +43,7 @@
 //        val rEncD = data.map { it[5] }
 //        val llX = data.map { it[8] }
 //        val llY = data.map { it[9] }
-////        val llHeading
+// //        val llHeading
 //        val odometry = DifferentialDriveOdometry(0.degrees.toRotation2d())
 //        odometry.resetPosition(Pose2d(-0.3, -0.4, Rotation2d()), 0.5185128515.degrees.toRotation2d())
 //
@@ -68,7 +68,7 @@
 //
 //
 //            if(l == null || r == null || theta == null || time == null || visionX == null || visionY == null) continue
-////            theta *= -1.0
+// //            theta *= -1.0
 //
 //            val heading = Math.IEEEremainder(theta, 360.0);
 //
@@ -87,9 +87,9 @@
 //        val chart = chartBuilder.build()
 //
 //        chart.addSeries("Pure odometry", odometryX, odometryY)
-////        chart.addSeries("Vision", visX, visY)
-////        chart.addSeries("Trajectory", trajXs, trajYs)
-////        chart.addSeries("xHat", observerXs, observerYs)
+// //        chart.addSeries("Vision", visX, visY)
+// //        chart.addSeries("Trajectory", trajXs, trajYs)
+// //        chart.addSeries("xHat", observerXs, observerYs)
 //
 //        SwingWrapper(chart).displayChart()
 //        Thread.sleep(1000000)
@@ -135,4 +135,4 @@
 //        println(kpOutputRotPerMinte)
 //    }
 //
-//}
+// }

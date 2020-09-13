@@ -2,7 +2,6 @@ package frc.robot.subsystems.drive
 
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
-import kotlin.math.absoluteValue
 
 class PointTurnCommand(private val wantedAngle: Rotation2d) : VisionDriveCommand() {
 
@@ -22,5 +21,4 @@ class PointTurnCommand(private val wantedAngle: Rotation2d) : VisionDriveCommand
     override fun end(interrupted: Boolean) {
         DriveSubsystem.setNeutral()
     }
-
 }

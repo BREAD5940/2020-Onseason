@@ -53,7 +53,6 @@ class GrabBumperCommand : FalconCommand(BumperGrabberSubsystem) {
 
         BumperGrabberSubsystem.wantsExtended = true
         BumperGrabberSubsystem.bumperGrabMotor.setDutyCycle(speed)
-
     }
 
     companion object {

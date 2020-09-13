@@ -16,10 +16,6 @@ import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.HoodSubsystem
 import frc.robot.subsystems.shooter.ShooterCharacterizationCommand
 import frc.robot.subsystems.vision.VisionSubsystem
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import org.ghrobotics.lib.mathematics.units.derived.inDegrees
 import org.ghrobotics.lib.wrappers.FalconTimedRobot
 
 object Robot : FalconTimedRobot() {
@@ -46,7 +42,7 @@ object Robot : FalconTimedRobot() {
 
         super.robotInit()
 
-        for(i in 0 until buffer.length) {
+        for (i in 0 until buffer.length) {
             buffer.setRGB(i, 0, 0, 0)
         }
         led.setLength(buffer.length)
@@ -65,13 +61,13 @@ object Robot : FalconTimedRobot() {
         Network.update()
 //        println(FlywheelSubsystem.shooterMaster.encoder.position.inDegrees())
 
-        for(i in 0 until buffer.length) {
+        for (i in 0 until buffer.length) {
             buffer.setRGB(i, 0, 0, 0)
         }
         buffer.setRGB(last, 100, 0, 0)
         led.setData(buffer)
         last++
-        if(last >= buffer.length) last = 0
+        if (last >= buffer.length) last = 0
     }
 
     override fun disabledInit() {
@@ -89,8 +85,7 @@ object Robot : FalconTimedRobot() {
 }
 
 fun main() {
-    edu.wpi.first.math.WPIMathJNI.forceLoad()
-    edu.wpi.first.wpiutil.math.WPIMathJNI.forceLoad()
+    WPIMathJNI.forceLoad()
     VecBuilder.fill(0.0)
     println("Starting on version ${WPILibVersion.Version}")
     Robot.start()

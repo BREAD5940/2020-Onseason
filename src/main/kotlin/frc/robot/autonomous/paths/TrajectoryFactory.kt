@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstrai
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint
 import frc.robot.Constants.kinematics
 import frc.robot.autonomous.paths.TrajectoryWaypoints
-import lib.translation2d
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
 import org.ghrobotics.lib.mathematics.twodim.geometry.Rectangle2d
 import org.ghrobotics.lib.mathematics.twodim.trajectory.FalconTrajectoryConfig
@@ -105,7 +104,9 @@ object TrajectoryFactory {
                         Pose2d(19.445.feet, 24.719.feet, 0.0.degrees),
                         Pose2d(30.826.feet, 24.719.feet, 0.0.degrees)
                 ),
-                listOf( //TODO check if encompasses both pc areas in trench
+                // TODO check if encompasses both pc areas in trench
+
+                listOf(
                         SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
                         VelocityLimitRegionConstraint(Rectangle2d(
                                 Translation2d(32.808, 22.449),
@@ -292,17 +293,17 @@ object TrajectoryFactory {
     /** Generation **/
 
     private fun getConstraints(
-            maxSpeedMetersPerSecond: SIUnit<Velocity<Meter>>
+        maxSpeedMetersPerSecond: SIUnit<Velocity<Meter>>
     ) = listOf(SwerveDriveKinematicsConstraint(kinematics, maxSpeedMetersPerSecond.value))
 
     fun generateTrajectory(
-            reversed: Boolean,
-            points: List<Pose2d>,
-            constraints: List<TrajectoryConstraint>,
-            maxVelocity: SIUnit<Velocity<Meter>>,
-            maxAcceleration: SIUnit<Acceleration<Meter>>,
-            endVelocity: SIUnit<Velocity<Meter>> = 0.inches.velocity,
-            clampedCubic: Boolean = true
+        reversed: Boolean,
+        points: List<Pose2d>,
+        constraints: List<TrajectoryConstraint>,
+        maxVelocity: SIUnit<Velocity<Meter>>,
+        maxAcceleration: SIUnit<Acceleration<Meter>>,
+        endVelocity: SIUnit<Velocity<Meter>> = 0.inches.velocity,
+        clampedCubic: Boolean = true
     ): Trajectory {
 
         val allConstraints = ArrayList<TrajectoryConstraint>()

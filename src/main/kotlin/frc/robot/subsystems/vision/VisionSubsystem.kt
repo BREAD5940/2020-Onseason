@@ -12,7 +12,9 @@ import frc.robot.autonomous.paths.Pose2d
 import frc.robot.autonomous.paths.plus
 import frc.robot.autonomous.paths.transformBy
 import frc.robot.subsystems.drive.DriveSubsystem
-import kotlinx.coroutines.CoroutineStart
+import kotlin.math.absoluteValue
+import kotlin.math.tan
+import kotlin.properties.Delegates
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -26,18 +28,8 @@ import org.ghrobotics.lib.mathematics.units.*
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.types.Interpolatable
-import org.ghrobotics.lib.utils.loopFrequency
 import org.ghrobotics.lib.vision.ChameleonCamera
 import org.ghrobotics.lib.vision.ToastyTargetTracker
-import org.opencv.core.Mat
-import org.opencv.imgproc.Imgproc
-import kotlin.coroutines.EmptyCoroutineContext
-import kotlin.math.absoluteValue
-import kotlin.math.pow
-import kotlin.math.sqrt
-import kotlin.math.tan
-import kotlin.properties.Delegates
-
 
 object VisionSubsystem : FalconSubsystem() {
 
@@ -45,7 +37,7 @@ object VisionSubsystem : FalconSubsystem() {
 
     val lifecam = ChameleonCamera("lifecam")
 
-    private val ledFet = DigitalOutput(7) //DigitalOutput(9).apply {
+    private val ledFet = DigitalOutput(7) // DigitalOutput(9).apply {
 //            .apply {
 //                setDirection(Relay.Direction.kForward)
 //            }
@@ -173,9 +165,9 @@ object VisionSubsystem : FalconSubsystem() {
 }
 
 private infix fun Pose2d.epsilonEquals(other: Pose2d) =
-        this.translation.x epsilonEquals other.translation.x
-                && this.translation.y epsilonEquals other.translation.y
-                && this.rotation.radians epsilonEquals other.rotation.radians
+        this.translation.x epsilonEquals other.translation.x &&
+                this.translation.y epsilonEquals other.translation.y &&
+                this.rotation.radians epsilonEquals other.rotation.radians
 
 private operator fun Pose2d.plus(other: Pose2d) = this.transformBy(Transform2d(other.translation, other.rotation))
 

@@ -106,8 +106,8 @@ open class ToastyTargetTracker(private val constants: TargetTrackerConstants) {
      * @param initialSample The initial target sample for this target.
      */
     class TrackedTarget(
-            private val initialSample: TrackedTargetSample,
-            private val constants: TargetTrackerConstants
+        private val initialSample: TrackedTargetSample,
+        private val constants: TargetTrackerConstants
     ) {
         // The samples that make up this target.
         private val samples = mutableSetOf<TrackedTargetSample>()
@@ -196,9 +196,9 @@ open class ToastyTargetTracker(private val constants: TargetTrackerConstants) {
      * @param kMedianWindowSize The number of samples to average the pose over.
      */
     data class TargetTrackerConstants(
-            val kMaxTargetTrackingLifetime: SIUnit<Second>,
-            val kTargetTrackingDistanceErrorTolerance: SIUnit<Meter>,
-            val kMedianWindowSize: Int,
-            val kMinSamplesForReal: Int
+        val kMaxTargetTrackingLifetime: SIUnit<Second>,
+        val kTargetTrackingDistanceErrorTolerance: SIUnit<Meter>,
+        val kMedianWindowSize: Int,
+        val kMinSamplesForReal: Int
     )
 }
