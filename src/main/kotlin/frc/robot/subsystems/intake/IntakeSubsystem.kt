@@ -71,8 +71,7 @@ object IntakeSubsystem : FalconSubsystem() {
 
         defaultCommand = runCommand({
             val speed = Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kRight) -
-                    Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft)
-            + Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kRight) -
+                    Controls.operatorXbox.getTriggerAxis(GenericHID.Hand.kLeft) + Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kRight) -
                     Controls.driverWpiXbox.getTriggerAxis(GenericHID.Hand.kLeft)
 
             setSpeed(speed)

@@ -90,7 +90,7 @@ object Robot : FalconTimedRobot() {
 
 fun main() {
     edu.wpi.first.math.WPIMathJNI.forceLoad()
-    edu.wpi.first.wpiutil.math.WPIMathJNI.forceLoad()
+
     VecBuilder.fill(0.0)
     println("Starting on version ${WPILibVersion.Version}")
     Robot.start()
