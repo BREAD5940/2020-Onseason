@@ -55,6 +55,7 @@ object VisionSubsystem : FalconSubsystem() {
     }
 
     override fun lateInit() {
+
         lifecam.driverMode = false
         lifecam.pipeline = 1.0
 

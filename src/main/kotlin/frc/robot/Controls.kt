@@ -33,7 +33,16 @@ object Controls {
         button(kStart).changeOn(reZeroCommand)
         button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kX).changeOn { IntakeSubsystem.miniRetractIntakeCommand() }
-        button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
+        //button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
+        button(kBumperRight).change(
+                ShootCommand(true)
+                        .andThen(ShootCommand(false).withTimeout(0.5))
+                        .andThen(
+                                ShootCommand(false)
+                                        .beforeStarting(Runnable { FlywheelSubsystem.kickWheelMotor.setDutyCycle(kGutSpeed) })
+                                        .andThen(Runnable { FlywheelSubsystem.kickWheelMotor.setNeutral() })
+                        ).alongWith(VisionDriveCommand())
+        )
         button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(kGutSpeed) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
         button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))
         button(kY).change(ShootCommand().alongWith(VisionDriveCommand()))

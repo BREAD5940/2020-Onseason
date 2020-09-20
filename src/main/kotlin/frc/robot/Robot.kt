@@ -45,7 +45,6 @@ object Robot : FalconTimedRobot() {
         SmartDashboard.putData(CommandScheduler.getInstance())
 
         super.robotInit()
-
         for(i in 0 until buffer.length) {
             buffer.setRGB(i, 0, 0, 0)
         }
