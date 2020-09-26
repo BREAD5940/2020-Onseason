@@ -58,7 +58,7 @@ object TrajectoryFactory {
                 false,
                 listOf(
                         Pose2d(11.75.feet, 25.689.feet, 270.degrees),
-                        Pose2d(17.682.feet, 21.939.feet, (-166).degrees)
+                        Pose2d(17.682.feet, 21.939.feet, 14.degrees)
                 ),
                 getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
@@ -100,9 +100,9 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(17.682.feet, 21.939.feet, (-166).degrees),
-                        Pose2d(19.445.feet, 24.719.feet, 0.0.degrees),
-                        Pose2d(30.826.feet, 24.719.feet, 0.0.degrees)
+                        Pose2d(17.682.feet, 21.939.feet, 14.degrees),
+                        Pose2d(19.445.feet, 24.719.feet, 180.degrees),
+                        Pose2d(30.826.feet, 24.719.feet, 180.degrees)
                 ),
                 // TODO check if encompasses both pc areas in trench
 
@@ -124,9 +124,9 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(30.826.feet, 24.719.feet, 180.0.degrees),
-                        Pose2d(27.879.feet, 24.719.feet, 180.0.degrees),
-                        Pose2d(17.682.feet, 21.939.feet, (-166).degrees)
+                        Pose2d(30.826.feet, 24.719.feet, 0.0.degrees),
+                        Pose2d(27.879.feet, 24.719.feet, 0.0.degrees),
+                        Pose2d(17.682.feet, 21.939.feet, 14.degrees)
                 ),
                 getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )

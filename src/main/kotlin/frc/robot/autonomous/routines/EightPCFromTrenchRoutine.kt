@@ -27,23 +27,23 @@ class EightPCFromTrenchRoutine : AutoRoutine() {
     override val routine
         get() = sequential {
 
-            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 180.degrees.toRotation2d()) }
+            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 0.degrees.toRotation2d()) }
 
-            +DriveSubsystem.followTrajectory(path1) { -166.0.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path1) { 14.0.degrees.toRotation2d() }
                     .alongWith(IntakeSubsystem.extendIntakeCommand())
 
             +(FlywheelSubsystem.agitateAndShoot(3.seconds))
                     .deadlineWith(VisionDriveCommand())
 
-            +PointTurnCommand(0.degrees.toRotation2d())
+            +PointTurnCommand(180.degrees.toRotation2d())
 
-            +DriveSubsystem.followTrajectory2(path2) { (0.0).degrees }
+            +DriveSubsystem.followTrajectory2(path2) { (180.0).degrees }
                     .alongWith(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
-            +PointTurnCommand(180.degrees.toRotation2d())
+            +PointTurnCommand(0.degrees.toRotation2d())
 
-            +DriveSubsystem.followTrajectory(path3) { -166.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path3) { 14.degrees.toRotation2d() }
 
             +(FlywheelSubsystem.agitateAndShoot(3.seconds))
                     .deadlineWith(VisionDriveCommand(),
