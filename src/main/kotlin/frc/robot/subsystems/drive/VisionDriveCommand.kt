@@ -51,7 +51,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
 //        val shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
 
         when {
-            VisionSubsystem.lifecam.isValid -> {
+            VisionSubsystem.gloworm.hasTargets() -> {
 
                 val speeds: ChassisSpeeds
                 @Suppress("LiftReturnOrAssignment")

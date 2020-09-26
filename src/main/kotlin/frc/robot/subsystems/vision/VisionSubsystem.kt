@@ -10,9 +10,7 @@ import edu.wpi.first.wpilibj.geometry.Transform2d
 import frc.robot.Robot
 import frc.robot.autonomous.paths.Pose2d
 import frc.robot.autonomous.paths.plus
-import frc.robot.autonomous.paths.transformBy
 import frc.robot.subsystems.drive.DriveSubsystem
-import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -26,15 +24,9 @@ import org.ghrobotics.lib.mathematics.units.*
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.types.Interpolatable
-import org.ghrobotics.lib.utils.loopFrequency
-import org.ghrobotics.lib.vision.ChameleonCamera
 import org.ghrobotics.lib.vision.ToastyTargetTracker
-import org.opencv.core.Mat
-import org.opencv.imgproc.Imgproc
-import kotlin.coroutines.EmptyCoroutineContext
+import org.photonvision.PhotonCamera
 import kotlin.math.absoluteValue
-import kotlin.math.pow
-import kotlin.math.sqrt
 import kotlin.math.tan
 import kotlin.properties.Delegates
 
@@ -43,7 +35,9 @@ object VisionSubsystem : FalconSubsystem() {
 
 //    val ps3eye = ChameleonCamera("ps3eye")
 
-    val lifecam = ChameleonCamera("lifecam")
+//    val lifecam = ChameleonCamera("lifecam")
+
+    val gloworm = PhotonCamera("gloworm")
 
     private val ledFet = DigitalOutput(7) //DigitalOutput(9).apply {
 //            .apply {
@@ -56,18 +50,10 @@ object VisionSubsystem : FalconSubsystem() {
 
     override fun lateInit() {
 
-        lifecam.driverMode = false
-        lifecam.pipeline = 1.0
+        gloworm.driverMode = false
+        gloworm.pipelineIndex = 0
 
-        GlobalScope.launch {
-            while (lifecam.latencyEntry.getDouble(-1.0) < 0.0) {
-                delay(10)
-            }
 
-            runCommand { lifecam.driverMode = true }.withTimeout(1.0)
-                    .andThen(Runnable { lifecam.driverMode = false })
-                    .schedule()
-        }
     }
 
     object Tracker : ToastyTargetTracker(TargetTrackerConstants(1.5.seconds, 10.feet, 100, 3)) {
@@ -103,8 +89,8 @@ object VisionSubsystem : FalconSubsystem() {
 
     private fun updateTracker() {
 
-        if (lifecam.isValid) updateTangentEstimation(lifecam.pitch + camAngle.toRotation2d(), lifecam.yaw,
-                Timer.getFPGATimestamp().seconds - lifecam.latency)
+        if (gloworm.hasTargets()) updateTangentEstimation(Rotation2d.fromDegrees(gloworm.bestTargetPitch) + camAngle.toRotation2d(), gloworm.bestTargetYaw.degrees.toRotation2d(),
+                Timer.getFPGATimestamp().seconds - gloworm.latestResult.latencyMillis.milli.seconds)
 
         Tracker.update()
     }
