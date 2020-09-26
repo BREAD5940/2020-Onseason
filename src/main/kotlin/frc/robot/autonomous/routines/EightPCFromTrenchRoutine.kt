@@ -27,27 +27,26 @@ class EightPCFromTrenchRoutine : AutoRoutine() {
     override val routine
         get() = sequential {
 
-            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 0.degrees.toRotation2d()) }
+            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 180.degrees.toRotation2d()) }
 
-            +DriveSubsystem.followTrajectory(path1) { 14.0.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path1) { 180.degrees.toRotation2d() }
                     .alongWith(IntakeSubsystem.extendIntakeCommand())
 
             +(FlywheelSubsystem.agitateAndShoot(3.seconds))
                     .deadlineWith(VisionDriveCommand())
 
-            +PointTurnCommand(180.degrees.toRotation2d())
+            +PointTurnCommand(0.degrees.toRotation2d()) //TODO figure out if this turns robot 0 or if it turns to 0, assumed latter
 
-            +DriveSubsystem.followTrajectory2(path2) { (180.0).degrees }
+            +DriveSubsystem.followTrajectory2(path2) { 0.degrees }
                     .alongWith(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })
-                    .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
+                    //.andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem) TODO when does it know when to switch over? there's no time constraint that tells it when to switch
 
-            +PointTurnCommand(0.degrees.toRotation2d())
+            +PointTurnCommand(180.degrees.toRotation2d())
+                    .andThen (Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
-            +DriveSubsystem.followTrajectory(path3) { 14.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path3) { 180.degrees.toRotation2d() }
 
             +(FlywheelSubsystem.agitateAndShoot(3.seconds))
-                    .deadlineWith(VisionDriveCommand(),
-                            runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0); IntakeSubsystem.setSmolPistonExtension(true) })
-                    .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
+                    .deadlineWith(VisionDriveCommand())
         }
 }

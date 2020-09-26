@@ -57,8 +57,8 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(11.75.feet, 25.689.feet, 270.degrees),
-                        Pose2d(17.682.feet, 21.939.feet, 14.degrees)
+                        Pose2d(11.75.feet, 25.689.feet, 180.degrees),
+                        Pose2d(16.319.feet, 22.536.feet, 180.degrees)
                 ),
                 getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
@@ -100,9 +100,9 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(17.682.feet, 21.939.feet, 14.degrees),
-                        Pose2d(19.445.feet, 24.719.feet, 180.degrees),
-                        Pose2d(30.826.feet, 24.719.feet, 180.degrees)
+                        Pose2d(16.319.feet, 22.536.feet, 0.degrees),
+                        Pose2d(19.445.feet, 24.719.feet, 0.degrees),
+                        Pose2d(30.826.feet, 24.719.feet, 0.degrees)
                 ),
                 // TODO check if encompasses both pc areas in trench
 
@@ -115,7 +115,7 @@ object TrajectoryFactory {
                         VelocityLimitRegionConstraint(Rectangle2d(
                                 Translation2d(20.075, 25.434),
                                 Translation2d(27.752, 23.918)),
-                                3.feet.velocity)
+                                6.feet.velocity)
                 ), kMaxVelocity, kMaxAcceleration
         )
     }
@@ -124,12 +124,18 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(30.826.feet, 24.719.feet, 0.0.degrees),
-                        Pose2d(27.879.feet, 24.719.feet, 0.0.degrees),
-                        Pose2d(17.682.feet, 21.939.feet, 14.degrees)
+                        Pose2d(30.826.feet, 24.719.feet, 180.degrees),
+                        Pose2d(27.879.feet, 24.719.feet, 180.degrees),
+                        Pose2d(16.319.feet, 22.536.feet, 180.degrees)
                 ),
-                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
-        )
+                listOf(
+                        SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
+                        VelocityLimitRegionConstraint(Rectangle2d(
+                                Translation2d(32.808,22.449),
+                                Translation2d(28.79,26.972)),
+                                3.feet.velocity)
+                        ), kMaxVelocity, kMaxAcceleration
+                )
     }
 
     val sixPCGrab3FromTrench by lazy {
@@ -201,11 +207,11 @@ object TrajectoryFactory {
     val retrieve5FromShieldGenerator: Trajectory by lazy {
         TrajectoryGenerator.generateTrajectory(
                 listOf(
-                        Pose2d(15.feet, 17.feet, (-89.284).degrees),
+                        Pose2d(15.feet, 17.feet, (-89).degrees),
                         Pose2d(19.45.feet, 11.75.feet, 113.degrees),
-                        Pose2d(18.619.feet, 13.746.feet, 112.586.degrees),
-                        Pose2d(17.535.feet, 14.504.feet, 171.653.degrees),
-                        Pose2d(16.393.feet, 16.819.feet, 88.135.degrees),
+                        Pose2d(18.619.feet, 13.746.feet, 113.degrees),
+                        Pose2d(17.535.feet, 14.504.feet, 172.degrees),
+                        Pose2d(16.393.feet, 16.819.feet, 88.degrees),
                         Pose2d(17.463.feet, 19.139.feet, 28.degrees),
                         Pose2d(20.25.feet, 18.4.feet, (-68).degrees)),
                 FalconTrajectoryConfig(kMaxVelocity / 1.0, kMaxAcceleration).apply {
@@ -217,8 +223,12 @@ object TrajectoryFactory {
                             VelocityLimitRegionConstraint(Rectangle2d(
                                     Translation2d(21.468, 11.5),
                                     Translation2d(19.02, 15.286)),
+                                    4.feet.velocity),
+                            VelocityLimitRegionConstraint(Rectangle2d(
+                                    Translation2d(22.479,17.24),
+                                    Translation2d(18.976,17.215)),
                                     4.feet.velocity)
-                    )
+                            )
                 }
         )
     }

@@ -34,15 +34,15 @@ class OpposingTrenchRoutine : AutoRoutine() {
 
     override val routine
         get() = sequential {
-            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 0.degrees.toRotation2d()) }
+            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 180.degrees.toRotation2d()) }
 
-            +DriveSubsystem.followTrajectory2(path1) { 0.0.degrees }
+            +DriveSubsystem.followTrajectory2(path1) { 180.0.degrees }
                     .deadlineWith(
                             IntakeSubsystem.extendIntakeCommand()
                                     .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) }))
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
-            +DriveSubsystem.followTrajectory(path2) { (160.0).degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path2) { -20.degrees.toRotation2d() }
 
             val command = VisionDriveCommand()
             +command.withExit { command.lastError.absoluteValue < 1.5.degrees.inRadians() }
@@ -60,7 +60,7 @@ class OpposingTrenchRoutine : AutoRoutine() {
                     .deadlineWith(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
-            +DriveSubsystem.followTrajectory(path4) { 160.0.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path4) { -20.degrees.toRotation2d() }
 
             val command2 = VisionDriveCommand()
             +command2.withExit { command2.lastError.absoluteValue < 1.5.degrees.inRadians() }
