@@ -88,8 +88,9 @@ object VisionSubsystem : FalconSubsystem() {
     private var previousSolvePnpPose: Pose2d = Pose2d()
 
     private fun updateTracker() {
+        val target = gloworm.latestResult
 
-        if (gloworm.hasTargets()) updateTangentEstimation(Rotation2d.fromDegrees(gloworm.bestTargetPitch) + camAngle.toRotation2d(), gloworm.bestTargetYaw.degrees.toRotation2d(),
+        if (target.hasTargets()) updateTangentEstimation(Rotation2d.fromDegrees(target.bestTarget.pitch) + camAngle.toRotation2d(), target.bestTarget.yaw.degrees.toRotation2d(),
                 Timer.getFPGATimestamp().seconds - gloworm.latestResult.latencyMillis.milli.seconds)
 
         Tracker.update()
