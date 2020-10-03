@@ -16,11 +16,10 @@ class PointTurnCommand(private val wantedAngle: Rotation2d) : VisionDriveCommand
     }
 
     override fun isFinished(): Boolean {
-        return (DriveSubsystem.robotPosition.rotation.minus(wantedAngle).degrees < 4)
+        return (DriveSubsystem.robotPosition.rotation.minus(wantedAngle).degrees.absoluteValue < 4)
     }
 
     override fun end(interrupted: Boolean) {
         DriveSubsystem.setNeutral()
     }
-
 }

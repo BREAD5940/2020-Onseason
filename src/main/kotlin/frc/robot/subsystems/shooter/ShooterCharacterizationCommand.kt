@@ -3,10 +3,10 @@ package frc.robot.subsystems.shooter
 import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.Timer
-import org.ghrobotics.lib.commands.FalconCommand
 import kotlin.math.abs
+import org.ghrobotics.lib.commands.FalconCommand
 
-class ShooterCharacterizationCommand: FalconCommand(FlywheelSubsystem) {
+class ShooterCharacterizationCommand : FalconCommand(FlywheelSubsystem) {
 
     var priorAutospeed = 0.0
     var autoSpeedEntry = NetworkTableInstance.getDefault().getEntry("/robot/autospeed")
@@ -46,5 +46,4 @@ class ShooterCharacterizationCommand: FalconCommand(FlywheelSubsystem) {
         numberArray = arrayOf(now, battery, autospeed, motorVolts, position, rate)
         telemetryEntry.setNumberArray(numberArray)
     }
-
 }

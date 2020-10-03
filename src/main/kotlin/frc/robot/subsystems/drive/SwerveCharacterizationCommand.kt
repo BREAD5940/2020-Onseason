@@ -1,6 +1,5 @@
 package frc.robot.subsystems.drive
 
-import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds

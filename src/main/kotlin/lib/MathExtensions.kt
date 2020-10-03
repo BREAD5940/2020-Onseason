@@ -2,14 +2,8 @@ package lib
 
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Translation2d
-import edu.wpi.first.wpilibj.system.LinearSystem
-import edu.wpi.first.wpilibj.system.plant.DCMotor
-import edu.wpi.first.wpiutil.math.MatBuilder
-import edu.wpi.first.wpiutil.math.MatrixUtils
-import edu.wpi.first.wpiutil.math.Nat
-import edu.wpi.first.wpiutil.math.numbers.N1
-import org.ghrobotics.lib.mathematics.kEpsilon
 import kotlin.math.*
+import org.ghrobotics.lib.mathematics.kEpsilon
 
 fun Rotation2d.toTranslation() = Translation2d(this.cos, this.sin)
 
@@ -129,7 +123,7 @@ fun Translation2d.isWithinAngle(A: Translation2d, C: Translation2d): Boolean {
 
 fun Rotation2d.mirror() = Rotation2d(-radians)
 
-//fun createElevatorVelocitySystem(motor: DCMotor, massKg: Double, radiusMeters: Double, G: Double, maxVoltage: Double): LinearSystem<N1, N1, N1> {
+// fun createElevatorVelocitySystem(motor: DCMotor, massKg: Double, radiusMeters: Double, G: Double, maxVoltage: Double): LinearSystem<N1, N1, N1> {
 //    // vdot = ( -G^2 * Kt ) / ( R * r^2 * m * Kv ) v + (G * Kt)/(R*r*m) V
 //
 //    return LinearSystem(Nat.N1(), Nat.N1(), Nat.N1(),
@@ -142,5 +136,4 @@ fun Rotation2d.mirror() = Rotation2d(-radians)
 //            MatBuilder(Nat.N1(), Nat.N1()).fill(-maxVoltage),
 //            MatBuilder(Nat.N1(), Nat.N1()).fill(maxVoltage))
 //
-//}
-
+// }

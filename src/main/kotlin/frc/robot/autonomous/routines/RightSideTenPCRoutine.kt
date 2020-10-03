@@ -35,7 +35,7 @@ class RightSideTenPCRoutine : AutoRoutine() {
             +DriveSubsystem.followTrajectory2(path1) { (-68).degrees }
                     .alongWith(
                             IntakeSubsystem.extendIntakeCommand()
-                                    .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) }))//TODO wait a certen amount before turning intake off
+                                    .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })) // TODO wait a certen amount before turning intake off
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
             +PointTurnCommand(-68.degrees.toRotation2d())
@@ -45,20 +45,20 @@ class RightSideTenPCRoutine : AutoRoutine() {
             +PointTurnCommand(-166.degrees.toRotation2d())
 
             +(FlywheelSubsystem.agitateAndShoot((3.5.seconds)))
-                    .deadlineWith(VisionDriveCommand()) //TODO Try spinning up the shooter earlier, rather then now
+                    .deadlineWith(VisionDriveCommand()) // TODO Try spinning up the shooter earlier, rather then now
 
             +PointTurnCommand(0.degrees.toRotation2d())
 
             +DriveSubsystem.followTrajectory(path3) { 0.0.degrees.toRotation2d() }
                     .alongWith(
                             IntakeSubsystem.extendIntakeCommand()
-                                    .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) }))//TODO same here
+                                    .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })) // TODO same here
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
             +PointTurnCommand(180.degrees.toRotation2d())
 
             +DriveSubsystem.followTrajectory(path4) { 180.0.degrees.toRotation2d() }
-                    //TODO Implement a "ammo" sensor so that we can shoot the right amount.
+                    // TODO Implement a "ammo" sensor so that we can shoot the right amount.
             +(FlywheelSubsystem.agitateAndShoot((3.5.seconds)))
                     .deadlineWith(VisionDriveCommand(),
                             runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0); IntakeSubsystem.setSmolPistonExtension(true) })

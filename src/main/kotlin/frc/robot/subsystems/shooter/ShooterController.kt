@@ -41,5 +41,4 @@ object ShooterController {
 
     val nextU get() = loop.getU(0).volts
     val xHat get() = loop.getXHat(0).radians.velocity
-
 }

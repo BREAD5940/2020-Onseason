@@ -5,18 +5,14 @@ import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.subsystems.climb.GrabBumperCommand
-import frc.robot.subsystems.climb.OpenLoopClimbCommand
 import frc.robot.subsystems.climb.openLoopClimbCommandGroup
 import frc.robot.subsystems.drive.DriveSubsystem
-import frc.robot.subsystems.drive.SwerveCharacterizationCommand
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.ShootCommand
-import frc.robot.subsystems.shooter.ShooterCharacterizationCommand
 import lib.beforeStarting
 import lib.instantCommand
-import lib.runCommand
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.wrappers.hid.*
@@ -60,7 +56,7 @@ object Controls {
         val timer = Timer()
         pov(180).changeOn(DriveSubsystem.followTrajectory2(TrajectoryFactory.retrieve5FromShieldGenerator) {
                     // switch headings halfway through
-                    if(timer.get() < 2.5) 65.degrees else -68.degrees
+                    if (timer.get() < 2.5) 65.degrees else -68.degrees
                 }
                 .beforeStarting { timer.reset(); timer.start() }
 //                .deadlineWith(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })
@@ -71,7 +67,6 @@ object Controls {
 
 //        pov(0).changeOn(ShooterCharacterizationCommand())
 //        pov(0).changeOn(SwerveCharacterizationCommand())
-
     }
 
     val operatorXbox = XboxController(1)
@@ -89,7 +84,7 @@ object Controls {
         button(kA).change(ShootCommand().alongWith(VisionDriveCommand())).changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.shooterMaster.setNeutral() }
         button(kX).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kY).change(IntakeSubsystem.retractIntakeCommand())
-        pov(0).changeOn {  openLoopClimbCommandGroup.alongWith(GrabBumperCommand(), instantCommand(IntakeSubsystem) {}).withInterrupt { operatorXbox.bButton }.schedule(false) }
+        pov(0).changeOn { openLoopClimbCommandGroup.alongWith(GrabBumperCommand(), instantCommand(IntakeSubsystem) {}).withInterrupt { operatorXbox.bButton }.schedule(false) }
         button(kStickRight).change(
                 ShootCommand({ Constants.rightBelowGoalParameter5v }, true)
                         .andThen(ShootCommand({ Constants.rightBelowGoalParameter5v }, false).withTimeout(1.0))

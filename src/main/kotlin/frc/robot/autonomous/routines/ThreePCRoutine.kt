@@ -1,9 +1,7 @@
 package frc.robot.autonomous.routines
 
-import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
-import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.SwerveDriveOutput
 import frc.robot.subsystems.drive.VisionDriveCommand
@@ -14,8 +12,6 @@ import lib.runCommand
 import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.Second
-import org.ghrobotics.lib.mathematics.units.derived.degrees
-import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.seconds
 
 class ThreePCRoutine : AutoRoutine() {

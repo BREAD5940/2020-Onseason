@@ -1,11 +1,7 @@
 package frc.robot.subsystems
 
-import frc.robot.Constants
-import frc.robot.subsystems.shooter.ShotParameter
 import lib.InterpolatingTable
 import lib.interpolate
-import lib.revolutionsPerMinute
-import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.types.Interpolatable
 import org.junit.Assert.*
 import org.junit.Test

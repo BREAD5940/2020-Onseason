@@ -6,7 +6,6 @@ import frc.robot.subsystems.shooter.ShotParameter
 import lib.InterpolatingTable
 import lib.revolutionsPerMinute
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
-import org.ghrobotics.lib.mathematics.units.derived.degree
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.feet
 import org.ghrobotics.lib.mathematics.units.inMeters
@@ -67,10 +66,9 @@ object Constants {
     )
 
     val rightBelowGoalParameter5v = ShotParameter(30.degrees, 3000.revolutionsPerMinute)
-
 }
 
-//val distanceLookupTable5v = InterpolatingTable(
+// val distanceLookupTable5v = InterpolatingTable(
 //        3.65 to ShotParameter(53.degrees, 2150.revolutionsPerMinute, (-2).degrees),
 //        4.3 to ShotParameter(55.degrees, 2300.revolutionsPerMinute, (-2).degrees),
 //        5.15 to ShotParameter(58.degrees, 2400.revolutionsPerMinute, (-2).degrees),
@@ -79,6 +77,6 @@ object Constants {
 //        7.7 to ShotParameter(60.degrees, 2800.revolutionsPerMinute, (-2).degrees),
 //        9.13 to ShotParameter(58.degrees, 3100.revolutionsPerMinute, (-2).degrees),
 //        10.45 to ShotParameter(54.degree, 2900.revolutionsPerMinute, (-1).degrees)
-//)
+// )
 //
-//val rightBelowGoalParameter5v = ShotParameter(27.5.degrees, 2400.revolutionsPerMinute)
+// val rightBelowGoalParameter5v = ShotParameter(27.5.degrees, 2400.revolutionsPerMinute)

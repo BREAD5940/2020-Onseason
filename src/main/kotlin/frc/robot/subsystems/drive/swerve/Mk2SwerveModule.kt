@@ -8,23 +8,23 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState
-import lib.Logger
 import kotlin.math.PI
+import lib.Logger
 import org.ghrobotics.lib.mathematics.units.* // ktlint-disable no-wildcard-imports
 import org.ghrobotics.lib.mathematics.units.derived.* // ktlint-disable no-wildcard-imports
 import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
 import org.ghrobotics.lib.motors.rev.FalconMAX
 
 open class Mk2SwerveModule(
-        azimuthMotorCANid: Int,
-        azimuthEncoderPort: Int,
-        private val offset: SIUnit<Radian>,
-        angleKp: Double,
-        angleKi: Double,
-        angleKd: Double,
-        val driveMotor: FalconMAX<Meter>,
-        private val angleMotorOutputRange: ClosedFloatingPointRange<Double>,
-        name: String
+    azimuthMotorCANid: Int,
+    azimuthEncoderPort: Int,
+    private val offset: SIUnit<Radian>,
+    angleKp: Double,
+    angleKi: Double,
+    angleKd: Double,
+    val driveMotor: FalconMAX<Meter>,
+    private val angleMotorOutputRange: ClosedFloatingPointRange<Double>,
+    name: String
 ) {
 
     private val stateMutex = Object() // used to stop multiple threads from accessing the state simultaneously
@@ -57,7 +57,7 @@ open class Mk2SwerveModule(
         driveMotor.canSparkMax.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, false)
         driveMotor.canSparkMax.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, false)
         driveMotor.canSparkMax.openLoopRampRate = 0.05
-        driveMotor.controller.p = 0.0001//' 6e-5 // About 1 order of magnitude below LQR because neo velocity phase lag
+        driveMotor.controller.p = 0.0001 // ' 6e-5 // About 1 order of magnitude below LQR because neo velocity phase lag
 
         azimuthMotor.canSparkMax.restoreFactoryDefaults()
         azimuthMotor.canSparkMax.setSecondaryCurrentLimit(35.0)
@@ -72,7 +72,6 @@ open class Mk2SwerveModule(
         }
 
         logger.log("time, reference, measurement, voltage, current, bus voltage")
-
     }
 
     fun updateState() {
@@ -154,8 +153,8 @@ open class Mk2SwerveModule(
 
         // duty cycle
         class DutyCycle(
-                val dutyCycle: Double,
-                angle: Rotation2d
+            val dutyCycle: Double,
+            angle: Rotation2d
         ) : Output(angle) {
             override fun reverse(): Output {
                 return DutyCycle(-dutyCycle, moduleAngle + 180.degrees.toRotation2d())

@@ -13,6 +13,8 @@ import frc.robot.Ports.collectorAgitatorId
 import frc.robot.Ports.kPcmId
 import frc.robot.Ports.shooterGearboxIds
 import frc.robot.Ports.shooterShifterSolenoid
+import kotlin.math.PI
+import kotlin.properties.Delegates
 import kotlinx.coroutines.GlobalScope
 import lib.inRpm
 import lib.instantCommand
@@ -32,8 +34,6 @@ import org.ghrobotics.lib.types.Interpolatable
 import org.ghrobotics.lib.utils.launchFrequency
 import org.ghrobotics.lib.wrappers.FalconDoubleSolenoid
 import org.ghrobotics.lib.wrappers.FalconSolenoid
-import kotlin.math.PI
-import kotlin.properties.Delegates
 
 object FlywheelSubsystem : FalconSubsystem() {
 
@@ -131,7 +131,7 @@ object FlywheelSubsystem : FalconSubsystem() {
     }
 
     override fun periodic() {
-        if(!updateJob.isActive) updateJob.start()
+        if (!updateJob.isActive) updateJob.start()
     }
 
     /**
@@ -195,7 +195,6 @@ object FlywheelSubsystem : FalconSubsystem() {
     // STATE SPACE STUFF
     private val feedForward = SimpleMotorFeedforward(0.6, 12.0 / 5676.revolutionsPerMinute.value * 0.9)
     private val feedBack = PIDController(0.02, 0.0, 0.0)
-
 }
 
 data class ShotParameter(

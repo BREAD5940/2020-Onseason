@@ -1,24 +1,24 @@
-//package frc.robot.subsystems.drive.localization
+// package frc.robot.subsystems.drive.localization
 //
-//import edu.wpi.first.wpilibj.Timer
-//import edu.wpi.first.wpilibj.geometry.Pose2d
-//import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
-//import edu.wpi.first.wpiutil.math.numbers.N3
-//import frc.team4069.keigen.*
-//import frc.team4069.keigen.Vector
-//import java.util.*
-//import lib.interpolate
-//import org.ghrobotics.lib.localization.TimePoseInterpolatableBuffer
-//import org.ghrobotics.lib.mathematics.units.*
-//import org.ghrobotics.lib.mathematics.units.derived.radians
-//import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
-//import org.ghrobotics.lib.mathematics.units.operations.div
-//import org.ghrobotics.lib.utils.Source
+// import edu.wpi.first.wpilibj.Timer
+// import edu.wpi.first.wpilibj.geometry.Pose2d
+// import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
+// import edu.wpi.first.wpiutil.math.numbers.N3
+// import frc.team4069.keigen.*
+// import frc.team4069.keigen.Vector
+// import java.util.*
+// import lib.interpolate
+// import org.ghrobotics.lib.localization.TimePoseInterpolatableBuffer
+// import org.ghrobotics.lib.mathematics.units.*
+// import org.ghrobotics.lib.mathematics.units.derived.radians
+// import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
+// import org.ghrobotics.lib.mathematics.units.operations.div
+// import org.ghrobotics.lib.utils.Source
 //
-///**
+// /**
 // * A kalman filter designed to run at 200hz
 // */
-//object DrivetrainLocalizer {
+// object DrivetrainLocalizer {
 //
 //    private const val dt = 0.005
 //
@@ -89,13 +89,13 @@
 //        pastInputs[now] = nowInput
 //        pastPoseBuffer[timestamp] = observer.xhat.toPose()
 //    }
-//}
+// }
 //
-//private fun Vector<N3>.toPose() = Pose2d(get(0), get(1), get(0).radians.toRotation2d())
+// private fun Vector<N3>.toPose() = Pose2d(get(0), get(1), get(0).radians.toRotation2d())
 //
-//fun Pose2d.toVec() = vec(`3`).fill(translation.x, translation.y, rotation.radians)
+// fun Pose2d.toVec() = vec(`3`).fill(translation.x, translation.y, rotation.radians)
 //
-//class TimeInterpolatableInputBuffer(private val historySpan: SIUnit<Second> = 1.0.seconds, private val timeSource: Source<SIUnit<Second>> = { Timer.getFPGATimestamp().seconds }) {
+// class TimeInterpolatableInputBuffer(private val historySpan: SIUnit<Second> = 1.0.seconds, private val timeSource: Source<SIUnit<Second>> = { Timer.getFPGATimestamp().seconds }) {
 //
 //    val bufferMap = TreeMap<SIUnit<Second>, Vector<N3>>()
 //
@@ -138,10 +138,10 @@
 //            )
 //        }
 //    }
-//}
+// }
 //
-//private fun Vector<N3>.interpolate(upperBound: Vector<N3>, t: Double) = vec(`3`).fill(
+// private fun Vector<N3>.interpolate(upperBound: Vector<N3>, t: Double) = vec(`3`).fill(
 //        get(0).interpolate(upperBound[0], t),
 //        get(0).interpolate(upperBound[0], t),
 //        get(0).interpolate(upperBound[0], t)
-//)
+// )

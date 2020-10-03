@@ -4,11 +4,11 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.subsystems.drive.DriveSubsystem
-import frc.robot.subsystems.drive.PointTurnCommand
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.ShootCommand
+import kotlin.math.absoluteValue
 import lib.beforeStarting
 import lib.instantCommand
 import lib.runCommand
@@ -19,7 +19,6 @@ import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.inRadians
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.seconds
-import kotlin.math.absoluteValue
 
 class OpposingTrenchRoutine : AutoRoutine() {
     private val path1 = TrajectoryFactory.eightPCAutoStartToOpposingTrench // Grab 2
@@ -55,7 +54,7 @@ class OpposingTrenchRoutine : AutoRoutine() {
             val timer = Timer()
             +DriveSubsystem.followTrajectory2(path3) {
                 // switch headings halfway through
-                if(timer.get() < 2.5) 65.degrees else 115.degrees
+                if (timer.get() < 2.5) 65.degrees else 115.degrees
             }
                     .beforeStarting { timer.reset(); timer.start() }
                     .deadlineWith(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })

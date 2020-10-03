@@ -24,7 +24,7 @@ fun <D : Num> ones(size: Nat<D>): Matrix<D, N1> {
 
 fun <R : Num, C : Num> mat(rows: Nat<R>, cols: Nat<C>) = MatBuilder(rows, cols)
 
-//typealias Vector<D> = Matrix<D, N1>
+// typealias Vector<D> = Matrix<D, N1>
 
 operator fun <D : Num> Matrix<D, N1>.get(i: Int) = storage[i, 0]
 operator fun <D : Num> Matrix<D, N1>.set(i: Int, j: Double) {
