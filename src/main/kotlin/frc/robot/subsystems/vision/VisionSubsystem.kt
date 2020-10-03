@@ -100,7 +100,7 @@ object VisionSubsystem : FalconSubsystem() {
     private fun updateTracker() {
         val target = gloworm.latestResult
 
-        if (target.hasTargets()) updateTangentEstimation(Rotation2d.fromDegrees(target.bestTarget.pitch) + camAngle.toRotation2d(), target.bestTarget.yaw.degrees.toRotation2d(),
+        if (target.hasTargets()) updateTangentEstimation(Rotation2d.fromDegrees(target.bestTarget.pitch) + camAngle.toRotation2d(),-target.bestTarget.yaw.degrees.toRotation2d(),
                 Timer.getFPGATimestamp().seconds - gloworm.latestResult.latencyMillis.milli.seconds)
 
         Tracker.update()
