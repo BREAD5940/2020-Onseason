@@ -48,7 +48,7 @@ object Autonomous {
             Mode.EIGHT_PC_TRENCH to EightPCFromTrenchRoutine()(),
             Mode.THREE_PC to ThreePCRoutine()(),
             Mode.SIX_PC_TRENCH to SixPCFromTrenchRoutine()(),
-            Mode.OPPOSING_TRENCH to OpposingTrenchRoutine()(),
+            Mode.OPPOSING_TRENCH to OpposingTrenchTenRoutine()(),
             Mode.TEN_PC_RIGHT to RightSideTenPCRoutine()(),
             Mode.DO_NOTHING to InstantCommand()
     )

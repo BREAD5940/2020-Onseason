@@ -17,9 +17,9 @@ import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.seconds
 
 class EightPCFromTrenchRoutine : AutoRoutine() {
-    private val path1 = TrajectoryFactory.shootThree
-    private val path2 = TrajectoryFactory.getPCFromTrench
-    private val path3 = TrajectoryFactory.trenchToShoot
+    private val path1 = TrajectoryFactory.shootThree //sets up to shoot starting balls
+    private val path2 = TrajectoryFactory.getPCFromTrench //gets 5 balls in trench
+    private val path3 = TrajectoryFactory.trenchToShoot //goes back to shooting spot
 
     override val duration: SIUnit<Second>
         get() = SIUnit<Second>(path1.totalTimeSeconds + path2.totalTimeSeconds + path3.totalTimeSeconds)

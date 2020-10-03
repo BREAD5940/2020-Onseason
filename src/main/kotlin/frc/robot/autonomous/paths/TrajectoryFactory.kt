@@ -166,86 +166,75 @@ object TrajectoryFactory {
         )
     }
 
-    val eightPCAutoStartToOpposingTrench by lazy {
+    val tenPCAutoStartToOpposingTrench by lazy {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(11.79.feet, 1.281.feet, 90.degrees),
-                        Pose2d(13.047.feet, 2.425.feet, 0.degrees),
-                        Pose2d(20.75.feet, 2.2.feet, 0.degrees)
+                        Pose2d(11.79.feet, 1.281.feet, 0.degrees),
+                        Pose2d(20.75.feet, 2.2.feet, 0.degrees),
+                        Pose2d(19.607.feet, 2.2.feet, 0.degrees)
                 ),
                 listOf(
                         SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
                         VelocityLimitRegionConstraint(Rectangle2d(
                                 Translation2d(21.552, 4.357),
                                 Translation2d(24.824, -0.051)),
-                                3.feet.velocity),
-                        VelocityLimitRegionConstraint(Rectangle2d(
-                                Translation2d(20.998, 3.531),
-                                Translation2d(21.904, 1.051)),
                                 3.feet.velocity)
                 ), kMaxVelocity, kMaxAcceleration
         )
     }
 
-    val eightPCAutoOpposingTrenchToShoot by lazy {
+    val tenPCAutoOpposingTrenchToShoot by lazy {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(20.75.feet, 2.2.feet, 112.degrees),
-                        Pose2d(15.feet, 17.feet, 112.degrees)
+                        Pose2d(19.607.feet, 2.2.feet, 180.degrees),
+                        Pose2d(15.feet, 17.feet, 180.degrees)
                 ),
-                listOf(
-                        SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
-                        VelocityLimitRadiusConstraint(Translation2d(18.624, 16.571),
-                                1.5.feet,
-                                3.feet.velocity)
-                ), kMaxVelocity, kMaxAcceleration
+                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
     }
 
-    val retrieve5FromShieldGenerator: Trajectory by lazy {
-        TrajectoryGenerator.generateTrajectory(
+    val retrieve5FromShieldGenerator by lazy {
+        generateTrajectory(
+                false,
                 listOf(
-                        Pose2d(15.feet, 17.feet, (-89).degrees),
-                        Pose2d(19.45.feet, 11.75.feet, 113.degrees),
-                        Pose2d(18.619.feet, 13.746.feet, 113.degrees),
-                        Pose2d(17.535.feet, 14.504.feet, 172.degrees),
-                        Pose2d(16.393.feet, 16.819.feet, 88.degrees),
-                        Pose2d(17.463.feet, 19.139.feet, 28.degrees),
-                        Pose2d(20.25.feet, 18.4.feet, (-68).degrees)),
-                FalconTrajectoryConfig(kMaxVelocity / 1.0, kMaxAcceleration).apply {
-                    addConstraints(
-                            SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
+                        Pose2d(15.feet, 17.feet, 67.degrees),
+                        Pose2d(19.142.feet, 12.301.feet, 67.degrees),
+                        Pose2d(18.575.feet, 13.746.feet, 67.degrees),
+                        Pose2d(16.745.feet, 17.783.feet, 0.degrees),
+                        Pose2d(20.514.feet, 18.4.feet, (-112).degrees)
+                ),
+                listOf(
+                        SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
                             VelocityLimitRadiusConstraint(Translation2d(18.624, 16.571),
                                     1.5.feet,
                                     4.feet.velocity),
                             VelocityLimitRegionConstraint(Rectangle2d(
                                     Translation2d(21.468, 11.5),
                                     Translation2d(19.02, 15.286)),
-                                    4.feet.velocity),
+                                    4.feet.velocity), //subject to change
                             VelocityLimitRegionConstraint(Rectangle2d(
                                     Translation2d(22.479,17.24),
                                     Translation2d(18.976,17.215)),
-                                    4.feet.velocity)
-                            )
-                }
-        )
-    }
+                                    4.feet.velocity) //subject to change
+                            ), kMaxVelocity, kMaxAcceleration
+                    )
 
-    val eightPCShieldGeneratorToShoot by lazy {
+    }
+    val tenPCShieldGeneratorToShoot by lazy {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(20.25.feet, 18.4.feet, 135.degrees),
-                        Pose2d(15.feet, 17.feet, -129.degrees)
+                        Pose2d(20.514.feet, 18.4.feet, (-112).degrees),
+                        Pose2d(15.feet, 18.929.feet, 180.degrees)
                 ),
                 listOf(
                         SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
                         VelocityLimitRadiusConstraint(Translation2d(18.624, 16.571),
                                 1.5.feet,
                                 3.feet.velocity)
-                ), kMaxVelocity, kMaxAcceleration, clampedCubic = false
+                ), kMaxVelocity, kMaxAcceleration
         )
     }
 
@@ -271,34 +260,34 @@ object TrajectoryFactory {
         )
     }
 
-//    val sixPCGetPCFromShieldGenerator by lazy {
-//        generateTrajectory(
-//                false,
-//                listOf(
-//                        Pose2d(16.557.feet, 14.551.feet, 160.degrees),
-//                        Pose2d(18.65.feet, 13.541.feet, 24.degrees),
-//                        Pose2d(19.134.feet, 12.347.feet, 24.degrees)
-//                ),
-//                listOf(
-//                        SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
-//                        VelocityLimitRegionConstraint(Rectangle2d(
-//                                Translation2d(21.468, 11.5),
-//                                Translation2d(19.02, 15.286)),
-//                                3.feet.velocity)
-//                ), kMaxVelocity, kMaxAcceleration
-//        )
-//    }
-//
-//    val sixPCShieldGeneratorToShoot by lazy {
-//        generateTrajectory(
-//                false,
-//                listOf(
-//                        Pose2d(19.134.feet, 12.347.feet, 24.degrees),
-//                        Pose2d(16.557.feet, 14.551.feet, 160.degrees)
-//                ),
-//                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
-//        )
-//    }
+    val sixPCGetPCFromShieldGenerator by lazy {
+        generateTrajectory(
+                false,
+                listOf(
+                        Pose2d(16.557.feet, 14.551.feet, 160.degrees),
+                        Pose2d(18.65.feet, 13.541.feet, 24.degrees),
+                        Pose2d(19.134.feet, 12.347.feet, 24.degrees)
+                ),
+                listOf(
+                        SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
+                        VelocityLimitRegionConstraint(Rectangle2d(
+                                Translation2d(21.468, 11.5),
+                                Translation2d(19.02, 15.286)),
+                                3.feet.velocity)
+                ), kMaxVelocity, kMaxAcceleration
+        )
+    }
+
+    val sixPCShieldGeneratorToShoot by lazy {
+        generateTrajectory(
+                false,
+                listOf(
+                        Pose2d(19.134.feet, 12.347.feet, 24.degrees),
+                        Pose2d(16.557.feet, 14.551.feet, 160.degrees)
+                ),
+                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
+        )
+    }
 
     /** Generation **/
 
