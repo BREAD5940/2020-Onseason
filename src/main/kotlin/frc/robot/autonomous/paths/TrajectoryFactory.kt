@@ -64,8 +64,7 @@ object TrajectoryFactory {
         )
     }
 
-    val
-            tenPCAutoToShieldGenerator by lazy {
+    val tenPCAutoToShieldGenerator by lazy {
         generateTrajectory(
                 false,
                 listOf(
@@ -90,7 +89,7 @@ object TrajectoryFactory {
                 false,
                 listOf(
                         Pose2d(20.383.feet, 18.592.feet, (-68).degrees),
-                        Pose2d(17.682.feet, 21.939.feet, (-166).degrees)
+                        Pose2d(16.591.feet, 19.262.feet, 180.degrees)
                 ),
                 getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
@@ -100,9 +99,9 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(16.319.feet, 22.536.feet, 0.degrees),
-                        Pose2d(19.445.feet, 24.719.feet, 0.degrees),
-                        Pose2d(30.826.feet, 24.719.feet, 0.degrees)
+                        Pose2d(16.591.feet, 19.262.feet, 180.degrees),
+                        Pose2d(19.445.feet, 24.719.feet, 180.degrees),
+                        Pose2d(30.826.feet, 24.719.feet, 180.degrees)
                 ),
                 // TODO check if encompasses both pc areas in trench
 
@@ -111,11 +110,11 @@ object TrajectoryFactory {
                         VelocityLimitRegionConstraint(Rectangle2d(
                                 Translation2d(32.808, 22.449),
                                 Translation2d(28.79, 26.972)),
-                                3.feet.velocity),
-                        VelocityLimitRegionConstraint(Rectangle2d(
-                                Translation2d(20.075, 25.434),
-                                Translation2d(27.752, 23.918)),
-                                6.feet.velocity)
+                                3.feet.velocity)
+//                        VelocityLimitRegionConstraint(Rectangle2d(
+//                                Translation2d(20.075, 25.434),
+//                                Translation2d(27.752, 23.918)),
+//                                6.feet.velocity)
                 ), kMaxVelocity, kMaxAcceleration
         )
     }
@@ -203,7 +202,7 @@ object TrajectoryFactory {
                         Pose2d(19.142.feet, 12.301.feet, 67.degrees),
                         Pose2d(18.575.feet, 13.746.feet, 67.degrees),
                         Pose2d(16.745.feet, 17.783.feet, 0.degrees),
-                        Pose2d(20.514.feet, 18.4.feet, (-112).degrees)
+                        Pose2d(20.514.feet, 18.4.feet, (-68).degrees)
                 ),
                 listOf(
                         SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
@@ -226,7 +225,7 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(20.514.feet, 18.4.feet, (-112).degrees),
+                        Pose2d(20.514.feet, 18.4.feet, (-68).degrees),
                         Pose2d(15.feet, 18.929.feet, 180.degrees)
                 ),
                 listOf(
@@ -253,8 +252,8 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(30.826.feet, 24.719.feet, 180.0.degrees),
-                        Pose2d(27.879.feet, 24.719.feet, 180.0.degrees)
+                        Pose2d(30.826.feet, 24.719.feet, 0.0.degrees),
+                        Pose2d(16.319.feet, 22.536.feet, 0.0.degrees)
                 ),
                 getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )

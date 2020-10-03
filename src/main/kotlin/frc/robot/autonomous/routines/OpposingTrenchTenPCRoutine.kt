@@ -21,7 +21,7 @@ import org.ghrobotics.lib.mathematics.units.derived.inRadians
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.seconds
 
-class OpposingTrenchTenRoutine : AutoRoutine() {
+class OpposingTrenchTenPCRoutine : AutoRoutine() {
     private val path1 = TrajectoryFactory.tenPCAutoStartToOpposingTrench // Grab 2 from opposing trench
     private val path2 = TrajectoryFactory.tenPCAutoOpposingTrenchToShoot // Post up next to truss
     private val path3 = TrajectoryFactory.retrieve5FromShieldGenerator //Grab 5 from shield generator
@@ -57,7 +57,7 @@ class OpposingTrenchTenRoutine : AutoRoutine() {
                     .deadlineWith(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })
                     //.andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
-            +DriveSubsystem.followTrajectory(path4) { -112.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path4) { -68.degrees.toRotation2d() }
 
 //            val command2 = VisionDriveCommand()
 //            +command2.withExit { command2.lastError.absoluteValue < 1.5.degrees.inRadians() }
