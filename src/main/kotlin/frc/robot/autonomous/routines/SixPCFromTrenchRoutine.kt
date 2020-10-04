@@ -37,9 +37,9 @@ class SixPCFromTrenchRoutine : AutoRoutine() {
                     .alongWith(IntakeSubsystem.extendIntakeCommand())
                     .deadlineWith(instantCommand { IntakeSubsystem.intakeMotor.setDutyCycle(0.5); IntakeSubsystem.setSmolPistonExtension(true) })
 
-            val command = VisionDriveCommand()
-            +command.withExit { command.lastError.absoluteValue < 1.5.degrees.inRadians() }
-                    .deadlineWith(ShootCommand())
+//            val command = VisionDriveCommand()
+//            +command.withExit { command.lastError.absoluteValue < 1.5.degrees.inRadians() }
+//                    .deadlineWith(ShootCommand())
 
             +(FlywheelSubsystem.agitateAndShoot(2.5.seconds))
                     .deadlineWith(VisionDriveCommand())
@@ -56,13 +56,13 @@ class SixPCFromTrenchRoutine : AutoRoutine() {
 
 //            +PointTurnCommand(180.degrees.toRotation2d())
 
-            val rectangle = Rectangle2d(Translation2d(27.feet, 22.feet), Translation2d(36.feet, 27.feet))
-
-            +DriveSubsystem.followTrajectory2(path3) {
-                if (rectangle.contains(DriveSubsystem.robotPosition.translation)) 0.degrees
-                else (-172).degrees
-            }
-                    .deadlineWith(ShootCommand())
+//            val rectangle = Rectangle2d(Translation2d(27.feet, 22.feet), Translation2d(36.feet, 27.feet))
+//
+//            +DriveSubsystem.followTrajectory2(path3) {
+//                if (rectangle.contains(DriveSubsystem.robotPosition.translation)) 0.degrees
+//                else (-172).degrees
+//            }
+//                    .deadlineWith(ShootCommand())
 //                    .alongWith(
 //                            IntakeSubsystem.retractIntakeCommand().andThen(WaitCommand(0.5))
 //                                    .andThen(IntakeSubsystem.extendIntakeCommand())
@@ -70,9 +70,9 @@ class SixPCFromTrenchRoutine : AutoRoutine() {
                     .deadlineWith(instantCommand { IntakeSubsystem.intakeMotor.setDutyCycle(0.5); IntakeSubsystem.setSmolPistonExtension(true) })
 
             // re-align with target
-            val command2 = VisionDriveCommand()
-            +command2.withExit { command2.lastError.absoluteValue < 1.5.degrees.inRadians() }
-                    .deadlineWith(ShootCommand())
+//            val command2 = VisionDriveCommand()
+//            +command2.withExit { command2.lastError.absoluteValue < 1.5.degrees.inRadians() }
+//                    .deadlineWith(ShootCommand())
 
             +(FlywheelSubsystem.agitateAndShoot(3.seconds))
                     .deadlineWith(

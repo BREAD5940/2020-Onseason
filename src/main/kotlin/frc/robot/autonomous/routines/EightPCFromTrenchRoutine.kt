@@ -29,11 +29,11 @@ class EightPCFromTrenchRoutine : AutoRoutine() {
 
             +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 180.degrees.toRotation2d()) }
 
+            +(FlywheelSubsystem.agitateAndShoot(1.seconds))
+                    .deadlineWith(VisionDriveCommand())
+
             +DriveSubsystem.followTrajectory(path1) { 180.degrees.toRotation2d() }
                     .alongWith(IntakeSubsystem.extendIntakeCommand())
-
-            +(FlywheelSubsystem.agitateAndShoot(3.seconds))
-                    .deadlineWith(VisionDriveCommand())
 
             +PointTurnCommand(0.degrees.toRotation2d()) //TODO figure out if this turns robot 0 or if it turns to 0, assumed latter
 

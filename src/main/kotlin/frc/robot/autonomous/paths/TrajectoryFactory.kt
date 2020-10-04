@@ -60,7 +60,7 @@ object TrajectoryFactory {
                         Pose2d(11.75.feet, 25.689.feet, 180.degrees),
                         Pose2d(16.319.feet, 22.536.feet, 180.degrees)
                 ),
-                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
+                getConstraints(kMaxVelocity), 4.feet.velocity, kMaxAcceleration
         )
     }
 
@@ -115,7 +115,7 @@ object TrajectoryFactory {
 //                                Translation2d(20.075, 25.434),
 //                                Translation2d(27.752, 23.918)),
 //                                6.feet.velocity)
-                ), kMaxVelocity, kMaxAcceleration
+                ), 4.feet.velocity, kMaxAcceleration
         )
     }
 
@@ -133,7 +133,7 @@ object TrajectoryFactory {
                                 Translation2d(32.808,22.449),
                                 Translation2d(28.79,26.972)),
                                 3.feet.velocity)
-                        ), kMaxVelocity, kMaxAcceleration
+                        ), 4.feet.velocity, kMaxAcceleration
                 )
     }
 
@@ -241,10 +241,10 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(12.feet, 25.5.feet, -110.degrees),
-                        Pose2d(9.5.feet, 22.feet, (-125).degrees)
+                        Pose2d(11.75.feet, 25.689.feet, 180.degrees),
+                        Pose2d(16.319.feet, 22.536.feet, 180.degrees)
                 ),
-                getConstraints(kMaxVelocity), 10.feet.velocity, kMaxAcceleration
+                getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
     }
 
