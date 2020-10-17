@@ -101,7 +101,7 @@ object VisionSubsystem : FalconSubsystem() {
         val target = gloworm.latestResult
 
         if (target.hasTargets()) updateTangentEstimation(Rotation2d.fromDegrees(target.bestTarget.pitch) + camAngle.toRotation2d(),-target.bestTarget.yaw.degrees.toRotation2d(),
-                Timer.getFPGATimestamp().seconds - gloworm.latestResult.latencyMillis.milli.seconds)
+                Timer.getFPGATimestamp().seconds - target.latencyMillis.milli.seconds)
 
         Tracker.update()
     }
@@ -121,6 +121,7 @@ object VisionSubsystem : FalconSubsystem() {
 
         // from limelight we know that
         // d = (h2-h1) / tan(a1+a2)
+
         val heightDifferential = targetHeight - camHeight
         val distance = heightDifferential / tan(pitchToHorizontal.radians) * (1.0 + yaw.degrees.absoluteValue * yawDistanceCorrectKp)
 
