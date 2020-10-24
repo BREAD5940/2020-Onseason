@@ -46,6 +46,7 @@ class SwerveTrajectoryFollowerCommand(
 
     override fun end(interrupted: Boolean) {
         FalconDashboard.isFollowingPath = false
+        DriveSubsystem.setNeutral()
     }
 
     override fun initialize() {
@@ -64,6 +65,7 @@ class SwerveTrajectoryFollowerCommand(
 
         // update target heading
         targetHeading = headingSupplier()
+        println(targetHeading.degrees)
 
         // update the controller
         val time = timer.get()
