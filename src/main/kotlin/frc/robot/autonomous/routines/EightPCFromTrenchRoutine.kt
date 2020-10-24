@@ -34,20 +34,20 @@ class EightPCFromTrenchRoutine : AutoRoutine() {
             +DriveSubsystem.followTrajectory(path1, { -166.degrees.toRotation2d() })
                     .alongWith(IntakeSubsystem.extendIntakeCommand())
 
-            +(FlywheelSubsystem.agitateAndShoot(3.seconds))
+            +(FlywheelSubsystem.agitateAndShoot(2.seconds))
                     .deadlineWith(VisionDriveCommand())
 
-            +PointTurnCommand(0.degrees.toRotation2d()) //TODO figure out if this turns robot 0 or if it turns to 0, assumed latter
+            +PointTurnCommand(0.degrees.toRotation2d())
 
             +DriveSubsystem.followTrajectory2(path2) { 0.degrees }
                     .deadlineWith(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
             val timer = Timer()
-            +DriveSubsystem.followTrajectory(path3) { if(timer.get() > 2.0) 180.degrees.toRotation2d() else 0.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path3) { if(timer.get() > 1.5) 180.degrees.toRotation2d() else 0.degrees.toRotation2d() }
                     .beforeStarting { timer.reset(); timer.start() }
 
-            +(FlywheelSubsystem.agitateAndShoot(3.seconds))
+            +(FlywheelSubsystem.agitateAndShoot(2.seconds))
                     .deadlineWith(VisionDriveCommand(),
                         runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0); IntakeSubsystem.setSmolPistonExtension(true) })
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
