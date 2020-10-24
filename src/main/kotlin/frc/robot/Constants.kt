@@ -60,7 +60,7 @@ object Constants {
             7.0 to ShotParameter(67.degrees, 2800.revolutionsPerMinute, (0).degrees),
             8.0 to ShotParameter(67.degrees, 3100.revolutionsPerMinute, 0.degrees),
             9.5 to ShotParameter(67.degrees, 3300.revolutionsPerMinute, 0.degrees),
-            11.4 to ShotParameter(6.5.degrees, 3600.revolutionsPerMinute, 0.degrees),
+            11.4 to ShotParameter(67.degrees, 3600.revolutionsPerMinute, 0.degrees),
             13.85 to ShotParameter(67.5.degrees, 4100.revolutionsPerMinute, 0.degrees),
             15.7 to ShotParameter(68.5.degrees, 4110.revolutionsPerMinute, 0.degrees)
     )

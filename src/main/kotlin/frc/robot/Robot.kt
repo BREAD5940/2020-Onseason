@@ -22,7 +22,7 @@ object Robot : FalconTimedRobot() {
 
     val isEnabled get() = wrappedValue.isEnabled
 
-    const val debugMode = true
+    const val debugMode = false
 
     val led = AddressableLED(7)
     val buffer = AddressableLEDBuffer(100) // irl 43
