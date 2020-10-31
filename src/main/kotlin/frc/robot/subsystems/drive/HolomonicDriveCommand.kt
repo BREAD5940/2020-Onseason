@@ -24,7 +24,7 @@ open class HolomonicDriveCommand : FalconCommand(DriveSubsystem) {
     override fun execute() {
         var forward = (xSource() / 1.0 )
         var strafe = (zSource() / 1.0 )
-        var rotation = (-rotSource() * 1.0 / 1.5)
+        var rotation = (-rotSource() * 1.0 / 1.25)
 
         // var isRobotRelative = false
         //   forward *= forward.absoluteValue

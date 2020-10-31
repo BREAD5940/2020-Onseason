@@ -43,8 +43,12 @@ class EightPCFromTrenchRoutine : AutoRoutine() {
                     .deadlineWith(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
+            +PointTurnCommand(10.degrees.toRotation2d())
+
+            +PointTurnCommand(-10.degrees.toRotation2d())
+
             val timer = Timer()
-            +DriveSubsystem.followTrajectory(path3) { if(timer.get() > 1.5) 180.degrees.toRotation2d() else 0.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path3) { if(timer.get() > 1.0) 180.degrees.toRotation2d() else 0.degrees.toRotation2d() }
                     .beforeStarting { timer.reset(); timer.start() }
 
             +(FlywheelSubsystem.agitateAndShoot(2.seconds))
