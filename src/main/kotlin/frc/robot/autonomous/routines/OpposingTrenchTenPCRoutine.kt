@@ -41,8 +41,8 @@ class OpposingTrenchTenPCRoutine : AutoRoutine() {
 
             +DriveSubsystem.followTrajectory(path1) { 0.degrees.toRotation2d() }
                     .deadlineWith(
-                            IntakeSubsystem.extendIntakeCommand()
-                                    .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) }))
+                            IntakeSubsystem.extendIntakeCommand())
+                    .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })
 
             +PointTurnCommand(180.degrees.toRotation2d())
 
@@ -50,27 +50,41 @@ class OpposingTrenchTenPCRoutine : AutoRoutine() {
 
             +(FlywheelSubsystem.agitateAndShoot((2.seconds)))
                     .deadlineWith(VisionDriveCommand())
-                    .withExit { command.lastError.absoluteValue < 1.5.degrees.inRadians() }
+//                    .withExit { command.lastError.absoluteValue < 1.5.degrees.inRadians() }
 
-            +PointTurnCommand(24.degrees.toRotation2d())
+//            +PointTurnCommand(24.degrees.toRotation2d())
 
-            //val timer = Timer()
-            +DriveSubsystem.followTrajectory(path3)  { 67.degrees.toRotation2d() } //TODO Make sure it doesn't hit boundaries (bumps) under shield generator
-                    //.beforeStarting { timer.reset(); timer.start() }
-                    .deadlineWith(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })
+//            val timer = Timer()
+//            +DriveSubsystem.followTrajectory(path3)  { 67.degrees.toRotation2d() } //TODO Make sure it doesn't hit boundaries (bumps) under shield generator
+//                    .beforeStarting { timer.reset(); timer.start() }
+//                    .deadlineWith(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })
+//                    .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
+
+            +DriveSubsystem.followTrajectory(path3) { 24.degrees.toRotation2d() }
+                    .deadlineWith(runCommand(IntakeSubsystem) {IntakeSubsystem.setSpeed(1.0)})
+
+            +DriveSubsystem.followTrajectory(path4) { 24.degrees.toRotation2d() }
+                    .deadlineWith(runCommand(IntakeSubsystem) {IntakeSubsystem.setSpeed(1.0)})
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
-            +DriveSubsystem.followTrajectory(path4) { -68.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path5) { 0.degrees.toRotation2d() }
 
-            val command2 = VisionDriveCommand()
-            +command2.withExit { command2.lastError.absoluteValue < 1.5.degrees.inRadians() }
-                    .deadlineWith(ShootCommand())
+            +DriveSubsystem.followTrajectory(path6) { -68.degrees.toRotation2d() }
+                    .deadlineWith(runCommand(IntakeSubsystem) {IntakeSubsystem.setSpeed(1.0)})
+                    .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
+
+            val timer = Timer()
+            +DriveSubsystem.followTrajectory(path7) { if(timer.get() > 2.0) 180.degrees.toRotation2d() else 0.degrees.toRotation2d() } //TODO Adjust timing
+                    .beforeStarting{ timer.reset(); timer.start(); }
+
+//            val command2 = VisionDriveCommand()
+//            +command2.withExit { command2.lastError.absoluteValue < 1.5.degrees.inRadians() }
+//                    .deadlineWith(ShootCommand())
 
             +(FlywheelSubsystem.agitateAndShoot((2.seconds)))
-                    .deadlineWith(
-                            VisionDriveCommand())
-                            runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0); IntakeSubsystem.setSmolPistonExtension(true) })
-                    .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
+                    .deadlineWith(VisionDriveCommand())
+//                            runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0); IntakeSubsystem.setSmolPistonExtension(true) }
+//                    .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
             println(duration)
         }

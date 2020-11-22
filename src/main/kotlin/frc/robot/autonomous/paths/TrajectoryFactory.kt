@@ -183,7 +183,7 @@ object TrajectoryFactory {
         )
     }
 
-    val tenPCAutoOpposingTrenchToShoot by lazy {
+    val tenPCAutoOpposingTrenchToShoot by lazy { //end heading 171 degrees
         generateTrajectory(
                 false,
                 listOf(
@@ -250,8 +250,8 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(19.142.feet, 12.301.feet, 25.degrees),
-                        Pose2d(18.575.feet, 13.746.feet, 25.degrees)
+                        Pose2d(19.142.feet, 12.301.feet, 115.degrees),
+                        Pose2d(18.575.feet, 13.746.feet, 115.degrees)
                 ),
                 listOf(
                         SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
@@ -274,8 +274,8 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(18.575.feet, 13.746.feet, 26.degrees),
-                        Pose2d(16.613.feet, 18.104.feet, 26.degrees)
+                        Pose2d(18.575.feet, 13.746.feet, 113.degrees),
+                        Pose2d(16.613.feet, 18.104.feet, 113.degrees)
                 ),
                 listOf(
                         SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
@@ -298,8 +298,8 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(16.613.feet, 18.104.feet, 26.degrees),
-                        Pose2d(20.316.feet, 18.643.feet, 26.degrees)
+                        Pose2d(16.613.feet, 18.104.feet, 10.degrees),
+                        Pose2d(20.316.feet, 18.643.feet, 10.degrees)
                 ),
                 listOf(
                         SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
