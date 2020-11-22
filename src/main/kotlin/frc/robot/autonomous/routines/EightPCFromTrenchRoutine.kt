@@ -31,7 +31,7 @@ class EightPCFromTrenchRoutine : AutoRoutine() {
 
             +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 180.degrees.toRotation2d()) }
 
-            +DriveSubsystem.followTrajectory(path1, { -166.degrees.toRotation2d() })
+            +DriveSubsystem.followTrajectory(path1) { -166.degrees.toRotation2d() }
                     .alongWith(IntakeSubsystem.extendIntakeCommand())
 
             +(FlywheelSubsystem.agitateAndShoot(2.seconds))
@@ -39,7 +39,7 @@ class EightPCFromTrenchRoutine : AutoRoutine() {
 
             +PointTurnCommand(0.degrees.toRotation2d())
 
-            +DriveSubsystem.followTrajectory2(path2) { 0.degrees }
+            +DriveSubsystem.followTrajectory(path2) { 0.degrees.toRotation2d() }
                     .deadlineWith(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 

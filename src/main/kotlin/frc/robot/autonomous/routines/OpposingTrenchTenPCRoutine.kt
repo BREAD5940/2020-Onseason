@@ -24,49 +24,54 @@ import org.ghrobotics.lib.mathematics.units.seconds
 class OpposingTrenchTenPCRoutine : AutoRoutine() {
     private val path1 = TrajectoryFactory.tenPCAutoStartToOpposingTrench // Grab 2 from opposing trench
     private val path2 = TrajectoryFactory.tenPCAutoOpposingTrenchToShoot // Post up next to truss
-    private val path3 = TrajectoryFactory.retrieve5FromShieldGenerator //Grab 5 from shield generator
-    private val path4 = TrajectoryFactory.tenPCShieldGeneratorToShoot //Go to shoot
+    private val path3 = TrajectoryFactory.retrieve3FromShieldGenerator1 //Grab 2 of 3 from one side of truss
+    private val path4 = TrajectoryFactory.retrieve3FromShieldGenerator2 //Grab last of 3 from one side of truss
+    private val path5 = TrajectoryFactory.goAroundCornerOfShieldGenerator //Go around corner of shield generator
+    private val path6 = TrajectoryFactory.retrieve2FromShieldGenerator //Grab 2 of 2 from one side of truss
+    private val path7 = TrajectoryFactory.tenPCShieldGeneratorToShoot //Go to shoot
 
     private val command = VisionDriveCommand()
 
     override val duration: SIUnit<Second>
-        get() = SIUnit(path1.totalTimeSeconds + path2.totalTimeSeconds + path3.totalTimeSeconds + path4.totalTimeSeconds)
+        get() = SIUnit(path1.totalTimeSeconds + path2.totalTimeSeconds + path3.totalTimeSeconds + path4.totalTimeSeconds + path5.totalTimeSeconds + path6.totalTimeSeconds + path7.totalTimeSeconds)
 
     override val routine
         get() = sequential {
             +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 0.degrees.toRotation2d()) }
 
-            +DriveSubsystem.followTrajectory2(path1) { 0.degrees }
+            +DriveSubsystem.followTrajectory(path1) { 0.degrees.toRotation2d() }
                     .deadlineWith(
                             IntakeSubsystem.extendIntakeCommand()
                                     .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) }))
 
             +PointTurnCommand(180.degrees.toRotation2d())
 
-            +DriveSubsystem.followTrajectory(path2) { 180.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path2) { 171.degrees.toRotation2d() }
 
-            +(FlywheelSubsystem.agitateAndShoot((3.seconds)))
+            +(FlywheelSubsystem.agitateAndShoot((2.seconds)))
                     .deadlineWith(VisionDriveCommand())
-                    //.withExit { command.lastError.absoluteValue < 1.5.degrees.inRadians() }
+                    .withExit { command.lastError.absoluteValue < 1.5.degrees.inRadians() }
 
-            +PointTurnCommand(67.degrees.toRotation2d())
+            +PointTurnCommand(24.degrees.toRotation2d())
 
             //val timer = Timer()
-            +DriveSubsystem.followTrajectory(path3)  { 67.degrees.toRotation2d() }
+            +DriveSubsystem.followTrajectory(path3)  { 67.degrees.toRotation2d() } //TODO Make sure it doesn't hit boundaries (bumps) under shield generator
                     //.beforeStarting { timer.reset(); timer.start() }
                     .deadlineWith(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })
-                    //.andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
+                    .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
 
             +DriveSubsystem.followTrajectory(path4) { -68.degrees.toRotation2d() }
 
-//            val command2 = VisionDriveCommand()
-//            +command2.withExit { command2.lastError.absoluteValue < 1.5.degrees.inRadians() }
-//                    .deadlineWith(ShootCommand())
+            val command2 = VisionDriveCommand()
+            +command2.withExit { command2.lastError.absoluteValue < 1.5.degrees.inRadians() }
+                    .deadlineWith(ShootCommand())
 
-            +(FlywheelSubsystem.agitateAndShoot((3.seconds)))
+            +(FlywheelSubsystem.agitateAndShoot((2.seconds)))
                     .deadlineWith(
                             VisionDriveCommand())
-//                            runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0); IntakeSubsystem.setSmolPistonExtension(true) })
-//                    .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
+                            runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0); IntakeSubsystem.setSmolPistonExtension(true) })
+                    .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
+
+            println(duration)
         }
 }
