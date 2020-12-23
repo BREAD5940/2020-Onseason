@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Compressor
 import edu.wpi.first.wpilibj.SPI
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
+import edu.wpi.first.wpilibj.estimator.SwerveDrivePoseEstimator
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Translation2d
@@ -14,10 +15,14 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState
+import edu.wpi.first.wpilibj.smartdashboard.Field2d
 import edu.wpi.first.wpilibj.trajectory.Trajectory
+import edu.wpi.first.wpilibj.util.Units
+import edu.wpi.first.wpiutil.math.VecBuilder
 import frc.robot.Constants
 import frc.robot.subsystems.drive.DriveSubsystem.feedForward
 import frc.robot.subsystems.drive.swerve.Mk2SwerveModule
+import frc.robot.subsystems.vision.VisionSubsystem
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import lib.asSparkMax
@@ -75,6 +80,8 @@ object DriveSubsystem : FalconSubsystem() {
 
     private val modules = listOf(flModule, frModule, blModule, brModule)
 
+    private val field = Field2d()
+
     /**
      * Feedforward. Used for trajectory tracking
      */
@@ -86,9 +93,26 @@ object DriveSubsystem : FalconSubsystem() {
 
     val kinematics = Constants.kinematics
 
-    internal val odometry = SwerveDriveOdometry(kinematics, robotHeadingSource()).apply {
-//        resetPosition(Pose2d(11.75.feet, 25.689.feet, 180.0.degrees), gyro())
+    private val odometry = SwerveDriveOdometry(kinematics, robotHeadingSource()).apply {
         resetPosition(Pose2d(30.feet, 11.feet, 180.degrees), robotHeadingSource()) // curst so i can be lazy
+    }
+
+    private val estimator = SwerveDrivePoseEstimator(robotHeadingSource(), Pose2d(30.feet, 11.feet, 180.degrees),
+        kinematics,
+        VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(5.0)),
+        VecBuilder.fill(Units.degreesToRadians(1.0)),
+        VecBuilder.fill(0.03, 0.03, Units.degreesToRadians(10.0)),
+        1.0 / 200.0)
+
+    fun resetPosition(pose: Pose2d) {
+        odometry.resetPosition(pose, robotHeadingSource())
+        estimator.resetPosition(pose, robotHeadingSource())
+    }
+
+    fun addVisionPose(fieldToRobot: Pose2d, time: SIUnit<Second>) {
+        estimator.addVisionMeasurement(fieldToRobot, time.inSeconds())
+
+        field.getObject("vision pose").pose = fieldToRobot
     }
 
     private val stateLock = Object()
@@ -110,13 +134,10 @@ object DriveSubsystem : FalconSubsystem() {
         modules.forEach { it.driveMotor.brakeMode = true }
         modules.forEach { it.azimuthMotor.brakeMode = false }
 
-        // set the default comand
+        // set the default command
         defaultCommand = HolomonicDriveCommand()
-//        defaultCommand = RunCommand(Runnable{
-//            periodicIO.output = SwerveDriveOutput.Nothing //SwerveDriveOutput.Percent(ChassisSpeeds(0.0, 0.0, 0.0))
-//        }, this)
 
-        // update localization f a s t
+        // update localization at 200hz
         this.kinematicsUpdateJob = GlobalScope.launchFrequency(200) {
             updateState()
             useState()
@@ -132,7 +153,7 @@ object DriveSubsystem : FalconSubsystem() {
     }
 
     fun setGyroAngle(angle: Rotation2d) {
-        odometry.resetPosition(Pose2d(periodicIO.pose.translation, angle), robotHeadingSource())
+        resetPosition(Pose2d(robotPosition.translation, angle))
     }
 
     val currentSwerveModuleStates get() = listOf(flModule.currentState, frModule.currentState, blModule.currentState, brModule.currentState)
@@ -140,7 +161,7 @@ object DriveSubsystem : FalconSubsystem() {
     var robotPosition
         get() = periodicIO.pose
         set(value) {
-            odometry.resetPosition(value, robotHeadingSource())
+            resetPosition(value)
         }
 
     override fun periodic() {
@@ -156,6 +177,12 @@ object DriveSubsystem : FalconSubsystem() {
         FalconDashboard.robotY = robotPosition.translation.y_u.inFeet()
 
         poseBuffer[Timer.getFPGATimestamp().seconds] = robotPosition
+
+        field.getObject("close goal").pose = VisionSubsystem.closePowerPort
+        field.getObject("far goal").pose = VisionSubsystem.farPowerPort
+        field.robotPose = robotPosition
+        field.getObject("pose estimator").pose = estimator.estimatedPosition
+        field.getObject()
     }
 
     // Trajectory following and other utility methods
@@ -201,7 +228,10 @@ object DriveSubsystem : FalconSubsystem() {
         periodicIO.pose = odometry.update(robotHeadingSource(), states[0], states[1], states[2], states[3])
         periodicIO.speed = kinematics.toChassisSpeeds(states[0], states[1], states[2], states[3])
 
-        val output = modules.map { "${it.azimuthAngle().degrees}, ${it.azimuthMotor.voltageOutput.value}, ${it.driveMotor.encoder.velocity.value}, ${it.driveMotor.voltageOutput.value}" }
+        // Update pose estimator
+        estimator.update(robotHeadingSource(), states[0], states[1], states[2], states[3])
+
+        // val output = modules.map { "${it.azimuthAngle().degrees}, ${it.azimuthMotor.voltageOutput.value}, ${it.driveMotor.encoder.velocity.value}, ${it.driveMotor.voltageOutput.value}" }
         // logger.log("${output[0]}, ${output[1]}, ${output[2]}, ${output[3]}")
     }
 

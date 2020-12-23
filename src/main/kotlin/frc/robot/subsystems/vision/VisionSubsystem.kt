@@ -7,39 +7,27 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Transform2d
+import edu.wpi.first.wpilibj.geometry.Translation2d
+import edu.wpi.first.wpilibj.util.Units
 import frc.robot.Robot
 import frc.robot.autonomous.paths.Pose2d
 import frc.robot.autonomous.paths.plus
 import frc.robot.subsystems.drive.DriveSubsystem
-
 import kotlin.math.absoluteValue
 import kotlin.math.tan
 import kotlin.properties.Delegates
-
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import lib.InterpolatingTable
 import lib.interpolate
-import lib.runCommand
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.mathematics.epsilonEquals
+import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
 import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
 import org.ghrobotics.lib.mathematics.units.*
+import org.ghrobotics.lib.mathematics.units.derived.Radian
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.types.Interpolatable
-
-import org.ghrobotics.lib.vision.ToastyTargetTracker
 import org.photonvision.PhotonCamera
-import kotlin.math.absoluteValue
-import kotlin.math.tan
-
-
-
-import org.ghrobotics.lib.vision.ChameleonCamera
-
-
 
 object VisionSubsystem : FalconSubsystem() {
 
@@ -62,22 +50,6 @@ object VisionSubsystem : FalconSubsystem() {
 
         gloworm.driverMode = false
         gloworm.pipelineIndex = 0
-
-
-    }
-
-    object Tracker : ToastyTargetTracker(TargetTrackerConstants(1.5.seconds, 10.feet, 100, 3)) {
-        /**
-         * Find the target that's closest to the robot per it's averagedPose2dRelativeToBot
-         */
-        fun getBestTarget() = synchronized(targets) {
-            targets.asSequence()
-                    .filter {
-                        if (!it.isReal) return@filter false
-                        val x = it.averagePose.relativeTo(DriveSubsystem.robotPosition).translation.x
-                        x >= 0.0
-                    }.minBy { it.averagePose.relativeTo(DriveSubsystem.robotPosition).translation.norm }
-        }
     }
 
     override fun periodic() {
@@ -100,10 +72,16 @@ object VisionSubsystem : FalconSubsystem() {
     private fun updateTracker() {
         val target = gloworm.latestResult
 
-        if (target.hasTargets()) updateTangentEstimation(Rotation2d.fromDegrees(target.bestTarget.pitch) + camAngle.toRotation2d(),-target.bestTarget.yaw.degrees.toRotation2d(),
+        if (target.hasTargets()) updateTangentEstimation(Rotation2d.fromDegrees(target.bestTarget.pitch) + camAngle.toRotation2d(), -target.bestTarget.yaw.degrees.toRotation2d(),
                 Timer.getFPGATimestamp().seconds - target.latencyMillis.milli.seconds)
+    }
 
-        Tracker.update()
+    private fun updateSolvePNP(cameraToTarget: Transform2d, timestamp: SIUnit<Second>) {
+        val fieldToTarget = getTarget(DriveSubsystem.robotPosition)
+        val fieldToCamera = fieldToTarget.transformBy(cameraToTarget.inverse())
+        val fieldToRobot = fieldToCamera.transformBy(robotToCamera.inverse())
+
+        DriveSubsystem.addVisionPose(fieldToRobot, timestamp)
     }
 
     private var lastPitch = 0.0
@@ -126,33 +104,39 @@ object VisionSubsystem : FalconSubsystem() {
         val distance = heightDifferential / tan(pitchToHorizontal.radians) * (1.0 + yaw.degrees.absoluteValue * yawDistanceCorrectKp)
 
         // A vector representing the vector between our camera and the target on the field
-        val cameraToTarget = Translation2d(distance, correctedYaw)
+        val cameraToTargetTranslation = Translation2d(distance, correctedYaw)
 
-        // Pose2d representing a rigid transform from the field to us
-        val fieldToRobot = DriveSubsystem.poseBuffer[timestamp] ?: DriveSubsystem.robotPosition
+        // This pose maps our camera at the origin out to our target, in the robot reference frame
+        // We assume we only ever see the opposing power port, and that its rotation is zero.
+        val cameraToTarget =
+            Transform2d(cameraToTargetTranslation, DriveSubsystem.robotHeadingSource() * -1.0)
 
-        // field-oriented rotation of the target. Must either be 0 or 180 degrees.
-        val goalRotation = (if (fieldToRobot.rotation.degrees + correctedYaw.degrees in -90.0..90.0)
-            0.degrees else 180.degrees)
-                .toRotation2d()
+        // Field to camera takes us from the field origin to the camera. The inverse of cameraToTarget
+        // is targetToCamera.
+        val fieldToCamera: Pose2d = getTarget(DriveSubsystem.robotPosition).transformBy(cameraToTarget.inverse())
 
-        Tracker.addSamples(timestamp,
-                Pose2d(
-                        // Transform chain (see wikipedia) that take us from the field to the target
-                        // for example fieldToRobot + robotToCamera = fieldToCamera
-                        fieldToRobot
-                                .plus(robotToCamera)
-                                .plus(Pose2d(cameraToTarget, Rotation2d()))
-                                .translation, // just the translation component so that we keep our [goalRotation]
-                        goalRotation
-                ))
+        // Field to robot is then field to camera + camera to robot
+        val fieldToRobot = fieldToCamera.transformBy(robotToCamera.inverse())
+
+        DriveSubsystem.addVisionPose(fieldToRobot, timestamp)
     }
+
+    private fun getTarget(pose: Pose2d): Pose2d {
+        // If we're pointing in [-90, 90], we're pointing away from the opponent
+        // so we want the power point on the "far" wall (our wall technically)
+        // Otherwise, we want the closer power port
+        return if(pose.rotation.degrees.absoluteValue < 90) farPowerPort
+        else closePowerPort
+    }
+
+    val closePowerPort = Pose2d(0.feet, 27.feet - 94.66.inches, 180.degrees)
+    val farPowerPort = Pose2d(Units.feetToMeters(54.0), Units.inchesToMeters(94.66), Rotation2d());
 
     private val targetHeight = 8.feet + 2.25.inches
     private val camHeight = 17.inches // todo check
     private var camAngle = 20.degrees // 24.74.degrees + 15.degrees
     private val width = 19.625.inches * 2
-    private val robotToCamera = Pose2d(Translation2d((9.5).inches, 1.25.inches), 0.degrees) // TODO adjust to cad
+    private val robotToCamera = Transform2d(Translation2d((9.5).inches, 1.25.inches), 0.degrees) // TODO adjust to cad
 
     @Suppress("unused")
     val bumperCamera: UsbCamera = CameraServer.getInstance().startAutomaticCapture(0).apply {
@@ -171,6 +155,8 @@ object VisionSubsystem : FalconSubsystem() {
     }
 }
 
+private fun Pose2d.toTransform() = Transform2d(Pose2d(), this)
+
 private infix fun Pose2d.epsilonEquals(other: Pose2d) =
         this.translation.x epsilonEquals other.translation.x &&
                 this.translation.y epsilonEquals other.translation.y &&
@@ -184,3 +170,6 @@ inline class InterpolatingDouble(val number: Double) : Interpolatable<Interpolat
 }
 
 fun Number.interpolatable() = InterpolatingDouble(toDouble())
+
+private fun Transform2d(translation2d: Translation2d, degrees: SIUnit<Radian>) = Transform2d(translation2d, degrees.toRotation2d())
+

@@ -29,7 +29,7 @@ object Controls {
         button(kStart).changeOn(reZeroCommand)
         button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kX).changeOn { IntakeSubsystem.miniRetractIntakeCommand() }
-        //button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
+        // button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
         button(kBumperRight).change(
                 ShootCommand(true)
                         .andThen(ShootCommand(false).withTimeout(0.5))
@@ -62,8 +62,8 @@ object Controls {
 //                .deadlineWith(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })
 //                .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
                 .beforeStarting {
-            DriveSubsystem.odometry.resetPosition(
-                    Pose2d(TrajectoryFactory.retrieve5FromShieldGenerator.initialPose.translation, 180.degrees.toRotation2d()), DriveSubsystem.robotHeadingSource()) })
+            DriveSubsystem.resetPosition(
+                    Pose2d(TrajectoryFactory.retrieve5FromShieldGenerator.initialPose.translation, 180.degrees.toRotation2d())) })
 
 //        pov(0).changeOn(ShooterCharacterizationCommand())
 //        pov(0).changeOn(SwerveCharacterizationCommand())

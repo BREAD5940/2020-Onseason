@@ -1,4 +1,5 @@
 package frc.robot.subsystems.intake
+
 import com.revrobotics.CANSparkMaxLowLevel
 import edu.wpi.first.wpilibj.GenericHID
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -40,7 +41,8 @@ object IntakeSubsystem : FalconSubsystem() {
 
     private var wantsExtended by Delegates.observable(false, { _, _, nowWantsExtended ->
         chungusPistonSolenoid.state = if (nowWantsExtended) FalconSolenoid.State.Forward else FalconSolenoid.State.Reverse
-        secondarySmolPistonSolenoid.state = if (nowWantsExtended) FalconSolenoid.State.Forward else FalconSolenoid.State.Reverse }
+        secondarySmolPistonSolenoid.state = if (nowWantsExtended) FalconSolenoid.State.Forward else FalconSolenoid.State.Reverse
+    }
     )
 
     fun setChungusPistonExtension(nowWantsExtended: Boolean) {

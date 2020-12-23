@@ -11,7 +11,6 @@ import frc.robot.Constants.kinematics
 import frc.robot.autonomous.paths.TrajectoryWaypoints
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
 import org.ghrobotics.lib.mathematics.twodim.geometry.Rectangle2d
-import org.ghrobotics.lib.mathematics.twodim.trajectory.FalconTrajectoryConfig
 import org.ghrobotics.lib.mathematics.twodim.trajectory.constraints.VelocityLimitRadiusConstraint
 import org.ghrobotics.lib.mathematics.twodim.trajectory.constraints.VelocityLimitRegionConstraint
 import org.ghrobotics.lib.mathematics.units.*
@@ -130,8 +129,8 @@ object TrajectoryFactory {
                 listOf(
                         SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
                         VelocityLimitRegionConstraint(Rectangle2d(
-                                Translation2d(32.808,22.449),
-                                Translation2d(28.79,26.972)),
+                                Translation2d(32.808, 22.449),
+                                Translation2d(28.79, 26.972)),
                                 3.feet.velocity)
                         ), kMaxVelocity, kMaxAcceleration
                 )
@@ -212,14 +211,13 @@ object TrajectoryFactory {
                             VelocityLimitRegionConstraint(Rectangle2d(
                                     Translation2d(21.468, 11.5),
                                     Translation2d(19.02, 15.286)),
-                                    4.feet.velocity), //subject to change
+                                    4.feet.velocity), // subject to change
                             VelocityLimitRegionConstraint(Rectangle2d(
-                                    Translation2d(22.479,17.24),
-                                    Translation2d(18.976,17.215)),
-                                    4.feet.velocity) //subject to change
+                                    Translation2d(22.479, 17.24),
+                                    Translation2d(18.976, 17.215)),
+                                    4.feet.velocity) // subject to change
                             ), kMaxVelocity, kMaxAcceleration
                     )
-
     }
     val tenPCShieldGeneratorToShoot by lazy {
         generateTrajectory(
