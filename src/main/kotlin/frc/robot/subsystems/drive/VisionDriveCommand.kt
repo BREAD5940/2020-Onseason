@@ -91,7 +91,9 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
         val controller = PIDController(1.7, 0.0, 0.0)
 
         fun getTargetPose(): Pose2d? {
-            val bestPose = VisionSubsystem.Tracker.getBestTarget()?.averagePose
+//            val bestPose = VisionSubsystem.Tracker.getBestTarget()?.averagePose
+            // TODO actually implement
+            val bestPose = Pose2d()
             if (bestPose == null) {
                 return null // todo do smth else?
             }

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState
 import edu.wpi.first.wpilibj.smartdashboard.Field2d
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj.trajectory.Trajectory
 import edu.wpi.first.wpilibj.util.Units
 import edu.wpi.first.wpiutil.math.VecBuilder
@@ -25,6 +26,7 @@ import frc.robot.subsystems.drive.swerve.Mk2SwerveModule
 import frc.robot.subsystems.vision.VisionSubsystem
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import lib.Logger
 import lib.asSparkMax
 import lib.mirror
 import org.ghrobotics.lib.commands.FalconSubsystem
@@ -43,11 +45,12 @@ import org.ghrobotics.lib.utils.BooleanSource
 import org.ghrobotics.lib.utils.Source
 import org.ghrobotics.lib.utils.launchFrequency
 import org.ghrobotics.lib.utils.map
+import java.lang.RuntimeException
 
 object DriveSubsystem : FalconSubsystem() {
 
     private val navX = AHRS(SPI.Port.kMXP)
-    val robotHeadingSource = { -Rotation2d.fromDegrees(navX.fusedHeading.toDouble()) }
+    private val robotHeadingSource = { -Rotation2d.fromDegrees(navX.fusedHeading.toDouble()) }
 
     val compressor = Compressor(8).apply { clearAllPCMStickyFaults() }
 
@@ -80,7 +83,7 @@ object DriveSubsystem : FalconSubsystem() {
 
     private val modules = listOf(flModule, frModule, blModule, brModule)
 
-    private val field = Field2d()
+    internal val field = Field2d()
 
     /**
      * Feedforward. Used for trajectory tracking
@@ -101,7 +104,7 @@ object DriveSubsystem : FalconSubsystem() {
         kinematics,
         VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(5.0)),
         VecBuilder.fill(Units.degreesToRadians(1.0)),
-        VecBuilder.fill(0.03, 0.03, Units.degreesToRadians(10.0)),
+        VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10.0)),
         1.0 / 200.0)
 
     fun resetPosition(pose: Pose2d) {
@@ -110,10 +113,16 @@ object DriveSubsystem : FalconSubsystem() {
     }
 
     fun addVisionPose(fieldToRobot: Pose2d, time: SIUnit<Second>) {
-        estimator.addVisionMeasurement(fieldToRobot, time.inSeconds())
+//        try {
+//            estimator.addVisionMeasurement(fieldToRobot, time.inSeconds())
+//        } catch (e: RuntimeException) {
+//            e.printStackTrace()
+//        }
 
         field.getObject("vision pose").pose = fieldToRobot
     }
+
+    val logger = Logger("DriveSubsystem")
 
     private val stateLock = Object()
     val periodicIO = PeriodicIO()
@@ -148,6 +157,10 @@ object DriveSubsystem : FalconSubsystem() {
         //        "frAngle, frAzimuthVolt, frDriveAngle, frDriveVolt, " +
         //        "blAngle, blAzimuthVolt, blDriveAngle, blDriveVolt, " +
         //        "brAngle, brAzimuthVolt, brDriveAngle, brDriveVolt,")
+        logger.log("time, x, y, heading (deg)")
+
+
+        SmartDashboard.putData("Field", field)
 
         compressor.start()
     }
@@ -178,11 +191,12 @@ object DriveSubsystem : FalconSubsystem() {
 
         poseBuffer[Timer.getFPGATimestamp().seconds] = robotPosition
 
+        // Update 2d field pose
         field.getObject("close goal").pose = VisionSubsystem.closePowerPort
         field.getObject("far goal").pose = VisionSubsystem.farPowerPort
         field.robotPose = robotPosition
-        field.getObject("pose estimator").pose = estimator.estimatedPosition
-        field.getObject()
+//        field.getObject("pose estimator").pose = estimator.estimatedPosition
+//        field.getObject("odometry").pose = robotPosition
     }
 
     // Trajectory following and other utility methods
@@ -233,6 +247,8 @@ object DriveSubsystem : FalconSubsystem() {
 
         // val output = modules.map { "${it.azimuthAngle().degrees}, ${it.azimuthMotor.voltageOutput.value}, ${it.driveMotor.encoder.velocity.value}, ${it.driveMotor.voltageOutput.value}" }
         // logger.log("${output[0]}, ${output[1]}, ${output[2]}, ${output[3]}")
+
+        logger.log(Timer.getFPGATimestamp(), robotPosition.x, robotPosition.y, robotPosition.rotation.degrees)
     }
 
     /**

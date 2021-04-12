@@ -1,4 +1,14 @@
-// package frc.robot.subsystems
+package frc.robot.subsystems
+
+import edu.wpi.first.wpilibj.DutyCycle
+import edu.wpi.first.wpilibj.DutyCycleEncoder
+import edu.wpi.first.wpilibj.simulation.DutyCycleEncoderSim
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim
+import edu.wpi.first.wpilibj.system.plant.DCMotor
+import edu.wpi.first.wpilibj.util.Units
+import org.junit.Test
+import kotlin.math.pow
+
 //
 // import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator
 // import edu.wpi.first.wpilibj.geometry.Pose2d
@@ -20,7 +30,21 @@
 // import java.io.FileReader
 // import kotlin.math.PI
 //
-// class StateSpaceMemes {
+class StateSpaceMemes {
+
+    @Test
+    fun testSim() {
+        val sim = SingleJointedArmSim(DCMotor.getNEO(1), 10.0 * 60.0 / 24.0,
+            0.425 * Units.inchesToMeters(6.0).pow(2) * 3.0, 0.0, // 0 because we dont care abt gravity
+            Units.degreesToRadians(-225.0), Units.degreesToRadians(225.0),
+            0.0, // also 0 coz we don't care about gravity
+            false
+            )
+
+        val encoder = DutyCycleEncoder(0)
+        val encoderSim = DutyCycleEncoderSim(encoder)
+    }
+
 //
 //    @Test
 //    fun testCtt() {
@@ -135,4 +159,4 @@
 //        println(kpOutputRotPerMinte)
 //    }
 //
-// }
+}
