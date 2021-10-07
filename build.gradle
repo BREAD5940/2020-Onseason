@@ -22,7 +22,7 @@ targetCompatibility = JavaVersion.VERSION_11
 //wpi.maven.useFrcMavenLocalDevelopment = false
 //wpi.wpilibVersion = '2020.3.2-163-gdc9e560'
 
-wpi.maven.useDevelopment = true
+wpi.maven.useDevelopment = false
 wpi.wpilibVersion = '2020.+'
 
 def ROBOT_MAIN_CLASS = "frc.robot.RobotKt"
