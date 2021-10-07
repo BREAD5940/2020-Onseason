@@ -17,10 +17,10 @@ import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.seconds
 
 class RightSideTenPCRoutine : AutoRoutine() {
-    private val path1 = TrajectoryFactory.tenPCAutoToShieldGenerator //Grab 2 from shield generator
-    private val path2 = TrajectoryFactory.tenPCAutoShieldGeneratorToShoot //Go to shooting position
-    private val path3 = TrajectoryFactory.getPCFromTrench //Get 5 from trench
-    private val path4 = TrajectoryFactory.shootFromTrench //Go to shooting position
+    private val path1 = TrajectoryFactory.tenPCAutoToShieldGenerator // Grab 2 from shield generator
+    private val path2 = TrajectoryFactory.tenPCAutoShieldGeneratorToShoot // Go to shooting position
+    private val path3 = TrajectoryFactory.getPCFromTrench // Get 5 from trench
+    private val path4 = TrajectoryFactory.shootFromTrench // Go to shooting position
 
     override val duration: SIUnit<Second>
         get() = SIUnit<Second> (path1.totalTimeSeconds + path2.totalTimeSeconds + path3.totalTimeSeconds + path4.totalTimeSeconds)

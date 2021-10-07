@@ -11,17 +11,11 @@ import frc.robot.Robot
 import frc.robot.autonomous.paths.Pose2d
 import frc.robot.autonomous.paths.plus
 import frc.robot.subsystems.drive.DriveSubsystem
-
 import kotlin.math.absoluteValue
 import kotlin.math.tan
 import kotlin.properties.Delegates
-
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import lib.InterpolatingTable
 import lib.interpolate
-import lib.runCommand
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.mathematics.epsilonEquals
 import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
@@ -29,17 +23,8 @@ import org.ghrobotics.lib.mathematics.units.*
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.types.Interpolatable
-
 import org.ghrobotics.lib.vision.ToastyTargetTracker
 import org.photonvision.PhotonCamera
-import kotlin.math.absoluteValue
-import kotlin.math.tan
-
-
-
-import org.ghrobotics.lib.vision.ChameleonCamera
-
-
 
 object VisionSubsystem : FalconSubsystem() {
 
@@ -62,8 +47,6 @@ object VisionSubsystem : FalconSubsystem() {
 
         gloworm.driverMode = false
         gloworm.pipelineIndex = 0
-
-
     }
 
     object Tracker : ToastyTargetTracker(TargetTrackerConstants(1.5.seconds, 10.feet, 100, 3)) {
@@ -100,7 +83,7 @@ object VisionSubsystem : FalconSubsystem() {
     private fun updateTracker() {
         val target = gloworm.latestResult
 
-        if (target.hasTargets()) updateTangentEstimation(Rotation2d.fromDegrees(target.bestTarget.pitch) + camAngle.toRotation2d(),-target.bestTarget.yaw.degrees.toRotation2d(),
+        if (target.hasTargets()) updateTangentEstimation(Rotation2d.fromDegrees(target.bestTarget.pitch) + camAngle.toRotation2d(), -target.bestTarget.yaw.degrees.toRotation2d(),
                 Timer.getFPGATimestamp().seconds - target.latencyMillis.milli.seconds)
 
         Tracker.update()

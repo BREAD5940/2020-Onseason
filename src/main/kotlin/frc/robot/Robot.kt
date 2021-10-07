@@ -42,7 +42,6 @@ object Robot : FalconTimedRobot() {
 
         super.robotInit()
 
-
         for (i in 0 until buffer.length) {
 
             buffer.setRGB(i, 0, 0, 0)
@@ -89,7 +88,6 @@ object Robot : FalconTimedRobot() {
 fun main() {
 
     edu.wpi.first.math.WPIMathJNI.forceLoad()
-
 
     WPIMathJNI.forceLoad()
 

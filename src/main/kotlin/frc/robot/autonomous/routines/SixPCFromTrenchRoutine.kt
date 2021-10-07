@@ -6,19 +6,13 @@ import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
-import frc.robot.subsystems.shooter.ShootCommand
-import kotlin.math.absoluteValue
 import lib.instantCommand
 import lib.runCommand
 import org.ghrobotics.lib.commands.sequential
-import org.ghrobotics.lib.mathematics.twodim.geometry.Rectangle2d
-import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
 import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.Second
 import org.ghrobotics.lib.mathematics.units.derived.degrees
-import org.ghrobotics.lib.mathematics.units.derived.inRadians
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
-import org.ghrobotics.lib.mathematics.units.feet
 import org.ghrobotics.lib.mathematics.units.seconds
 
 class SixPCFromTrenchRoutine : AutoRoutine() {

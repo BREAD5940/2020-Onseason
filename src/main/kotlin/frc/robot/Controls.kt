@@ -29,7 +29,7 @@ object Controls {
         button(kStart).changeOn(reZeroCommand)
         button(kA).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kX).changeOn { IntakeSubsystem.miniRetractIntakeCommand() }
-        //button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
+        // button(kBumperRight).change(ShootCommand().alongWith(VisionDriveCommand()))
         button(kBumperRight).change(
                 ShootCommand(true)
                         .andThen(ShootCommand(false).withTimeout(0.5))
