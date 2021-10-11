@@ -16,7 +16,7 @@ class ZeroCommand : FalconCommand(HoodSubsystem) {
         HoodSubsystem.hoodMotor.smartCurrentLimit = 3.amps
         HoodSubsystem.hoodMotor.canSparkMax.setSecondaryCurrentLimit(5.0)
         HoodSubsystem.wantedState = HoodSubsystem.State.Homing
-        HoodSubsystem.hoodMotor.setVoltage(3.volts)
+        HoodSubsystem.hoodMotor.setVoltage(-3.volts)
 
         timer.reset()
         timer.start()
@@ -31,5 +31,7 @@ class ZeroCommand : FalconCommand(HoodSubsystem) {
         super.end(interrupted)
         HoodSubsystem.wantedState = HoodSubsystem.State.Position
         HoodSubsystem.hoodMotor.encoder.resetPosition(17.degrees)
+        HoodSubsystem.hoodMotor.smartCurrentLimit = 5.amps
+        HoodSubsystem.hoodMotor.canSparkMax.setSecondaryCurrentLimit(10.0)
     }
 }

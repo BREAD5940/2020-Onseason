@@ -16,6 +16,7 @@ import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.HoodSubsystem
 import frc.robot.subsystems.shooter.ShooterCharacterizationCommand
 import frc.robot.subsystems.vision.VisionSubsystem
+import frc.robot.subsystems.shooter.ZeroCommand
 import org.ghrobotics.lib.wrappers.FalconTimedRobot
 
 object Robot : FalconTimedRobot() {
@@ -75,7 +76,7 @@ object Robot : FalconTimedRobot() {
     }
 
     override fun teleopInit() {
-        HoodSubsystem.enabledReset()
+        ZeroCommand().schedule()
     }
 
     override fun autonomousInit() {
