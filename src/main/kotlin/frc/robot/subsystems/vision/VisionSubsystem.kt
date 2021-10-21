@@ -2,6 +2,7 @@ package frc.robot.subsystems.vision
 
 import edu.wpi.cscore.UsbCamera
 import edu.wpi.first.cameraserver.CameraServer
+import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.wpilibj.DigitalOutput
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.geometry.Pose2d
@@ -11,9 +12,6 @@ import frc.robot.Robot
 import frc.robot.autonomous.paths.Pose2d
 import frc.robot.autonomous.paths.plus
 import frc.robot.subsystems.drive.DriveSubsystem
-import kotlin.math.absoluteValue
-import kotlin.math.tan
-import kotlin.properties.Delegates
 import lib.InterpolatingTable
 import lib.interpolate
 import org.ghrobotics.lib.commands.FalconSubsystem
@@ -25,6 +23,9 @@ import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.types.Interpolatable
 import org.ghrobotics.lib.vision.ToastyTargetTracker
 import org.photonvision.PhotonCamera
+import kotlin.math.absoluteValue
+import kotlin.math.tan
+import kotlin.properties.Delegates
 
 object VisionSubsystem : FalconSubsystem() {
 
@@ -79,12 +80,17 @@ object VisionSubsystem : FalconSubsystem() {
     )
 
     private var previousSolvePnpPose: Pose2d = Pose2d()
+    val mainTable = NetworkTableInstance.getDefault().getTable("photonvision").getSubTable("gloworm")
+    val pitch = mainTable.getEntry("targetPitch")
+    val yaw = mainTable.getEntry("targetYaw")
 
     private fun updateTracker() {
-        val target = gloworm.latestResult
+        //val target = gloworm.latestResult
 
-        if (target.hasTargets()) updateTangentEstimation(Rotation2d.fromDegrees(target.bestTarget.pitch) + camAngle.toRotation2d(), -target.bestTarget.yaw.degrees.toRotation2d(),
-                Timer.getFPGATimestamp().seconds - target.latencyMillis.milli.seconds)
+        if (gloworm.hasTargets()) updateTangentEstimation(
+                Rotation2d.fromDegrees(pitch.getDouble(0.0)) + camAngle.toRotation2d(),
+                -yaw.getDouble(0.0).degrees.toRotation2d(),
+                Timer.getFPGATimestamp().seconds /* - gloworm.latencyMillis.milli.seconds*/)
 
         Tracker.update()
     }

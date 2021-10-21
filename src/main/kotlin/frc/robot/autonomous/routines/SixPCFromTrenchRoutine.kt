@@ -1,19 +1,28 @@
 package frc.robot.autonomous.routines
 
 import edu.wpi.first.wpilibj.geometry.Pose2d
+import edu.wpi.first.wpilibj.geometry.Translation2d
+import edu.wpi.first.wpilibj2.command.WaitCommand
 import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.subsystems.drive.DriveSubsystem
+import frc.robot.subsystems.drive.PointTurnCommand
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
+import frc.robot.subsystems.shooter.ShootCommand
 import lib.instantCommand
 import lib.runCommand
 import org.ghrobotics.lib.commands.sequential
+import org.ghrobotics.lib.mathematics.twodim.geometry.Rectangle2d
+import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
 import org.ghrobotics.lib.mathematics.units.SIUnit
 import org.ghrobotics.lib.mathematics.units.Second
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.seconds
+import org.ghrobotics.lib.mathematics.units.feet
+
+
 
 class SixPCFromTrenchRoutine : AutoRoutine() {
     private val path1 = TrajectoryFactory.sixPCStartToShoot
@@ -48,19 +57,19 @@ class SixPCFromTrenchRoutine : AutoRoutine() {
                     .andThen(Runnable { IntakeSubsystem.setNeutral() }, IntakeSubsystem)
                     .alongWith(instantCommand { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-0.5) }.andThen(Runnable { FlywheelSubsystem.kickWheelMotor.setNeutral() }))
 
-//            +PointTurnCommand(180.degrees.toRotation2d())
+        //    +PointTurnCommand(180.degrees.toRotation2d())
 
-//            val rectangle = Rectangle2d(Translation2d(27.feet, 22.feet), Translation2d(36.feet, 27.feet))
-//
-//            +DriveSubsystem.followTrajectory2(path3) {
-//                if (rectangle.contains(DriveSubsystem.robotPosition.translation)) 0.degrees
-//                else (-172).degrees
-//            }
-//                    .deadlineWith(ShootCommand())
-//                    .alongWith(
-//                            IntakeSubsystem.retractIntakeCommand().andThen(WaitCommand(0.5))
-//                                    .andThen(IntakeSubsystem.extendIntakeCommand())
-//                    )
+           val rectangle = Rectangle2d(Translation2d(27.feet, 22.feet), Translation2d(36.feet, 27.feet))
+
+           +DriveSubsystem.followTrajectory2(path3) {
+               if (rectangle.contains(DriveSubsystem.robotPosition.translation)) 0.degrees
+               else (-172).degrees
+           }
+                   .deadlineWith(ShootCommand())
+                   .alongWith(
+                           IntakeSubsystem.retractIntakeCommand().andThen(WaitCommand(0.5))
+                                   .andThen(IntakeSubsystem.extendIntakeCommand())
+                   )
                     .deadlineWith(instantCommand { IntakeSubsystem.intakeMotor.setDutyCycle(0.5); IntakeSubsystem.setSmolPistonExtension(true) })
 
             // re-align with target
