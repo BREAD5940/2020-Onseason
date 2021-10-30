@@ -51,7 +51,7 @@ class OpenLoopClimbCommand : FalconCommand(FlywheelSubsystem) {
         FlywheelSubsystem.shooterMaster.brakeMode = false
     }
 
-    override fun isFinished() = false
+    override fun isFinished() = FlywheelSubsystem.armLimitTriggered;
 
     companion object {
         val speedSource by lazy { Controls.operatorFalconXbox.getY(GenericHID.Hand.kRight).withDeadband(0.15) }

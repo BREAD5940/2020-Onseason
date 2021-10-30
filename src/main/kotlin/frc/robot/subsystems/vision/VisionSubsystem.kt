@@ -149,6 +149,7 @@ object VisionSubsystem : FalconSubsystem() {
         setFPS(10)
         setName("Bumper Grabber")
         setExposureAuto()
+        setBrightness(100)
     }!!
 
     @Suppress("unused")
