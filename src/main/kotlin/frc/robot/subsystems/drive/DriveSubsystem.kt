@@ -73,7 +73,7 @@ object DriveSubsystem : FalconSubsystem() {
             0.0, 0.0001, FalconMAX(
                         CANSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless), driveNativeUnitModel), kAzimuthMotorOutputRange, "fl")
 
-    private val modules = listOf(flModule, frModule, blModule, brModule)
+    val modules = listOf(flModule, frModule, blModule, brModule)
 
     /**
      * Feedforward. Used for trajectory tracking
