@@ -12,6 +12,9 @@ import frc.robot.Robot
 import frc.robot.autonomous.paths.Pose2d
 import frc.robot.autonomous.paths.plus
 import frc.robot.subsystems.drive.DriveSubsystem
+import kotlin.math.absoluteValue
+import kotlin.math.tan
+import kotlin.properties.Delegates
 import lib.InterpolatingTable
 import lib.interpolate
 import org.ghrobotics.lib.commands.FalconSubsystem
@@ -23,9 +26,6 @@ import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.types.Interpolatable
 import org.ghrobotics.lib.vision.ToastyTargetTracker
 import org.photonvision.PhotonCamera
-import kotlin.math.absoluteValue
-import kotlin.math.tan
-import kotlin.properties.Delegates
 
 object VisionSubsystem : FalconSubsystem() {
 
@@ -85,7 +85,7 @@ object VisionSubsystem : FalconSubsystem() {
     val yaw = mainTable.getEntry("targetYaw")
 
     private fun updateTracker() {
-        //val target = gloworm.latestResult
+        // val target = gloworm.latestResult
 
         if (gloworm.hasTargets()) updateTangentEstimation(
                 Rotation2d.fromDegrees(pitch.getDouble(0.0)) + camAngle.toRotation2d(),

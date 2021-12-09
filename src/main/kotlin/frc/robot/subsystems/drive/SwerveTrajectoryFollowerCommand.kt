@@ -16,7 +16,6 @@ import org.ghrobotics.lib.mathematics.units.inFeet
 import org.ghrobotics.lib.utils.BooleanSource
 import org.ghrobotics.lib.utils.Source
 import org.ghrobotics.lib.utils.map
-import kotlin.math.abs
 
 /**
  * Follow a trajectory
@@ -43,7 +42,7 @@ class SwerveTrajectoryFollowerCommand(
 
     private val controller = SwerveTrajectoryController(DriveSubsystem.kinematics, DriveSubsystem.feedForward)
 
-    override fun isFinished() = timer.hasPeriodPassed(trajectory.totalTimeSeconds);
+    override fun isFinished() = timer.hasPeriodPassed(trajectory.totalTimeSeconds)
 
     override fun end(interrupted: Boolean) {
         FalconDashboard.isFollowingPath = false

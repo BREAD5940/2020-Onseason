@@ -1,7 +1,6 @@
 package frc.robot.subsystems.drive
 
 import edu.wpi.first.wpilibj.Timer
-import edu.wpi.first.wpilibj.geometry.Translation2d
 import lib.Logger
 import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.mathematics.units.inAmps
@@ -11,7 +10,7 @@ class DataCollectionCommand : FalconCommand() {
     private val logger = Logger("DataCollection")
 
     override fun runsWhenDisabled(): Boolean {
-        return false;
+        return false
     }
 
     override fun execute() {
@@ -40,5 +39,4 @@ class DataCollectionCommand : FalconCommand() {
         println(stateString)
         logger.log(stateString)
     }
-
 }

@@ -48,7 +48,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
 //        strafe *= strafe.absoluteValue
 
 //        val shotParameter = ShotParameter(0.degrees, 0.revolutionsPerMinute, angleEntry.getDouble(0.0).degrees)
-        
+
         when {
             VisionSubsystem.gloworm.hasTargets() -> {
 
@@ -74,7 +74,7 @@ open class VisionDriveCommand : HolomonicDriveCommand() {
 
                 DriveSubsystem.periodicIO.output = SwerveDriveOutput.Percent(speeds, centerOfRotation)
             }
-    
+
             else -> {
                 super.execute() // allow driver to rotate
             }

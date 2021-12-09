@@ -9,6 +9,7 @@ import frc.robot.subsystems.drive.PointTurnCommand
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
+import java.util.*
 import lib.beforeStarting
 import lib.instantCommand
 import lib.runCommand
@@ -18,7 +19,6 @@ import org.ghrobotics.lib.mathematics.units.Second
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.seconds
-import java.util.*
 
 class RightSideTenPCRoutine : AutoRoutine() {
     private val path1 = TrajectoryFactory.tenPCAutoToShieldGenerator // Grab 2 from shield generator

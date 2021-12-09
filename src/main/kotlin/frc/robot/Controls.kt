@@ -3,8 +3,6 @@ package frc.robot
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.geometry.Pose2d
-import edu.wpi.first.wpilibj2.command.InstantCommand
-import edu.wpi.first.wpilibj2.command.RunCommand
 import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.subsystems.climb.GrabBumperCommand
 import frc.robot.subsystems.climb.openLoopClimbCommandGroup
@@ -15,7 +13,6 @@ import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import frc.robot.subsystems.shooter.ShootCommand
 import lib.beforeStarting
-import lib.instantCommand
 import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.wrappers.hid.*
@@ -89,8 +86,7 @@ object Controls {
         button(kX).changeOn(IntakeSubsystem.extendIntakeCommand())
         button(kBumperLeft).changeOn { FlywheelSubsystem.runKickWheel(-1.0) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
 
-
-        button(kY).change(IntakeSubsystem.retractIntakeCommand().andThen(Runnable { IntakeSubsystem.miniRetractIntakeCommand() } ))
+        button(kY).change(IntakeSubsystem.retractIntakeCommand().andThen(Runnable { IntakeSubsystem.miniRetractIntakeCommand() }))
         pov(0).changeOn { openLoopClimbCommandGroup.alongWith(GrabBumperCommand()).withInterrupt { operatorXbox.bButton }.alongWith(IntakeSubsystem.retractIntakeCommand()).schedule(false) }
         button(kStickRight).change(
                 ShootCommand({ Constants.rightBelowGoalParameter5v }, true)

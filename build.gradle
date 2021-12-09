@@ -69,7 +69,7 @@ repositories {
     mavenCentral()
     jcenter()
 //    mavenLocal()
-    maven { url "http://dl.bintray.com/kyonifer/maven" }
+    // maven { url "http://dl.bintray.com/kyonifer/maven" }
     maven { url "https://jitpack.io" }
 //    maven { url "http://dev.imjac.in/maven" }
     maven { url "https://frcmaven.wpi.edu/artifactory/development" }
