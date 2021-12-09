@@ -24,7 +24,7 @@ open class Mk2SwerveModule(
     angleKd: Double,
     val driveMotor: FalconMAX<Meter>,
     private val angleMotorOutputRange: ClosedFloatingPointRange<Double>,
-    name: String
+    val name: String
 ) {
 
     private val stateMutex = Object() // used to stop multiple threads from accessing the state simultaneously

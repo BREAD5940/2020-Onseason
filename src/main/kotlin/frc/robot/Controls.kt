@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand
 import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.subsystems.climb.GrabBumperCommand
 import frc.robot.subsystems.climb.openLoopClimbCommandGroup
+import frc.robot.subsystems.drive.DataCollectionCommand
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
@@ -69,6 +70,7 @@ object Controls {
 
 //        pov(0).changeOn(ShooterCharacterizationCommand())
 //        pov(0).changeOn(SwerveCharacterizationCommand())
+        pov(0).changeOn(DataCollectionCommand())
     }
 
     val operatorXbox = XboxController(1)
