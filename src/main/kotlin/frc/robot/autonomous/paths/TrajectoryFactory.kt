@@ -20,7 +20,7 @@ object TrajectoryFactory {
 
     /** Constraints **/
 
-    val kMaxVelocity = 8.feet.velocity
+    val kMaxVelocity = 3.3.meters.velocity
     val kMaxAcceleration = 7.feet.acceleration
 
     /** Adjusted Poses **/
@@ -56,8 +56,8 @@ object TrajectoryFactory {
         generateTrajectory(
                 false,
                 listOf(
-                        Pose2d(11.75.feet, 25.689.feet, (-33).degrees),
-                        Pose2d(11.75.feet, 19.262.feet, (-32).degrees)
+                    Pose2d(11.75.feet, 25.689.feet, 0.degrees),
+                    Pose2d(16.07.feet, 19.824.feet, -179.578.degrees)
                 ),
                 getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
@@ -88,7 +88,7 @@ object TrajectoryFactory {
                 false,
                 listOf(
                         Pose2d(20.383.feet, 18.592.feet, (-68).degrees),
-                        Pose2d(16.591.feet, 19.262.feet, 180.degrees)
+                        Pose2d(16.106.feet, 19.562.feet, 180.degrees)
                 ),
                 getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
@@ -97,12 +97,13 @@ object TrajectoryFactory {
     val getPCFromTrench by lazy {
         generateTrajectory(
                 false,
-                listOf(
-                        Pose2d(11.75.feet, 19.262.feet, 48.degrees),
-                        Pose2d(20.72.feet, 23.709.feet, 10.degrees),
-                        Pose2d(35.223.feet, 24.995.feet, 0.degrees)
-                ),
-                // TODO check if encompasses both pc areas in trench
+            listOf(
+                Pose2d(16.106.feet, 19.562.feet, 89.984.degrees),
+                Pose2d(16.828.feet, 24.532.feet, 10.degrees),
+                Pose2d(36.723.feet, 24.546.feet, 0.degrees)
+            ),
+
+            // TODO check if encompasses both pc areas in trench
 
                 listOf(
                         SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
@@ -121,12 +122,12 @@ object TrajectoryFactory {
     val trenchToShoot by lazy {
         generateTrajectory(
                 false,
-                listOf(
-                        Pose2d(35.223.feet, 24.995.feet, 180.degrees),
-                        Pose2d(24.185.feet, 24.168.feet, 180.degrees),
-                        Pose2d(16.319.feet, 22.536.feet, 180.degrees)
-                ),
-                listOf(
+            listOf(
+                Pose2d(36.723.feet, 24.546.feet, 180.degrees),
+                Pose2d(24.185.feet, 24.168.feet, 180.degrees),
+                Pose2d(19.711.feet, 22.536.feet, 180.degrees)
+            ),
+            listOf(
                         SwerveDriveKinematicsConstraint(kinematics, kMaxVelocity.value),
                         VelocityLimitRegionConstraint(Rectangle2d(
                                 Translation2d(32.808, 22.449),
@@ -283,6 +284,27 @@ object TrajectoryFactory {
                         Pose2d(16.557.feet, 14.551.feet, 160.degrees)
                 ),
                 getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
+        )
+    }
+
+    val fivePCToTrench by lazy {
+        generateTrajectory(
+            false,
+            listOf(
+                Pose2d(43.165.feet, 26.669.feet, -179.678.degrees),
+                Pose2d(31.101.feet, 24.61.feet, 176.879.degrees)
+            ), getConstraints(2.4.meters.velocity), 2.4.meters.velocity, kMaxAcceleration
+        )
+    }
+
+    val opposingTrenchToShoot by lazy {
+        generateTrajectory(
+            false,
+            listOf(
+                Pose2d(31.101.feet, 24.61.feet, -3.646.degrees),
+                Pose2d(38.701.feet, 16.995.feet, -93.255.degrees),
+                Pose2d(39.808.feet, 10.519.feet, -14.411.degrees)
+            ), getConstraints(kMaxVelocity), kMaxVelocity, kMaxAcceleration
         )
     }
 

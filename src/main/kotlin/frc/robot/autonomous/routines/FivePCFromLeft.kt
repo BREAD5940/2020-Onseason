@@ -2,12 +2,14 @@ package frc.robot.autonomous.routines
 
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.geometry.Pose2d
+import frc.robot.Controls
 import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.PointTurnCommand
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
+import frc.robot.subsystems.shooter.ShootCommand
 import lib.beforeStarting
 import lib.instantCommand
 import lib.runCommand
@@ -18,41 +20,29 @@ import org.ghrobotics.lib.mathematics.units.derived.degrees
 import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.seconds
 
-class EightPCFromTrenchRoutine : AutoRoutine() {
-    private val path1 = TrajectoryFactory.shootThree // sets up to shoot starting balls
-    private val path2 = TrajectoryFactory.getPCFromTrench // gets 5 balls in trench
-    private val path3 = TrajectoryFactory.trenchToShoot // goes back to shooting spot
+class FivePCFromLeft : AutoRoutine() {
+    private val path1 = TrajectoryFactory.fivePCToTrench
+    private val path2 = TrajectoryFactory.opposingTrenchToShoot
 
     override val duration: SIUnit<Second>
-        get() = SIUnit<Second>(path1.totalTimeSeconds + path2.totalTimeSeconds + path3.totalTimeSeconds)
+        get() = SIUnit<Second>(path1.totalTimeSeconds)
 
     override val routine
         get() = sequential {
+            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation,  180.degrees.toRotation2d()) }
 
-            +instantCommand { DriveSubsystem.robotPosition = Pose2d(path1.states.first().poseMeters.translation, 180.degrees.toRotation2d()) }
-
-            +DriveSubsystem.followTrajectory(path1, { -166.degrees.toRotation2d() })
+            +DriveSubsystem.followTrajectory2(path1) { 180.degrees }
                 .deadlineWith(
                     IntakeSubsystem.extendIntakeCommand()
                         .andThen(runCommand(IntakeSubsystem) { IntakeSubsystem.setSpeed(1.0) })
                 )
 
-            +(FlywheelSubsystem.agitateAndShoot(2.seconds))
-                .deadlineWith(VisionDriveCommand())
-
-            +PointTurnCommand(0.degrees.toRotation2d())
-
-            +DriveSubsystem.followTrajectory2(path2) { 0.degrees }
-
-            +PointTurnCommand(10.degrees.toRotation2d())
-
-            +PointTurnCommand(-10.degrees.toRotation2d())
-
-            val timer = Timer()
-            +DriveSubsystem.followTrajectory(path3) { if (timer.get() > 1.0) 180.degrees.toRotation2d() else 0.degrees.toRotation2d() }
-                .beforeStarting { timer.reset(); timer.start() }
+            val timer = Timer();
+            +DriveSubsystem.followTrajectory(path2) { if (timer.get() > 0.5) 0.degrees.toRotation2d() else 180.degrees.toRotation2d() }
+                .beforeStarting(Runnable { IntakeSubsystem.setNeutral(); timer.reset(); timer.start() }, IntakeSubsystem)
 
             +(FlywheelSubsystem.agitateAndShoot((4.seconds)))
                 .deadlineWith(VisionDriveCommand())
+
         }
 }

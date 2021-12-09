@@ -31,7 +31,7 @@ object IntakeSubsystem : FalconSubsystem() {
             restoreFactoryDefaults()
             setSecondaryCurrentLimit(35.0)
         }
-        smartCurrentLimit = 20.amps
+        smartCurrentLimit = 25.amps
     }
 
     fun setSpeed(intakeSpeed: Double) {

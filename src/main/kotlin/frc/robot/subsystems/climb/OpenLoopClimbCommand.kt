@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.Subsystem
 import edu.wpi.first.wpilibj2.command.WaitCommand
 import frc.robot.Controls
+import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.shooter.FlywheelSubsystem
 import kotlin.math.absoluteValue
 import lib.instantCommand
@@ -51,7 +52,7 @@ class OpenLoopClimbCommand : FalconCommand(FlywheelSubsystem) {
         FlywheelSubsystem.shooterMaster.brakeMode = false
     }
 
-    override fun isFinished() = FlywheelSubsystem.armLimitTriggered;
+    override fun isFinished() = false;
 
     companion object {
         val speedSource by lazy { Controls.operatorFalconXbox.getY(GenericHID.Hand.kRight).withDeadband(0.15) }
@@ -76,7 +77,7 @@ val openLoopClimbCommandGroup
         // POSITIVE power is in opposite direction of ratchet,
         // NEGATIVE power climbs
         +runCommand(FlywheelSubsystem) { FlywheelSubsystem.climbAtPower(0.8) }
-                .withInterrupt { FlywheelSubsystem.shooterMaster.encoder.position > 77000.degrees }
+                .withInterrupt { FlywheelSubsystem.shooterMaster.encoder.position > 70000.degrees } // 77000
                 .withInterrupt { Controls.operatorXbox.getY(GenericHID.Hand.kRight).absoluteValue > 0.5 }
                 .beforeStarting(Runnable { FlywheelSubsystem.shooterMaster.brakeMode = true })
                 .andThen { FlywheelSubsystem.shooterMaster.setNeutral() }

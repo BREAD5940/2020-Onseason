@@ -78,9 +78,9 @@ object FlywheelSubsystem : FalconSubsystem() {
     val kickWheelMotor = falconMAX(collectorAgitatorId, CANSparkMaxLowLevel.MotorType.kBrushless, DefaultNativeUnitModel) {
         with(canSparkMax) {
             restoreFactoryDefaults()
-            setSecondaryCurrentLimit(35.0)
+            setSecondaryCurrentLimit(40.0)
         }
-        smartCurrentLimit = 25.amps
+        smartCurrentLimit = 30.amps
     }
 
     val pawlServo = Servo(8).apply {

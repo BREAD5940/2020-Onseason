@@ -3,6 +3,8 @@ package frc.robot
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.geometry.Pose2d
+import edu.wpi.first.wpilibj2.command.InstantCommand
+import edu.wpi.first.wpilibj2.command.RunCommand
 import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.subsystems.climb.GrabBumperCommand
 import frc.robot.subsystems.climb.openLoopClimbCommandGroup
@@ -39,7 +41,7 @@ object Controls {
                                         .andThen(Runnable { FlywheelSubsystem.kickWheelMotor.setNeutral() })
                         ).alongWith(VisionDriveCommand())
         )
-        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(kGutSpeed) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
+        button(kBumperLeft).changeOn { FlywheelSubsystem.kickWheelMotor.setDutyCycle(-1.0) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
         button(kStickRight).change(ShootCommand({ Constants.rightBelowGoalParameter5v }))
         button(kY).change(ShootCommand().alongWith(VisionDriveCommand()))
 
@@ -83,14 +85,17 @@ object Controls {
 
         button(kA).change(ShootCommand().alongWith(VisionDriveCommand())).changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral(); FlywheelSubsystem.shooterMaster.setNeutral() }
         button(kX).changeOn(IntakeSubsystem.extendIntakeCommand())
-        button(kY).change(IntakeSubsystem.retractIntakeCommand())
-        pov(0).changeOn { openLoopClimbCommandGroup.alongWith(GrabBumperCommand(), instantCommand(IntakeSubsystem) {}).withInterrupt { operatorXbox.bButton }.schedule(false) }
+        button(kBumperLeft).changeOn { FlywheelSubsystem.runKickWheel(-1.0) }.changeOff { FlywheelSubsystem.kickWheelMotor.setNeutral() }
+
+
+        button(kY).change(IntakeSubsystem.retractIntakeCommand().andThen(Runnable { IntakeSubsystem.miniRetractIntakeCommand() } ))
+        pov(0).changeOn { openLoopClimbCommandGroup.alongWith(GrabBumperCommand()).withInterrupt { operatorXbox.bButton }.alongWith(IntakeSubsystem.retractIntakeCommand()).schedule(false) }
         button(kStickRight).change(
                 ShootCommand({ Constants.rightBelowGoalParameter5v }, true)
                         .andThen(ShootCommand({ Constants.rightBelowGoalParameter5v }, false).withTimeout(1.0))
                         .andThen(
                                 ShootCommand({ Constants.rightBelowGoalParameter5v }, false)
-                                        .beforeStarting(Runnable { FlywheelSubsystem.kickWheelMotor.setDutyCycle(1.0) })
+                                        .beforeStarting(Runnable { FlywheelSubsystem.runKickWheel(1.0) })
                                         .andThen(Runnable { FlywheelSubsystem.kickWheelMotor.setNeutral() })
                         )
         )
